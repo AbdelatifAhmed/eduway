@@ -1,0 +1,1127 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  --main-color: #131432;
+  --white: #fff;
+  --gray: #f5f5f5;
+  --black1: #222;
+  --black2: #999;
+  --login-page-color: #d2d4ec;
+  --primary-color: #121431;
+}
+
+body {
+  font-family: "Ubuntu", sans-serif;
+  margin: 0;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
+*:focus {
+  outline: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+.page {
+  min-height: 100vh;
+}
+/*************************** Login Page **********************************************************/
+.login-page {
+  font-family: cursive;
+  min-height: 100%;
+  background: var(--login-page-color); /*#0c192c*/
+  width: 100%;
+  height: 100vh;
+}
+.login-page header {
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.login-page header .logo {
+  font-size: 30px;
+  font-family: "Montserrat-Alt1", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.login-page header .logo span {
+  font-family: "Montserrat-Alt1", sans-serif;
+  color: #eb9c23;
+}
+
+.login-page header .logo img {
+  width: 250px;
+}
+
+.login-page header .header-links {
+  width: 30%;
+}
+
+.login-page header ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.login-page header ul li a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-size: 20px;
+  border-bottom: 2px solid transparent;
+  text-transform: capitalize;
+  display: inline-block;
+}
+
+.login-page header ul a:hover {
+  border-bottom: 2px solid var(--primary-color);
+  transform: scale(1.1);
+}
+.login-page .wrapper {
+  width: 100%;
+  height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.login-page .container {
+  display: flex;
+  width: 1200px;
+  box-shadow: -3px 0px 15px 2px rgba(0, 0, 0, 0.3);
+  border-radius: 20px;
+  background-image: linear-gradient(
+    to right,
+    #fff 20%,
+    var(--login-page-color)
+  );
+}
+
+.login-page .form-info {
+  width: 40%;
+  margin: 20px 0;
+}
+.login-page .image {
+  width: 60%;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  /* background-color: #d2d4ec; */
+}
+.login-page .image img {
+  width: 700px;
+}
+
+.login-page .form-info form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  min-width: 400px;
+  height: 100%;
+  padding: 20px;
+}
+
+.login-page .form-info form h2 {
+  color: var(--primary-color);
+  text-align: center;
+  margin: 20px 0;
+  font-size: 40px;
+}
+
+.login-page .form-info form .field-holder {
+  position: relative;
+}
+
+.login-page .form-info form .field-holder input {
+  border: 0;
+  border-bottom: 1px solid var(--primary-color);
+  outline: none;
+  transition: 0.3s ease-in-out;
+}
+
+.login-page .form-info form .field-holder label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  cursor: text;
+  font-size: 20px;
+  transition: 0.3s ease-in-out;
+}
+
+.login-page .form-info form .field-holder label,
+.login-page .form-info form .field-holder input {
+  font-size: 1.25em;
+  width: 100%;
+  height: 55px;
+}
+
+.login-page .form-info form input {
+  background-color: transparent;
+  border: none;
+}
+
+.login-page .form-info form .field-holder input {
+  border-bottom: 1px solid var(--primary-color);
+  margin-bottom: 30px;
+  color: var(--primary-color);
+  outline: none;
+  width: 100%;
+}
+
+.login-page .form-info form .field-holder input:focus + label,
+.login-page .form-info form .field-holder input:valid + label {
+  font-size: 0.75em;
+  top: -25px;
+  pointer-events: none;
+}
+
+.login-page .form-info form input[type="submit"] {
+  background-color: var(--main-color);
+  /* box-shadow: -2px 8px 16px 0px rgba(0, 0, 0, 0.6); */
+  width: 200px;
+  color: #fff;
+  padding: 15px;
+  border-radius: 30px;
+  font-size: 25px;
+  margin: 30px 0;
+  cursor: pointer;
+  align-self: center;
+}
+.login-page .form-info form input[type="submit"]:hover {
+  background-color: var(--primary-color);
+}
+
+.login-page .form-info form p {
+  text-transform: capitalize;
+  text-align: center;
+}
+
+.login-page .form-info form p a {
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+/*End of Login Page *******************************************/
+
+.page {
+  position: relative;
+  width: 100%;
+}
+
+.sidebar {
+  position: fixed;
+  width: 300px;
+  height: 100%;
+  background: var(--main-color);
+  border-left: 10px solid var(--main-color);
+  transition: 0.5s;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.sidebar.active {
+  width: 80px;
+}
+
+.sidebar .logo-info {
+  color: var(--white);
+  padding: 10px;
+  margin-top: 20px;
+}
+
+.sidebar .logo-info.active {
+  padding: 0;
+}
+
+.sidebar .logo-info h3 {
+  font-size: 24px;
+  letter-spacing: 3px;
+  font-family: "Montserrat-Alt1", sans-serif;
+  text-transform: uppercase;
+  padding: 10px;
+  color: #6675f0;
+}
+
+.sidebar .logo-info h3 span {
+  font-family: "Montserrat-Alt1", sans-serif;
+  color: #eb9c23;
+}
+
+.sidebar .logo-info.active h3 {
+  font-size: 23px;
+  padding-top: 20px;
+}
+
+.sidebar ul {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  margin-top: 100px;
+  height: -webkit-fill-available;
+}
+
+.sidebar ul li:not(:last-child) {
+  position: relative;
+  width: 100%;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  margin-bottom: 10px;
+}
+
+.sidebar ul li:hover:not(:last-child),
+.sidebar ul li:has(a.active) {
+  background-color: var(--white);
+}
+
+.sidebar ul li:last-child {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translate(-50%);
+  transition: 0.5s;
+}
+
+.sidebar ul .logout.active-1 {
+  position: absolute;
+  left: 65px;
+}
+.sidebar ul li:last-child::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  border-radius: 5px;
+  bottom: 0;
+  height: 5px;
+  background-image: linear-gradient(
+    to right,
+    #eeb857,
+    #eeb857 30%,
+    #6675f0 30%
+  );
+}
+
+.sidebar ul .logout.active-1::after {
+  display: none;
+}
+.sidebar ul li.active {
+  /* pointer-events: none; */
+}
+
+.sidebar ul li a {
+  position: relative;
+  display: block;
+  width: 100%;
+  display: flex;
+  color: var(--white);
+}
+
+.sidebar ul li:hover:not(:last-child) a,
+.sidebar ul li:has(a.active) a {
+  color: var(--main-color);
+}
+
+.sidebar ul li a i {
+  position: relative;
+  display: block;
+  min-width: 60px;
+  height: 60px;
+  line-height: 60px;
+  text-align: center;
+  font-size: 1.75rem;
+}
+
+.sidebar ul li a span {
+  position: relative;
+  display: block;
+  padding: 0 10px;
+  height: 60px;
+  line-height: 60px;
+  text-align: start;
+  white-space: nowrap;
+}
+
+/* ============ Curve Outside of sidebar =================== */
+
+.sidebar ul li:hover:not(:last-child) a::before,
+.sidebar ul li:has(a.active):not(:last-child) a::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: -50px;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  border-radius: 50%;
+  box-shadow: 35px 35px 0 10px var(--white);
+  pointer-events: none;
+}
+
+.sidebar ul li:hover:not(:last-child) a::after,
+.sidebar ul li:has(a.active):not(:last-child) a::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -50px;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  border-radius: 50%;
+  box-shadow: 35px -35px 0 10px var(--white);
+  pointer-events: none;
+}
+
+/* ============== main =========== */
+
+.main {
+  position: absolute;
+  width: calc(100% - 300px);
+  left: 300px;
+  background-color: var(--white);
+  transition: 0.5s;
+}
+
+.main.active {
+  width: calc(100% - 80px);
+  left: 80px;
+}
+
+.topbar {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.toggle-search {
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.toggle {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+.search {
+  position: relative;
+  width: 400px;
+  margin: 0 10px;
+}
+
+.search label {
+  position: relative;
+  width: 100%;
+}
+
+.search label input {
+  width: 80%;
+  height: 40px;
+  border-radius: 40px;
+  padding: 5px 20px;
+  padding-left: 35px;
+  font-size: 18px;
+  outline: none;
+  border: 1px solid var(--black2);
+  transition: 0.5s;
+  font-weight: bold;
+}
+
+.search label input:focus {
+  width: 100%;
+}
+
+.search label i {
+  position: absolute;
+  top: 10;
+  left: 10px;
+  font-size: 1.2rem;
+}
+.topbar .user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar .user i {
+  font-size: 25px;
+  color: var(--black1);
+}
+.topbar .user img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.main .basic-info {
+  padding: 30px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.main .basic-info .item {
+  flex: calc(50% - 20px);
+}
+
+.main .basic-info .item fieldset {
+  border-radius: 20px;
+  padding: 20px;
+}
+
+.main .basic-info .item fieldset legend h1 {
+  color: var(--main-color);
+}
+
+.main .basic-info .item fieldset div {
+  font-size: 20px;
+  color: var(--main-color);
+  margin-bottom: 10px;
+}
+
+.main .basic-info .item fieldset p {
+  /* display: inline; */
+  width: 100%;
+}
+
+/* ========================== media query ============== */
+@media (max-width: 991px) {
+  .sidebar {
+    left: -300px;
+  }
+
+  .sidebar.active {
+    width: 300px;
+    left: 0;
+  }
+
+  .main {
+    width: 100%;
+    left: 0;
+  }
+
+  .main.active {
+    left: 300px;
+  }
+
+  .sidebar .logo-info.active h3 {
+    font-size: 24px;
+    letter-spacing: 3px;
+    font-family: "Bruno Ace SC", sans-serif;
+  }
+
+  .sidebar .logo-info.active p {
+    display: block;
+    font-size: 16px;
+    margin-top: 5px;
+  }
+
+  .sidebar ul .logout.active-1 {
+    margin: 250px 0 0 60px;
+  }
+  .sidebar ul .logout.active-1::after {
+    content: "";
+    position: absolute;
+    width: 50%;
+    border-radius: 5px;
+    bottom: 0;
+    height: 5px;
+    background-image: linear-gradient(
+      to right,
+      #eeb857,
+      #eeb857 30%,
+      #6675f0 30%
+    );
+  }
+
+  .sidebar ul .logout.active-1::after {
+    display: block;
+  }
+
+  .basic-info .item {
+    flex: calc(50% - 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .basic-info .item {
+    flex: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar .user {
+    min-width: 40px;
+  }
+
+  .sidebar {
+    width: 100%;
+    left: -100%;
+    z-index: 999;
+  }
+
+  .sidebar.active {
+    width: 100%;
+    left: 0;
+  }
+
+  .toggle {
+    z-index: 1000;
+  }
+
+  .main.active .toggle {
+    color: var(--white);
+    position: fixed;
+    right: 0;
+    top: 30px;
+    left: initial;
+  }
+
+  .sidebar.active .logout.active-1 {
+    margin: 250px 0 0 100px;
+  }
+
+  .sidebar.active .logout.active-1::after {
+    width: 40%;
+  }
+
+  .basic-info .item {
+    flex: 100%;
+  }
+}
+
+/*time table */
+
+.time-table {
+  padding: 20px;
+  width: 100%;
+  height: 100vh;
+}
+.time-table .header-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.time-table .head {
+  width: 50%;
+  display: inline-flex;
+  text-transform: capitalize;
+  font-size: 30px;
+  color: var(--main-color);
+}
+/* icon for print  */
+.time-table i {
+  padding-right: 10px;
+  font-size: large;
+  cursor: pointer;
+  color: var(--main-color);
+}
+.time-table table {
+  height: 80%;
+  width: 100%;
+  border-spacing: 0px;
+}
+.time-table table td {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid gray;
+}
+.time-table table thead td {
+  font-weight: bold;
+  text-align: center;
+  background-color: #ccc;
+  text-transform: capitalize;
+}
+
+/* Exam-Table */
+.exam-table {
+  padding: 20px;
+}
+.exam-table .head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  color: #121432;
+  text-transform: capitalize;
+  font-size: 25px;
+  margin-bottom: 20px;
+}
+
+.exam-table .head i {
+  cursor: pointer;
+}
+
+.exam-table table {
+  width: 100%;
+  height: 80%;
+  border: 1px solid black;
+  border-spacing: 0px;
+  color: #121432;
+}
+
+.exam-table table td {
+  /* text-align: center; */
+  padding: 35px;
+  border: 1px solid rgb(19, 19, 19);
+}
+
+.exam-table table thead td {
+  /* text-align: center; */
+  background-color: #ccc;
+  text-transform: capitalize;
+  /* border-spacing: 0px;   */
+}
+
+.exam-table table tbody tr:nth-child(1) {
+  background-color: #aedc8f;
+  color: #121432;
+}
+
+.exam-table table thead td {
+  border: none;
+}
+
+/* *************************Tuition fees *******************************/
+
+.tuition-fees {
+  padding: 20px;
+}
+.tuition-fees .tablee {
+  padding: 20px;
+}
+
+.tuition-fees table {
+  border: 1.5px solid #979797;
+}
+.tuition-fees .cont {
+  text-align: center;
+  width: 100%;
+  height: 45%;
+  border: 1.5px solid #979797;
+  /*border-radius: 15px;*/
+}
+.tuition-fees .headen {
+  width: 100%;
+  height: 12px;
+  background-color: #d9d9d9;
+  border-radius: 5px;
+  text-align: center;
+  padding: 5px 15px;
+}
+.tuition-fees .sciss span {
+  letter-spacing: 5px;
+}
+
+.tuition-fees .cont td {
+  padding: 6px;
+}
+
+.tuition-fees .cont .g {
+  background-color: #c1bebe;
+  border-radius: 15px 15px 0 0;
+  overflow: hidden;
+}
+.tuition-fees .cont tr td {
+  border-bottom: 1px solid #979797;
+  border-left: 1px solid #979797;
+  /*border-right: 1px solid #979797;*/
+}
+.tuition-fees .cont .f {
+  background-color: #c1bebe;
+  text-align: left;
+  padding-right: 8px;
+}
+
+/********************************** Course Grades*************************************************/
+
+.course-grades-table {
+  padding: 20px;
+}
+
+.course-grades-table .student-info {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.course-grades-table .student-info .std-item {
+  font-size: 20px;
+  font-weight: bold;
+  width: calc(100% / 3);
+}
+
+.course-grades-table .grades-info {
+  /* border: 1px solid var(--primary-color); */
+}
+
+.course-grades-table .grades-info table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.course-grades-table .grades-info table thead {
+  background-color: var(--main-color);
+  color: var(--white);
+}
+.course-grades-table .grades-info table td {
+  padding: 10px;
+  text-align: center;
+}
+
+.course-grades-table .grades-info table thead td span {
+  border: 1px solid white;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+.course-grades-table .grades-info table tbody tr {
+  border-bottom: 1px solid var(--black2);
+}
+
+.course-grades-table .grades-info table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.course-grades-table footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.course-grades-table footer .item {
+  width: calc(100% / 4);
+  font-weight: bold;
+}
+
+/* ***********************Admin****************************** */
+
+/**********************Faculty ***********************************/
+
+/******************************** Pop-Ups**************************************/
+.add-faculty {
+  height: 100%;
+  width: 100%;
+  /* display: none; */
+  position: fixed;
+  z-index: 1001;
+  top: 0;
+  left: 0;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.9
+  ); /* Black with a little bit see-through */
+}
+
+.add-faculty .box {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1002;
+}
+
+.add-faculty .box form {
+  border: 1px solid var(--primary-color);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  width: 400px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  position: relative;
+  z-index: 1002;
+}
+
+.add-faculty .box form::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: -25px;
+  background-color: var(--primary-color);
+  width: calc(100% + 2px);
+  height: 25px;
+  z-index: 1002;
+}
+
+.add-faculty .box form > input {
+  border-radius: 10px;
+  padding: 10px;
+  outline: none;
+}
+
+/******************************** End Pop-Ups**************************************/
+
+.faculty {
+}
+
+.faculty header {
+  padding: 0 20px;
+}
+
+.faculty header .buttons {
+  background: var(--primary-color);
+  padding: 10px 0;
+  border-bottom-right-radius: 50px;
+  border-bottom-left-radius: 50px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.faculty header .buttons button {
+  background-color: transparent;
+  color: white;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+/* 
+@media (max-width: 768px) {
+  .faculty header .buttons {
+    font-size: 16px;
+  }
+} */
+
+/********************************** Student Admin Side ************************************************/
+.Student-admin {
+  padding: 20px;
+}
+.Student-admin .head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  text-transform: capitalize;
+  padding-top: 15px;
+}
+.Student-admin .butt {
+  display: flex;
+  gap: 10px;
+}
+.Student-admin .butt .add {
+  border: 1px solid rgb(59, 180, 236);
+  background-color: rgb(59, 180, 236);
+  border-radius: 8px;
+  text-transform: capitalize;
+  font-size: 15px;
+  color: white;
+  padding: 7px;
+  cursor: pointer;
+}
+
+.Student-admin .butt .delete {
+  border: 1px solid black;
+  background-color: rgb(7, 7, 7);
+  border-radius: 8px;
+  text-transform: capitalize;
+  font-size: 15px;
+  color: white;
+  padding: 7px;
+  cursor: pointer;
+}
+
+.Student-admin .butt2 .disp {
+  text-transform: capitalize;
+  font-size: 17px;
+  font-weight: bold;
+}
+.Student-admin .butt2 .numb {
+  width: 40px;
+  height: 27px;
+}
+
+.Student-admin .butt3 {
+  width: 207px;
+  height: 27px;
+  border: 1px solid black;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 20px;
+}
+.Student-admin .butt3 .search {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  font-size: 14px;
+}
+.Student-admin .butt3 i {
+  margin-left: 7px;
+  cursor: pointer;
+}
+
+/* .Student-admin .table-continar {
+  width: 99%;
+  height: 800px;
+  overflow-x: scroll;
+}
+.Student-admin table {
+  width: 800px;
+  border-spacing: 0px;
+  color: #121432;
+  text-transform: capitalize;
+}
+.Student-admin table td {
+
+  padding: 25px;
+}
+
+.Student-admin .table-continar table thead tr {
+  border: 2px solid var(--main-color);
+}
+
+.Student-admin table tbody tr:nth-child(odd) {
+  background-color: rgb(225, 225, 225);
+  color: #121432;
+}
+.Student-admin .checkbox {
+  width: 20px;
+  height: 20px;
+}
+
+.Student-admin .pagination {
+  float: right;
+}
+.Student-admin .pagination a {
+  color: black;
+  text-decoration: none;
+  padding: 8px 15px;
+  display: inline-block;
+}
+
+.Student-admin .pagination a:hover {
+  background-color: gray;
+  border-radius: 5px;
+} */
+
+.table-content {
+  margin-top: 10px;
+  width: 99%;
+}
+
+.Student-admin .table thead {
+  background-color: #121431 !important;
+}
+
+.table thead tr th {
+  white-space: nowrap;
+}
+
+.table .th-flex {
+  display: flex;
+  gap: 10px;
+}
+
+.customThead {
+  background-color: var(--primary-color);
+}
+
+/********************** Add Student Form *******************************************/
+
+.add-student {
+  padding: 20px;
+}
+
+.add-student .header {
+  font-size: 25px;
+  font-weight: bold;
+  font-family: sans-serif;
+  color: var(--primary-color);
+}
+
+.add-student .col .txt-input {
+  padding: 5px;
+  width: 100%;
+  border: 1px solid var(--main-color);
+  border-radius: 10px;
+  font-weight: bold;
+  outline: none;
+  transition: 0.1s linear;
+}
+
+.add-student .col .txt-input:focus {
+  border: 1px solid #6675f0;
+  color: #6675f0;
+}
+
+.add-student .col .list {
+  width: 100%;
+  padding: 7px;
+  font-weight: bold;
+  border: 1px solid var(--main-color);
+  border-radius: 10px;
+}
+
+.add-student .col .description {
+  width: 100%;
+  padding: 5px;
+  border-radius: 10px;
+  border: 1px solid var(--main-color);
+  font-weight: bold;
+}
+
+.add-student .col .description:hover {
+  border: 1px solid #6675f0;
+  color: #6675f0;
+}
+
+.add-student #pre-requisite {
+  display: block;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1.1;
+  display: grid;
+  grid-template-columns: 1em auto;
+  gap: 0.5em;
+}
+
+.nav-link.active {
+  color: white !important;
+  background-color: var(--primary-color) !important;
+}
+
+.nav-link {
+  color: var(--primary-color) !important;
+  font-size: 20px;
+}
