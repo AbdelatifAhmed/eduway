@@ -45,6 +45,10 @@ export default function AddFaculty() {
   const [type, setType] = useState();
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
+  const [successPercentageCourse, setSuccessPercentageCourse] = useState();
+  const [successPercentageBand, setSuccessPercentageBand] = useState();
+  const [successPercentageSemester, setSuccessPercentageSemester] = useState();
+  const [successPercentagePhase, setSuccessPercentagePhase] = useState();
   //Add bylaws Inputs
   const [estimates, setEstimates] = useState([]);
   const [estimateCourse, setEstimateCourse] = useState([]);
@@ -54,25 +58,7 @@ export default function AddFaculty() {
   const [phaseDisabled, setPhaseDisabled] = useState(true);
   const [semesterDisabled, setSemesterDisabled] = useState(true);
   const [examRoleDisabled, setExamRoleDisabled] = useState(true);
-
-  const restVariables = () => {
-    setName("");
-    setFaculty("");
-    setBylaw("");
-    setBand("");
-    setPhase("");
-    setSemester("");
-    setExamRole("");
-    setSemesterParent(null);
-    setDescription("");
-    setCode("");
-    setOrder("");
-    setminDegree("");
-    setMaxDegree("");
-    setType("");
-    setStartDate("");
-    setEndDate("");
-  };
+  // const [type]
 
   const addChildForEstimates = () => {
     // Add a new set of input elements to the array of inputs
@@ -200,6 +186,17 @@ export default function AddFaculty() {
       .then((res) => setExamRoleNames(res?.data?.data))
       .catch((err) => console.log(err));
   };
+  const getAllParents = () => {
+    axios
+      .get(`/api/ScientificDegree/ByBylawId?bylawId=${bylaw}&type=${type}`, {
+        headers: {
+          Accept: "application/json",
+          // Authorization: "Bearer" + token ,
+        },
+      })
+      .then((res) => setSemesterParentNames(res?.data?.data))
+      .catch((err) => console.log(err));
+  };
 
   const [firstTime, setFirstTime] = useState(true);
 
@@ -220,15 +217,15 @@ export default function AddFaculty() {
 
   useEffect(() => {
     if (!firstTime) {
+      getAllParents();
     }
-  }, [bylaw]);
+  }, [bylaw, type]);
 
   const showFaculty = facultyNames.map((index) => (
     <option key={index.facultId} value={index?.facultId}>
       {index?.facultName}
     </option>
   ));
-
   const showBaylws = bylawsNames.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
@@ -254,6 +251,11 @@ export default function AddFaculty() {
   ));
 
   const showPhases = phaseNames.map((index) => (
+    <option key={index.id} value={index?.id}>
+      {index?.name}
+    </option>
+  ));
+  const showParent = semesterParentNames.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
@@ -305,7 +307,7 @@ export default function AddFaculty() {
     }
   };
 
-  const handelAddBylaw = (event) => {
+  const handelAddBylaw = async (event) => {
     // Prepare data to send to the database
     const estimatesData = estimates.map((input) => ({
       nameEstimates: input.nameEstimates,
@@ -654,28 +656,62 @@ export default function AddFaculty() {
       setPhaseDisabled(true);
       setSemesterDisabled(true);
       setExamRoleDisabled(true);
+      document.getElementById("scienticSemester").value = null;
+      document.getElementById("scienticPhase").value = null;
+      document.getElementById("scienticExamRole").value = null;
     } else if (event == 3) {
       setBandDisabled(true);
       setPhaseDisabled(false);
       setSemesterDisabled(true);
       setExamRoleDisabled(true);
+      document.getElementById("scienticBand").value = null;
+      document.getElementById("scienticSemester").value = null;
+      document.getElementById("scienticExamRole").value = null;
     } else if (event == 4) {
       setBandDisabled(true);
       setPhaseDisabled(true);
       setSemesterDisabled(false);
       setExamRoleDisabled(true);
+      document.getElementById("scienticBand").value = null;
+      document.getElementById("scienticPhase").value = null;
+      document.getElementById("scienticExamRole").value = null;
     } else if (event == 5) {
       setBandDisabled(true);
       setPhaseDisabled(true);
       setSemesterDisabled(true);
       setExamRoleDisabled(false);
-    }
-    else {
+      document.getElementById("scienticBand").value = null;
+      document.getElementById("scienticSemester").value = null;
+      document.getElementById("scienticPhase").value = null;
+    } else {
       setBandDisabled(true);
       setPhaseDisabled(true);
       setSemesterDisabled(true);
       setExamRoleDisabled(true);
     }
+  };
+
+  const restVariables = () => {
+    setName("");
+    setFaculty("");
+    setBylaw("");
+    setBand("");
+    setPhase("");
+    setSemester("");
+    setExamRole("");
+    setSemesterParent(null);
+    setDescription("");
+    setCode("");
+    setOrder("");
+    setminDegree("");
+    setMaxDegree("");
+    setType("");
+    setStartDate("");
+    setEndDate("");
+    setBandDisabled(true);
+    setPhaseDisabled(true);
+    setSemesterDisabled(true);
+    setExamRoleDisabled(true);
   };
 
   return (
@@ -1579,7 +1615,7 @@ export default function AddFaculty() {
                       aria-label="Floating label select example"
                       onChange={(e) => setBylaw(e.target.value)}
                     >
-                      <option disabled selected>
+                      <option disabled selected value={null}>
                         Select Bylaw
                       </option>
                       {showBaylws}
@@ -1617,8 +1653,9 @@ export default function AddFaculty() {
                       aria-label="Floating label select example"
                       onChange={(e) => setBand(e.target.value)}
                       disabled={bandDisabled}
+                      id="scienticBand"
                     >
-                      <option disabled selected>
+                      <option disabled selected value={null}>
                         Select band
                       </option>
                       {showBands}
@@ -1634,6 +1671,7 @@ export default function AddFaculty() {
                       aria-label="Floating label select example"
                       onChange={(e) => setPhase(e.target.value)}
                       disabled={phaseDisabled}
+                      id="scienticPhase"
                     >
                       <option disabled selected>
                         Select Phase
@@ -1651,6 +1689,7 @@ export default function AddFaculty() {
                       aria-label="Floating label select example"
                       onChange={(e) => setSemester(e.target.value)}
                       disabled={semesterDisabled}
+                      id="scienticSemester"
                     >
                       <option disabled selected>
                         Select Semster
@@ -1668,6 +1707,7 @@ export default function AddFaculty() {
                       aria-label="Floating label select example"
                       onChange={(e) => setExamRole(e.target.value)}
                       disabled={examRoleDisabled}
+                      id="scienticExamRole"
                     >
                       <option disabled selected>
                         Select Exam Role
@@ -1684,11 +1724,17 @@ export default function AddFaculty() {
                     <Form.Select
                       aria-label="Floating label select example"
                       onChange={(e) => setSemesterParent(e.target.value)}
+                      disabled={
+                        examRoleDisabled &
+                        phaseDisabled &
+                        semesterDisabled &
+                        bandDisabled
+                      }
                     >
                       <option disabled selected>
                         Select Semester Parent
                       </option>
-                      {showFaculty}
+                      {showParent}
                     </Form.Select>
                   </FloatingLabel>
                 </Form.Group>
@@ -1705,7 +1751,7 @@ export default function AddFaculty() {
                 <Form.Group className="mt-2">
                   <Form.Control
                     as="textarea"
-                    rows={4}
+                    rows={2}
                     placeholder="Description"
                     onChange={(e) => setDescription(e.target.value)}
                   />
@@ -1720,6 +1766,54 @@ export default function AddFaculty() {
                     type="Text"
                     placeholder="Order"
                     onChange={(e) => setOrder(e.target.value)}
+                  />
+                </FloatingLabel>
+                <FloatingLabel
+                  controlId="floatingPhaseDegreeOrder"
+                  label="Success Percentage Course"
+                  className="mt-2"
+                >
+                  <Form.Control
+                    type="number"
+                    placeholder="Success Percentage Course"
+                    onChange={(e) =>
+                      setSuccessPercentageCourse(+e.target.value)
+                    }
+                  />
+                </FloatingLabel>
+                <FloatingLabel
+                  controlId="floatingPhaseDegreeOrder"
+                  label="Success Percentage Band"
+                  className="mt-2"
+                >
+                  <Form.Control
+                    type="number"
+                    placeholder="Success Percentage Band"
+                    onChange={(e) => setSuccessPercentageBand(+e.target.value)}
+                  />
+                </FloatingLabel>
+                <FloatingLabel
+                  controlId="floatingPhaseDegreeOrder"
+                  label="Success Percentage Semester"
+                  className="mt-2"
+                >
+                  <Form.Control
+                    type="number"
+                    placeholder="Success Percentage Semester"
+                    onChange={(e) =>
+                      setSuccessPercentageSemester(+e.target.value)
+                    }
+                  />
+                </FloatingLabel>
+                <FloatingLabel
+                  controlId="floatingPhaseDegreeOrder"
+                  label="Success Percentage Phase"
+                  className="mt-2"
+                >
+                  <Form.Control
+                    type="number"
+                    placeholder="Success Percentage Phase"
+                    onChange={(e) => setSuccessPercentagePhase(+e.target.value)}
                   />
                 </FloatingLabel>
               </Col>

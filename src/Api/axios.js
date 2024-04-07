@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default axios.create({
-  baseURL: "https://eduway-api.runasp.net/",
+  baseURL: "https://gladly-in-quagga.ngrok-free.app/",
     headers: {
       "Content-Type": "application/json",
       // Authorization : "Bearer " + token
