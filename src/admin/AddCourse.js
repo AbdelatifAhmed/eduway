@@ -8,8 +8,8 @@ export default function AddCourse() {
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [description, setDescription] = useState("");
-  const [type, setType] = useState("");
-  const [category, setCategory] = useState("");
+  const [type, setType] = useState();
+  const [category, setCategory] = useState();
   const [maxDegree, setMaxDegree] = useState();
   const [minDegree, setMinDegree] = useState("");
   const [numberOfPoints, setNumberOfPoints] = useState(null);
@@ -17,16 +17,28 @@ export default function AddCourse() {
   const [scientificDegreeId, setScientificDegreeId] = useState();
   const [departmentId, setDepartmentId] = useState();
   const [showPrerequisite, setShowPrerequisite] = useState(false);
-
+  const [coursePrerequisites, setCoursePrerequisites] = useState([]);
   // Multi-Select input
   const [selectedOptions, setSelectedOptions] = useState([]);
+
+
   const handelChange = (selevtedValue) => {
     setSelectedOptions(selevtedValue);
+    const output = selevtedValue.map((item) => ({
+      coursePrerequisiteId: item.id,
+    }));
+
+    setCoursePrerequisites(output);
   };
   //Credit Hours And Points views
   const [isDisapledHours, setIsDisapledHours] = useState(true);
   const [isDisapledPoints, setIsDisapledPoints] = useState(true);
+
+
+  //GET FOR API
   const [getCourses, setGetCourses] = useState([]);
+  const [getDepartment, setGetDepartment] = useState([]);
+  
 
   useEffect(() => {
     axios
@@ -38,6 +50,18 @@ export default function AddCourse() {
       })
       .then((res) => setGetCourses(res.data.data))
       .catch((err) => console.log(err));
+
+
+    axios
+      .get("api/Department/All", {
+        headers: {
+          Accept: "application/json",
+          // Authorization: "Bearer" + token ,
+        },
+      })
+      .then((res) => setGetDepartment(res.data.data))
+      .catch((err) => console.log(err));
+
   }, []);
 
   const isSelected = (event) => {
@@ -75,31 +99,22 @@ export default function AddCourse() {
     });
     try {
       await axios
-        .post(
-          "/api/Course/AddCourse",
-          {
-            id: 0,
-            name,
-            code,
-            description,
-            type,
-            category,
-            maxDegree,
-            minDegree,
-            numberOfPoints,
-            numberOfCreditHours,
-            prerequisite: showPrerequisite,
-            scientificDegreeId,
-            departmentId,
-            coursePrerequisites: selectedOptions,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              // Authorization : "Bearer " + token
-            },
-          }
-        )
+        .post("/api/Course/AddCourse", {
+          id: 0,
+          name,
+          code,
+          description,
+          type,
+          category,
+          maxDegree,
+          minDegree,
+          numberOfPoints,
+          numberOfCreditHours,
+          prerequisite: showPrerequisite,
+          scientificDegreeId,
+          departmentId,
+          coursePrerequisites,
+        })
         .then((response) => {
           if (response.status === 201) {
             Toast.fire({
@@ -145,7 +160,7 @@ export default function AddCourse() {
             />
           </div>
           <div className="col">
-            <select className="list" onChange={(e) => setType(e.target.value)}>
+            <select className="list" onChange={(e) => setType(+e.target.value)}>
               <option disabled selected>
                 Type
               </option>
@@ -159,7 +174,7 @@ export default function AddCourse() {
           <div className="col">
             <select
               className="list"
-              onChange={(e) => isSelected(e.target.value)}
+              onChange={(e) => isSelected(+e.target.value)}
             >
               <option disabled selected>
                 category
