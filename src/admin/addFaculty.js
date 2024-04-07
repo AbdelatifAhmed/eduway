@@ -4,6 +4,7 @@ import { Col, Container, FloatingLabel, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
+import { RiDeleteBin7Fill } from "react-icons/ri";
 import Swal from "sweetalert2";
 
 export default function AddFaculty() {
@@ -63,6 +64,13 @@ export default function AddFaculty() {
     ]);
   };
 
+  const handleDeleteChildForEstimates = (index) => {
+    // Remove the child at the specified index from the array
+    const newInputs = [...estimates];
+    newInputs.splice(index, 1);
+    setEstimates(newInputs);
+  };
+
   const addChildForEstimateCourse = () => {
     // Add a new set of input elements to the array of inputs
     setEstimateCourse([
@@ -74,6 +82,13 @@ export default function AddFaculty() {
         minPercentageEstimatesCourse: "",
       },
     ]);
+  };
+
+  const handleDeleteChildForEstimateCourse = (index) => {
+    // Remove the child at the specified index from the array
+    const newInputs = [...estimateCourse];
+    newInputs.splice(index, 1);
+    setEstimateCourse(newInputs);
   };
 
   const handleInputChangeForEstimate = (index, fieldName, value) => {
@@ -328,7 +343,7 @@ export default function AddFaculty() {
               title: "Exam Role Added successfully",
             });
           }
-          getAllSemesters()
+          getAllSemesters();
         });
     } catch (err) {
       Toast.fire({
@@ -829,6 +844,17 @@ export default function AddFaculty() {
                                 }
                               />
                             </Col>
+                            <Col sm={1}>
+                              <Button
+                                variant="light"
+                                size="md"
+                                onClick={() =>
+                                  handleDeleteChildForEstimates(index)
+                                }
+                              >
+                                <RiDeleteBin7Fill />
+                              </Button>
+                            </Col>
                           </Row>
                         ))}
                       </Row>
@@ -864,7 +890,7 @@ export default function AddFaculty() {
                                 }
                               />
                             </Col>
-                            <Col sm={3}>
+                            <Col sm={2}>
                               <Form.Control
                                 type="text"
                                 placeholder="Char"
@@ -905,6 +931,17 @@ export default function AddFaculty() {
                                   )
                                 }
                               />
+                            </Col>
+                            <Col sm={1}>
+                              <Button
+                                variant="light"
+                                size="md"
+                                onClick={() =>
+                                  handleDeleteChildForEstimateCourse(index)
+                                }
+                              >
+                                <RiDeleteBin7Fill />
+                              </Button>
                             </Col>
                           </Row>
                         ))}

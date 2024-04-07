@@ -1,104 +1,125 @@
-import { useState } from "react";
-import { Col, Row } from "react-bootstrap";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import Modal from "react-bootstrap/Modal";
+import { useEffect, useState } from "react";
+import Select from "react-select";
+import axios from "../Api/axios";
 
 function Test() {
-  const [showComponent, setShowComponent] = useState(false); // State to control component visibility
-  const [estimateCourse, setEstimateCourse] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [getCourses, setGetCourses] = useState([]);
 
-  const addChildForEstimateCourse = () => {
-    // Add a new set of input elements to the array of inputs
-    setEstimateCourse([
-      ...estimateCourse,
-      {
-        input1: "",
-        input2: "",
-        input3: "",
-      },
-    ]);
+  const data = [
+    {
+      id: 0,
+      name: "db",
+      code: "db50",
+      description: "database",
+      type: 1,
+      category: 1,
+      maxDegree: 100,
+      minDegree: 0,
+      numberOfPoints: null,
+      numberOfCreditHours: 3,
+      prerequisite: true,
+      scientificDegreeId: 3,
+      departmentId: 1,
+      coursePrerequisites: null,
+    },
+    {
+      id: 1,
+      name: "cs",
+      code: "cs520",
+      description: "computer scince",
+      type: 1,
+      category: 1,
+      maxDegree: 100,
+      minDegree: 0,
+      numberOfPoints: null,
+      numberOfCreditHours: 3,
+      prerequisite: false,
+      scientificDegreeId: 3,
+      departmentId: 1,
+      coursePrerequisites: null,
+    },
+    {
+      id: 2,
+      name: "image",
+      code: "im560",
+      description: "image proc",
+      type: 1,
+      category: 1,
+      maxDegree: 100,
+      minDegree: 0,
+      numberOfPoints: null,
+      numberOfCreditHours: 3,
+      prerequisite: false,
+      scientificDegreeId: 3,
+      departmentId: 1,
+      coursePrerequisites: null,
+    },
+    {
+      id: 3,
+      name: "cv",
+      code: "cv580",
+      description: "computer vision",
+      type: 1,
+      category: 1,
+      maxDegree: 100,
+      minDegree: 0,
+      numberOfPoints: null,
+      numberOfCreditHours: 3,
+      prerequisite: false,
+      scientificDegreeId: 4,
+      departmentId: 1,
+      coursePrerequisites: null,
+    },
+    {
+      id: 4,
+      name: "ST",
+      code: "ST580",
+      description: "Software test",
+      type: 1,
+      category: 1,
+      maxDegree: 100,
+      minDegree: 0,
+      numberOfPoints: null,
+      numberOfCreditHours: 3,
+      prerequisite: false,
+      scientificDegreeId: 4,
+      departmentId: 1,
+      coursePrerequisites: null,
+    },
+  ];
+  useEffect(() => {
+    axios
+      .get("/api/Course", {
+        headers: {
+          Accept: "application/json",
+          // Authorization: "Bearer" + token ,
+        },
+      })
+      .then((res) => console.log(res.data.data))
+      .catch((err) => console.log(err));
+  }, []);
+
+  const handelChange = (selevtedValue) => {
+    setSelectedOptions(selevtedValue);
   };
-
-  const handleInputChangeForEstimateCourse = (index, fieldName, value) => {
-    // Update the input value in the state
-    const newInputs = [...estimateCourse];
-    newInputs[index][fieldName] = value;
-    setEstimateCourse(newInputs);
-  };
-
-  const handleDeleteChild = (index) => {
-    // Remove the child at the specified index from the array
-    const newInputs = [...estimateCourse];
-    newInputs.splice(index, 1);
-    setEstimateCourse(newInputs);
-  };
-
-  const handleSubmit = () => {
-    // Prepare data to send to the database
-    const inputData = estimateCourse.map((input) => ({
-      input1: input.input1,
-      input2: input.input2,
-      input3: input.input3,
-    }));
-
-    // Here you can send `inputData` to your database
-    console.log("Input data:", inputData);
-  };
-
   return (
-    <div>
-      <label>
-        <input
-          type="checkbox"
-          checked={showComponent}
-          onChange={() => setShowComponent(!showComponent)}
-        />
-        Show Component
-      </label>
-      {showComponent && (
-        <>
-          <button onClick={addChildForEstimateCourse}>Add Inputs</button>
-          {estimateCourse.map((input, index) => (
-            <Row key={index}>
-              <Col sm={2}>
-                <Form.Control
-                  type="text"
-                  placeholder="Name"
-                  value={input.input1}
-                  onChange={(e) =>
-                    handleInputChangeForEstimateCourse(index, "input1", e.target.value)
-                  }
-                />
-              </Col>
-              <Col sm={2}>
-                <Form.Control
-                  type="text"
-                  placeholder="Char"
-                  value={input.input2}
-                  onChange={(e) =>
-                    handleInputChangeForEstimateCourse(index, "input2", e.target.value)
-                  }
-                />
-              </Col>
-              <Col sm={2}>
-                <Form.Control
-                  type="text"
-                  placeholder="Max Percentage"
-                  value={input.input3}
-                  onChange={(e) =>
-                    handleInputChangeForEstimateCourse(index, "input3", e.target.value)
-                  }
-                />
-              </Col>
-              <Col sm={2}>
-                <Button onClick={() => handleDeleteChild(index)}>Delete</Button>
-              </Col>
-            </Row>
-          ))}
-          <button onClick={handleSubmit}>Submit</button>
-        </>
-      )}
+    <div className="p-3">
+      <Select
+        options={data}
+        getOptionLabel={(e) => e.name}
+        getOptionValue={(e) => e.id}
+        value={selectedOptions}
+        onChange={handelChange}
+        isMulti
+      />
+      <button
+        onClick={() => {
+          console.log(selectedOptions);
+        }}
+      >
+        Submit
+      </button>
     </div>
   );
 }

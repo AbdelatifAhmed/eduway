@@ -1,16 +1,8 @@
 import axios from "../Api/axios";
 import React, { useEffect, useState } from "react";
-import { RiDeleteBin7Fill } from "react-icons/ri";
-import {
-  Button,
-  Col,
-  Container,
-  FloatingLabel,
-  Form,
-  Row,
-} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Select from "react-select";
 
 export default function AddCourse() {
   const [name, setName] = useState("");
@@ -20,14 +12,18 @@ export default function AddCourse() {
   const [category, setCategory] = useState("");
   const [maxDegree, setMaxDegree] = useState();
   const [minDegree, setMinDegree] = useState("");
-  const [numberOfPoints, setNumberOfPoints] = useState();
-  const [numberOfCreditHours, setNumberOfCreditHours] = useState();
+  const [numberOfPoints, setNumberOfPoints] = useState(null);
+  const [numberOfCreditHours, setNumberOfCreditHours] = useState(null);
   const [scientificDegreeId, setScientificDegreeId] = useState();
   const [departmentId, setDepartmentId] = useState();
-  const [coursePrerequisite, setCoursePrerequisite] = useState();
   const [showPrerequisite, setShowPrerequisite] = useState(false);
-  const [newPrerequisite, setNewPrerequisite] = useState([]);
 
+  // Multi-Select input
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const handelChange = (selevtedValue) => {
+    setSelectedOptions(selevtedValue);
+  };
+  //Credit Hours And Points views
   const [isDisapledHours, setIsDisapledHours] = useState(true);
   const [isDisapledPoints, setIsDisapledPoints] = useState(true);
   const [getCourses, setGetCourses] = useState([]);
@@ -43,9 +39,6 @@ export default function AddCourse() {
       .then((res) => setGetCourses(res.data.data))
       .catch((err) => console.log(err));
   }, []);
-  const showCourses = getCourses.map((course) => (
-    <option value={course.id}>{course.name}</option>
-  ));
 
   const isSelected = (event) => {
     setCategory(event);
@@ -66,38 +59,9 @@ export default function AddCourse() {
   const goBack = () => {
     navigator("/admin/courses");
   };
-  const addChildForPrerequisite = () => {
-    // Add a new set of input elements to the array of inputs
-    setNewPrerequisite([
-      ...newPrerequisite,
-      {
-        coursePrerequisiteId: "",
-      },
-    ]);
-  };
 
-  const handleDeleteChild = (index) => {
-    // Remove the child at the specified index from the array
-    const newInputs = [...newPrerequisite];
-    newInputs.splice(index, 1);
-    setNewPrerequisite(newInputs);
-  };
-
-  const handleInputChangeForprerequisite = (index, fieldName, value) => {
-    // Update the input value in the state
-    const newInputs = [...newPrerequisite];
-    newInputs[index][fieldName] = value;
-    setNewPrerequisite(newInputs);
-  };
   const handelAddCourse = async (event) => {
     event.preventDefault();
-
-    const coursePrerequisites = [
-      {
-        coursePrerequisiteId: coursePrerequisite,
-      },
-    ];
-
     const Toast = Swal.mixin({
       toast: true,
       position: "top-end",
@@ -114,6 +78,7 @@ export default function AddCourse() {
         .post(
           "/api/Course/AddCourse",
           {
+            id: 0,
             name,
             code,
             description,
@@ -126,7 +91,7 @@ export default function AddCourse() {
             prerequisite: showPrerequisite,
             scientificDegreeId,
             departmentId,
-            coursePrerequisites,
+            coursePrerequisites: selectedOptions,
           },
           {
             headers: {
@@ -222,7 +187,7 @@ export default function AddCourse() {
               type="number"
               className="txt-input"
               placeholder="Max Degree"
-              onChange={(e) => setMaxDegree(e.target.value)}
+              onChange={(e) => setMaxDegree(+e.target.value)}
             />
           </div>
           <div className="col">
@@ -230,7 +195,7 @@ export default function AddCourse() {
               type="number"
               className="txt-input"
               placeholder="Min Degree"
-              onChange={(e) => setMinDegree(e.target.value)}
+              onChange={(e) => setMinDegree(+e.target.value)}
             />
           </div>
         </div>
@@ -241,7 +206,7 @@ export default function AddCourse() {
               type="text"
               className="txt-input"
               placeholder="Course Department"
-              onChange={(e) => setDepartmentId(e.target.value)}
+              onChange={(e) => setDepartmentId(+e.target.value)}
             />
           </div>
           <div className="col">
@@ -249,7 +214,7 @@ export default function AddCourse() {
               type="text"
               className="txt-input"
               placeholder="Phase Degree"
-              onChange={(e) => setScientificDegreeId(e.target.value)}
+              onChange={(e) => setScientificDegreeId(+e.target.value)}
             />
           </div>
         </div>
@@ -260,7 +225,7 @@ export default function AddCourse() {
               type="number"
               className="txt-input"
               placeholder=" credit Hours"
-              onChange={(e) => setNumberOfCreditHours(e.target.value)}
+              onChange={(e) => setNumberOfCreditHours(+e.target.value)}
               readOnly={isDisapledHours}
               style={
                 isDisapledHours
@@ -275,7 +240,7 @@ export default function AddCourse() {
               type="text"
               className="txt-input"
               placeholder="Points"
-              onChange={(e) => setNumberOfPoints(e.target.value)}
+              onChange={(e) => setNumberOfPoints(+e.target.value)}
               readOnly={isDisapledPoints}
               style={
                 isDisapledPoints
@@ -293,60 +258,33 @@ export default function AddCourse() {
               className="description"
               placeholder="description"
               rows={4}
-              onChange={e=>setDescription(e.target.value)}
+              onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
         </div>
-        <label id="pre-requisite">
-          <input
-            type="checkbox"
-            checked={showPrerequisite}
-            onChange={() => setShowPrerequisite(!showPrerequisite)}
-          />
-          Prerequisites
-        </label>
-        {showPrerequisite && (
-          <Button
-            variant="dark"
-            size="sm"
-            onClick={addChildForPrerequisite}
-            style={{ whiteSpace: "nowrap", marginTop: "10px" }}
-          >
-            Add Prerequisite
-          </Button>
-        )}
-        {showPrerequisite && (
-          <div className="d-flex flex-wrap gap-2 pt-2">
-            {newPrerequisite.map((input, index) => (
-              <Row key={index}>
-                <Col className="d-flex gap-1">
-                  <Form.Select
-                    value={input.coursePrerequisiteId}
-                    onChange={(e) =>
-                      handleInputChangeForprerequisite(
-                        index,
-                        "coursePrerequisiteId",
-                        e.target.value
-                      )
-                    }
-                  >
-                    <option disabled selected>
-                      Select Course{" "}
-                    </option>
-                    {showCourses}
-                  </Form.Select>
-                  <Button
-                    variant="light"
-                    size="md"
-                    onClick={() => handleDeleteChild(index)}
-                  >
-                    <RiDeleteBin7Fill />
-                  </Button>
-                </Col>
-              </Row>
-            ))}
+        <div className="row pt-3">
+          <label id="pre-requisite">
+            <input
+              type="checkbox"
+              checked={showPrerequisite}
+              onChange={() => setShowPrerequisite(!showPrerequisite)}
+            />
+            Prerequisites
+          </label>
+
+          <div className="col pt-3">
+            {showPrerequisite && (
+              <Select
+                options={getCourses}
+                getOptionLabel={(e) => e.name}
+                getOptionValue={(e) => e.id}
+                value={selectedOptions}
+                onChange={handelChange}
+                isMulti
+              />
+            )}
           </div>
-        )}
+        </div>
       </div>
       {/* End of add-course */}
     </form>
