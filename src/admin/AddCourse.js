@@ -38,7 +38,9 @@ export default function AddCourse() {
   //GET FOR API
   const [getCourses, setGetCourses] = useState([]);
   const [getDepartment, setGetDepartment] = useState([]);
-  
+  const showDepartment = getDepartment.map(()=>(
+    <option></option>
+  ))
 
   useEffect(() => {
     axios

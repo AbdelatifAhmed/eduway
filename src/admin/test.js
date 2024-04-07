@@ -3,125 +3,31 @@ import Select from "react-select";
 import axios from "../Api/axios";
 
 function Test() {
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const [getCourses, setGetCourses] = useState([]);
+  const [selectedValue, setSelectedValue] = useState('');
+  const [disabledInputs, setDisabledInputs] = useState([false, false, false, false]);
 
-  const data = [
-    {
-      id: 0,
-      name: "db",
-      code: "db50",
-      description: "database",
-      type: 1,
-      category: 1,
-      maxDegree: 100,
-      minDegree: 0,
-      numberOfPoints: null,
-      numberOfCreditHours: 3,
-      prerequisite: true,
-      scientificDegreeId: 3,
-      departmentId: 1,
-      coursePrerequisites: null,
-    },
-    {
-      id: 1,
-      name: "cs",
-      code: "cs520",
-      description: "computer scince",
-      type: 1,
-      category: 1,
-      maxDegree: 100,
-      minDegree: 0,
-      numberOfPoints: null,
-      numberOfCreditHours: 3,
-      prerequisite: false,
-      scientificDegreeId: 3,
-      departmentId: 1,
-      coursePrerequisites: null,
-    },
-    {
-      id: 2,
-      name: "image",
-      code: "im560",
-      description: "image proc",
-      type: 1,
-      category: 1,
-      maxDegree: 100,
-      minDegree: 0,
-      numberOfPoints: null,
-      numberOfCreditHours: 3,
-      prerequisite: false,
-      scientificDegreeId: 3,
-      departmentId: 1,
-      coursePrerequisites: null,
-    },
-    {
-      id: 3,
-      name: "cv",
-      code: "cv580",
-      description: "computer vision",
-      type: 1,
-      category: 1,
-      maxDegree: 100,
-      minDegree: 0,
-      numberOfPoints: null,
-      numberOfCreditHours: 3,
-      prerequisite: false,
-      scientificDegreeId: 4,
-      departmentId: 1,
-      coursePrerequisites: null,
-    },
-    {
-      id: 4,
-      name: "ST",
-      code: "ST580",
-      description: "Software test",
-      type: 1,
-      category: 1,
-      maxDegree: 100,
-      minDegree: 0,
-      numberOfPoints: null,
-      numberOfCreditHours: 3,
-      prerequisite: false,
-      scientificDegreeId: 4,
-      departmentId: 1,
-      coursePrerequisites: null,
-    },
-  ];
-  useEffect(() => {
-    axios
-      .get("/api/Course", {
-        headers: {
-          Accept: "application/json",
-          // Authorization: "Bearer" + token ,
-        },
-      })
-      .then((res) => console.log(res.data.data))
-      .catch((err) => console.log(err));
-  }, []);
+  const handleInputChange = (index, event) => {
+    const newValue = event.target.value;
+    setSelectedValue(newValue);
 
-  const handelChange = (selevtedValue) => {
-    setSelectedOptions(selevtedValue);
+    // Disable all other inputs except the one that was clicked
+    const newDisabledInputs = disabledInputs.map((disabled, i) => (i !== index));
+    setDisabledInputs(newDisabledInputs);
   };
+
   return (
-    <div className="p-3">
-      <Select
-        options={data}
-        getOptionLabel={(e) => e.name}
-        getOptionValue={(e) => e.id}
-        value={selectedOptions}
-        onChange={handelChange}
-        isMulti
-      />
-      <button
-        onClick={() => {
-          console.log(selectedOptions);
-        }}
-      >
-        Submit
-      </button>
+    <div>
+      {[1, 2, 3, 4].map((index) => (
+        <select key={index} value={selectedValue} onChange={(event) => handleInputChange(index - 1, event)} disabled={disabledInputs[index - 1]}>
+          <option value="">Select Option</option>
+          <option value={`Option ${index}-1`}>Option {index}-1</option>
+          <option value={`Option ${index}-2`}>Option {index}-2</option>
+          <option value={`Option ${index}-3`}>Option {index}-3</option>
+        </select>
+      ))}
     </div>
   );
+  
 }
 
 export default Test;

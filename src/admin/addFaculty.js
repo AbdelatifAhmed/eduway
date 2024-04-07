@@ -30,6 +30,7 @@ export default function AddFaculty() {
   //Changable Variables
   const [name, setName] = useState("");
   const [faculty, setFaculty] = useState("");
+  const [facultyId, setFacultyId] = useState("");
   const [bylaw, setBylaw] = useState("");
   const [band, setBand] = useState("");
   const [phase, setPhase] = useState("");
@@ -44,10 +45,34 @@ export default function AddFaculty() {
   const [type, setType] = useState();
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-
   //Add bylaws Inputs
   const [estimates, setEstimates] = useState([]);
   const [estimateCourse, setEstimateCourse] = useState([]);
+
+  //Scientic Degree Choosen Type
+  const [bandDisabled, setBandDisabled] = useState(true);
+  const [phaseDisabled, setPhaseDisabled] = useState(true);
+  const [semesterDisabled, setSemesterDisabled] = useState(true);
+  const [examRoleDisabled, setExamRoleDisabled] = useState(true);
+
+  const restVariables = () => {
+    setName("");
+    setFaculty("");
+    setBylaw("");
+    setBand("");
+    setPhase("");
+    setSemester("");
+    setExamRole("");
+    setSemesterParent(null);
+    setDescription("");
+    setCode("");
+    setOrder("");
+    setminDegree("");
+    setMaxDegree("");
+    setType("");
+    setStartDate("");
+    setEndDate("");
+  };
 
   const addChildForEstimates = () => {
     // Add a new set of input elements to the array of inputs
@@ -118,76 +143,119 @@ export default function AddFaculty() {
   };
   const getAllBaylw = () => {
     axios
-      .get("/api/bylaw", {
+      .get(`api/Bylaw/ByFacultyId/${facultyId}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
         },
       })
-      .then((res) => console.log(res?.data?.data))
+      .then((res) => setBylawNames(res?.data?.data))
       .catch((err) => console.log(err));
   };
 
   const getAllBands = () => {
     axios
-      .get("/api/band", {
+      .get(`/api/Band/ByFacultyId/${facultyId}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
         },
       })
-      .then((res) => console.log(res?.data?.data))
+      .then((res) => setBandNames(res?.data?.data))
       .catch((err) => console.log(err));
   };
 
   const getAllPhases = () => {
     axios
-      .get("/api/phase", {
+      .get(`/api/phase/ByFacultyId/${facultyId}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
         },
       })
-      .then((res) => console.log(res?.data?.data))
+      .then((res) => setPhaseNames(res?.data?.data))
       .catch((err) => console.log(err));
   };
 
   const getAllSemesters = () => {
     axios
-      .get("/api/semester", {
+      .get(`/api/semester/ByFacultyId/${facultyId}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
         },
       })
-      .then((res) => console.log(res?.data?.data))
+      .then((res) => setSemesterNames(res?.data?.data))
       .catch((err) => console.log(err));
   };
 
   const getAllExamRoles = () => {
     axios
-      .get("/api/examRole", {
+      .get(`/api/examRole/ByFacultyId/${facultyId}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
         },
       })
-      .then((res) => console.log(res?.data?.data))
+      .then((res) => setExamRoleNames(res?.data?.data))
       .catch((err) => console.log(err));
   };
 
+  const [firstTime, setFirstTime] = useState(true);
+
   useEffect(() => {
     getAllFaculty();
-    getAllBaylw();
-    getAllBands();
-    getAllPhases();
-    getAllExamRoles();
-    getAllSemesters();
+    setFirstTime(false);
   }, []);
 
-  const showFaculty = facultyNames.map((faculty) => (
-    <option key={faculty.facultId} value={faculty?.facultId}>
-      {faculty?.facultName}
+  useEffect(() => {
+    if (!firstTime) {
+      getAllBaylw();
+      getAllBands();
+      getAllPhases();
+      getAllExamRoles();
+      getAllSemesters();
+    }
+  }, [facultyId]);
+
+  useEffect(() => {
+    if (!firstTime) {
+    }
+  }, [bylaw]);
+
+  const showFaculty = facultyNames.map((index) => (
+    <option key={index.facultId} value={index?.facultId}>
+      {index?.facultName}
+    </option>
+  ));
+
+  const showBaylws = bylawsNames.map((index) => (
+    <option key={index.id} value={index?.id}>
+      {index?.name}
+    </option>
+  ));
+
+  const showBands = bandNames.map((index) => (
+    <option key={index.id} value={index?.id}>
+      {index?.name}
+    </option>
+  ));
+
+  const showSemesters = semesterNames.map((index) => (
+    <option key={index.id} value={index?.id}>
+      {index?.name}
+    </option>
+  ));
+
+  const showExamRoles = examRoleNames.map((index) => (
+    <option key={index.id} value={index?.id}>
+      {index?.name}
+    </option>
+  ));
+
+  const showPhases = phaseNames.map((index) => (
+    <option key={index.id} value={index?.id}>
+      {index?.name}
     </option>
   ));
 
@@ -579,6 +647,37 @@ export default function AddFaculty() {
     }
   };
 
+  const handelScientificDegreeTypeChange = (event) => {
+    setType(event);
+    if (event == 2) {
+      setBandDisabled(false);
+      setPhaseDisabled(true);
+      setSemesterDisabled(true);
+      setExamRoleDisabled(true);
+    } else if (event == 3) {
+      setBandDisabled(true);
+      setPhaseDisabled(false);
+      setSemesterDisabled(true);
+      setExamRoleDisabled(true);
+    } else if (event == 4) {
+      setBandDisabled(true);
+      setPhaseDisabled(true);
+      setSemesterDisabled(false);
+      setExamRoleDisabled(true);
+    } else if (event == 5) {
+      setBandDisabled(true);
+      setPhaseDisabled(true);
+      setSemesterDisabled(true);
+      setExamRoleDisabled(false);
+    }
+    else {
+      setBandDisabled(true);
+      setPhaseDisabled(true);
+      setSemesterDisabled(true);
+      setExamRoleDisabled(true);
+    }
+  };
+
   return (
     <div>
       <div
@@ -595,35 +694,83 @@ export default function AddFaculty() {
         <Button
           variant="outline-light"
           className="me-2 "
-          onClick={() => setAddFacultyShow(true)}
+          onClick={() => {
+            setAddFacultyShow(true);
+            restVariables();
+          }}
         >
           Faculty
         </Button>
-        <Button variant="outline-light" onClick={() => setAddBylaw(true)}>
+        <Button
+          variant="outline-light"
+          onClick={() => {
+            setAddBylaw(true);
+            restVariables();
+          }}
+        >
           Bylaws
         </Button>
-        <Button variant="outline-light" onClick={() => setAddSemester(true)}>
+        <Button
+          variant="outline-light"
+          onClick={() => {
+            setAddSemester(true);
+            restVariables();
+          }}
+        >
           Semesters
         </Button>
-        <Button variant="outline-light" onClick={() => setAddDepartment(true)}>
+        <Button
+          variant="outline-light"
+          onClick={() => {
+            setAddDepartment(true);
+            restVariables();
+          }}
+        >
           Departments
         </Button>
-        <Button variant="outline-light" onClick={() => setAddExamRoles(true)}>
+        <Button
+          variant="outline-light"
+          onClick={() => {
+            setAddExamRoles(true);
+            restVariables();
+          }}
+        >
           Exam Roles
         </Button>
         <Button
           variant="outline-light"
-          onClick={() => setAddAssessMethods(true)}
+          onClick={() => {
+            setAddAssessMethods(true);
+            restVariables();
+          }}
         >
           Assess Methods
         </Button>
-        <Button variant="outline-light" onClick={() => setAddBands(true)}>
+        <Button
+          variant="outline-light"
+          onClick={() => {
+            setAddBands(true);
+            restVariables();
+          }}
+        >
           Bands
         </Button>
-        <Button variant="outline-light" onClick={() => setAddPhase(true)}>
+        <Button
+          variant="outline-light"
+          onClick={() => {
+            setAddPhase(true);
+            restVariables();
+          }}
+        >
           Phase
         </Button>
-        <Button variant="outline-light" onClick={() => setAddPhaseDegree(true)}>
+        <Button
+          variant="outline-light"
+          onClick={() => {
+            setAddPhaseDegree(true);
+            restVariables();
+          }}
+        >
           Phase Degree
         </Button>
       </div>
@@ -1414,7 +1561,7 @@ export default function AddFaculty() {
                   >
                     <Form.Select
                       aria-label="Floating label select example"
-                      onChange={(e) => setFaculty(e.target.value)}
+                      onChange={(e) => setFacultyId(e.target.value)}
                     >
                       <option disabled selected>
                         Select Faculty
@@ -1435,9 +1582,31 @@ export default function AddFaculty() {
                       <option disabled selected>
                         Select Bylaw
                       </option>
-                      {showFaculty}
+                      {showBaylws}
                     </Form.Select>
                   </FloatingLabel>
+
+                  <Form.Group className="mt-2">
+                    <FloatingLabel
+                      controlId="floatingPhaseDegreeBand"
+                      label="Type"
+                      className="mt-2"
+                    >
+                      <Form.Select
+                        onChange={(e) =>
+                          handelScientificDegreeTypeChange(e.target.value)
+                        }
+                      >
+                        <option selected value={1}>
+                          Scientific Degree
+                        </option>
+                        <option value={2}>Band</option>
+                        <option value={3}>Phase</option>
+                        <option value={4}>Semester</option>
+                        <option value={5}>ExamRole</option>
+                      </Form.Select>
+                    </FloatingLabel>
+                  </Form.Group>
 
                   <FloatingLabel
                     controlId="floatingPhaseDegreeBand"
@@ -1447,11 +1616,12 @@ export default function AddFaculty() {
                     <Form.Select
                       aria-label="Floating label select example"
                       onChange={(e) => setBand(e.target.value)}
+                      disabled={bandDisabled}
                     >
                       <option disabled selected>
                         Select band
                       </option>
-                      {showFaculty}
+                      {showBands}
                     </Form.Select>
                   </FloatingLabel>
 
@@ -1463,11 +1633,12 @@ export default function AddFaculty() {
                     <Form.Select
                       aria-label="Floating label select example"
                       onChange={(e) => setPhase(e.target.value)}
+                      disabled={phaseDisabled}
                     >
                       <option disabled selected>
                         Select Phase
                       </option>
-                      {showFaculty}
+                      {showPhases}
                     </Form.Select>
                   </FloatingLabel>
 
@@ -1479,11 +1650,12 @@ export default function AddFaculty() {
                     <Form.Select
                       aria-label="Floating label select example"
                       onChange={(e) => setSemester(e.target.value)}
+                      disabled={semesterDisabled}
                     >
                       <option disabled selected>
                         Select Semster
                       </option>
-                      {showFaculty}
+                      {showSemesters}
                     </Form.Select>
                   </FloatingLabel>
 
@@ -1495,11 +1667,12 @@ export default function AddFaculty() {
                     <Form.Select
                       aria-label="Floating label select example"
                       onChange={(e) => setExamRole(e.target.value)}
+                      disabled={examRoleDisabled}
                     >
                       <option disabled selected>
                         Select Exam Role
                       </option>
-                      {showFaculty}
+                      {showExamRoles}
                     </Form.Select>
                   </FloatingLabel>
 
@@ -1536,19 +1709,6 @@ export default function AddFaculty() {
                     placeholder="Description"
                     onChange={(e) => setDescription(e.target.value)}
                   />
-                </Form.Group>
-
-                <Form.Group className="mt-2">
-                  <FloatingLabel
-                    controlId="floatingPhaseDegreeDescription"
-                    label="Description"
-                  >
-                    <Form.Control
-                      type="text"
-                      placeholder="Type"
-                      onChange={(e) => setType(+e.target.value)}
-                    />
-                  </FloatingLabel>
                 </Form.Group>
 
                 <FloatingLabel
