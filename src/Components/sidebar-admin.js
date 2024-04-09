@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { FaUsersCog } from "react-icons/fa";
+
 export default function SidebarAdmin(props) {
   const [changeActive, setChangeActive] = useState(true);
   return (
@@ -10,28 +12,34 @@ export default function SidebarAdmin(props) {
         </h3>
       </div>
       <ul className="list">
-        <li >
+        <li>
           <NavLink to="/admin/faculty">
-            <i className="fa-solid fa-clipboard-list fa-fw"></i>
+            <i className="fa-solid fa-school fa-fw"></i>
             <span>Faculty</span>
           </NavLink>
         </li>
         <li>
           <NavLink to="/admin/students">
-            <i className="fa-solid fa-table fa-fw"></i>
+            <i className="fa-solid fa-user-tie fa-fw"></i>
             <span>Students</span>
           </NavLink>
         </li>
         <li>
           <NavLink to="/admin/courses">
-            <i className="fa-solid fa-money-check-dollar fa-fw"></i>
+            <i className="fa-solid fa-book fa-fw"></i>
             <span>Courses</span>
           </NavLink>
         </li>
         <li>
           <NavLink to="/admin/staff">
-            <i className="fa-solid fa-money-check-dollar fa-fw"></i>
+            <i className="fa-solid fa-users fa-fw"></i>
             <span>Staff</span>
+          </NavLink>
+        </li>
+        <li>
+          <NavLink to="/admin/control">
+            <i className="fa-solid fa-sliders fa-fw"></i>
+            <span>Control</span>
           </NavLink>
         </li>
         <li className={props.changeActive ? "logout" : "logout active-1"}>

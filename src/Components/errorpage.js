@@ -19,7 +19,7 @@ export default function Errorpage() {
         height: "100vh",
       }}
     >
-      <h1 style={{ fontSize: "100px" }}>Oooops</h1>
+      <h1 style={{ fontSize: "100px" }}>Oooops !</h1>
       <p style={{ fontSize: "30px" }}>
         The Page You want To access doesn't exist
       </p>

@@ -28,6 +28,8 @@ import AddTeacher from "./admin/AddTeacher.js";
 import AddAdministration from "./admin/AddAdministration.js";
 import AddTeacherAssistant from "./admin/AddTeacherAssistant.js";
 import AddStaff from "./admin/AddStaff.js";
+import AddControlMember from "./admin/addControlMember.js";
+import Control from "./admin/Control.js";
 
 export default function App() {
   return (
@@ -56,6 +58,8 @@ export default function App() {
           <Route path="add-teacher" element={<AddTeacher />} />
           <Route path="add-teacherAssistant" element={<AddTeacherAssistant />} />
           <Route path="add-Administration" element={<AddAdministration />} />
+          <Route path="add-control-member" element={<AddControlMember />} />
+          <Route path="control" element={<Control />} />
         </Route>
         {/* </Route> */}
         {/* </Route> */}

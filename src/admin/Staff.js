@@ -4,12 +4,14 @@ import axios from "../Api/axios";
 import Pagination from "../Components/Pagination";
 import { FaSort } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import StaffData from "./StaffData";
 
 export default function Staff() {
   const [administration, setAdministration] = useState([]);
   const [staff, setStaff] = useState([]);
   const [teacher, setTeacher] = useState([]);
   const [teacherAssistant, setTeacherAssistant] = useState([]);
+  const [controlMember, setControlMember] = useState([]);
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -55,8 +57,41 @@ export default function Staff() {
       })
       .then((res) => setTeacherAssistant(res?.data?.data))
       .catch((err) => console.log(err));
+
+    axios
+      .get("/api/Control/GetAll", {
+        headers: {
+          Accept: "application/json",
+          // Authorization: "Bearer " + token ,
+        },
+      })
+      .then((res) => setControlMember(res?.data?.data))
+      .catch((err) => console.log(err));
   }, []);
 
+  // if (!Array.isArray(administration) || administration.length === 0) {
+  //   return <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>No Administration found.</div>;
+  // }
+
+  // if (!Array.isArray(staff) || staff.length === 0) {
+  //   return <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>No Staff found.</div>;
+  // }
+
+  // if (!Array.isArray(teacher) || teacher.length === 0) {
+  //   return (
+  //     <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>
+  //       No teacher found.
+  //     </div>
+  //   );
+  // }
+
+  // if (!Array.isArray(teacherAssistant) || teacherAssistant.length === 0) {
+  //   return (
+  //     <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>
+  //       No Teacher Assistant found.
+  //     </div>
+  //   );
+  // }
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 
@@ -76,11 +111,20 @@ export default function Staff() {
     indexOfFirstRecord,
     indexOfLastRecord
   );
+  const currentRecordsControlMember = controlMember.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
 
   const nPagesForAdmin = Math.ceil(administration.length / recordsPerPage);
   const nPagesForStaff = Math.ceil(staff.length / recordsPerPage);
   const nPagesForTeacher = Math.ceil(teacher.length / recordsPerPage);
-  const nPagesForTeacherAssistant = Math.ceil(teacherAssistant.length / recordsPerPage);
+  const nPagesForTeacherAssistant = Math.ceil(
+    teacherAssistant.length / recordsPerPage
+  );
+  const nPagesForControlMember = Math.ceil(
+    controlMember.length / recordsPerPage
+  );
 
   const showAdminstration = currentRecordsAdmin.map((admin) => (
     <tr key={admin.staffId}>
@@ -123,6 +167,17 @@ export default function Staff() {
     </tr>
   ));
 
+  const showControlMember = currentRecordsControlMember.map((teacher) => (
+    <tr key={teacher.staffId}>
+      <td>{teacher.staffNameArbic}</td>
+      <td>{teacher.staffNameEnglish}</td>
+      <td>{teacher.email}</td>
+      <td>{teacher.gender}</td>
+      <td>{teacher.nationality}</td>
+      <td>{teacher.religion}</td>
+    </tr>
+  ));
+
   return (
     <div className="p-3">
       <Tabs
@@ -132,368 +187,39 @@ export default function Staff() {
         justify
         variant="tabs"
       >
+        {/* Administration  */}
         <Tab eventKey="administration" title="Administration">
-          <div className="table-content">
-            <header>
-              <Link
-                to="/admin/add-Administration"
-                className="btn btn-info btn-lg"
-                style={{ color: "white" }}
-              >
-                + Add New
-              </Link>
-            </header>
-
-            <table className="table table-striped mt-2">
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Name in Arabic</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Name in English</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Mail</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Gender</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Nationality</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Religion</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{showAdminstration}</tbody>
-            </table>
-          </div>
+          <StaffData show={showAdminstration} link={"add-administration"} />
           <Pagination
             nPages={nPagesForAdmin}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
         </Tab>
+        {/*  Teacher  */}
         <Tab eventKey="teacher" title="Teacher">
-          <div className="table-content">
-            <header>
-              <Link
-                to="/admin/add-teacher"
-                className="btn btn-info btn-lg"
-                style={{ color: "white" }}
-              >
-                + Add New
-              </Link>
-            </header>
-
-            <table className="table table-striped mt-2">
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Name in Arabic</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Name in English</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Mail</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Gender</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Nationality</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Religion</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{showTeacher}</tbody>
-            </table>
-          </div>
+          <StaffData show={showTeacher} link={"add-teacher"} />
           <Pagination
             nPages={nPagesForTeacher}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
         </Tab>
+        {/*  Teacher Assistant */}
         <Tab eventKey="teacher-assistant" title="Teacher Assistant">
-          <div className="table-content">
-            <header>
-              <Link
-                to="/admin/add-teacherAssistant"
-                className="btn btn-info btn-lg"
-                style={{ color: "white" }}
-              >
-                + Add New
-              </Link>
-            </header>
-
-            <table className="table table-striped mt-2">
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Name in Arabic</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Name in English</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Mail</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Gender</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Nationality</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Religion</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{showTeacherAssistant}</tbody>
-            </table>
-          </div>
+          <StaffData
+            show={showTeacherAssistant}
+            link={"add-teacherAssistant"}
+          />
           <Pagination
             nPages={nPagesForTeacherAssistant}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
         </Tab>
+        {/* Staaaaaff */}
         <Tab eventKey="staff" title="Staff">
-          <div className="table-content">
-            <header>
-              <Link
-                to="/admin/add-staff"
-                className="btn btn-info btn-lg"
-                style={{ color: "white" }}
-              >
-                + Add New
-              </Link>
-            </header>
-
-            <table className="table table-striped mt-2">
-              <thead>
-                <tr>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Name in Arabic</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Name in English</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Mail</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Gender</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Nationality</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ background: "#121431", color: "white" }}
-                  >
-                    <div className="th-flex">
-                      <span className="th-name">Religion</span>
-                      <span>
-                        <FaSort />
-                      </span>
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>{showStaff}</tbody>
-            </table>
-          </div>
+          <StaffData show={showStaff} link={"add-staff"} />
           <Pagination
             nPages={nPagesForStaff}
             currentPage={currentPage}
@@ -501,7 +227,12 @@ export default function Staff() {
           />
         </Tab>
         <Tab eventKey="control-member" title="Control Member">
-          Tab content for Contact
+          <StaffData show={showControlMember} link={"add-control-member"} />
+          <Pagination
+            nPages={nPagesForControlMember}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
         </Tab>
       </Tabs>
     </div>
