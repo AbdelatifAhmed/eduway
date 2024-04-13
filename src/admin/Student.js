@@ -25,8 +25,6 @@ export default function Student(props) {
       .then((res) => setStudent(res.data.data))
       .catch((err) => console.log(err));
   }, []);
-  console.log(students);
-
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   const currentRecords = students.slice(indexOfFirstRecord, indexOfLastRecord);
@@ -43,7 +41,7 @@ export default function Student(props) {
     </tr>
   ));
   return (
-    <div className="Student-admin">
+    <div className="pad">
       <header>
         <Link
           to="/admin/add-student"

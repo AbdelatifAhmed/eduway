@@ -26,6 +26,9 @@ export default function AddStaffData(props) {
   const [seatNumber, setSeatNumber] = useState();
   const [degree, setDegree] = useState();
 
+  const [phoneNum, setPhoneNum] = useState("");
+
+
   const navigator = useNavigate();
   const goBack = () => {
     navigator("/admin/staff");
@@ -40,6 +43,13 @@ export default function AddStaffData(props) {
     const numericCountryId = parseInt(country, 10);
     const numericGovernorateId = parseInt(governorate, 10);
     const numericCityId = parseInt(city, 10);
+
+    const phoneNumbers = [
+      {
+        phoneNumber: phoneNum,
+        type: 1,
+      },
+    ];
 
     const Toast = Swal.mixin({
       toast: true,
@@ -78,6 +88,7 @@ export default function AddStaffData(props) {
             seatNumber: numericSeatNumber,
             qualificationYear: prequalificationYear,
             degree: numericDegree,
+            phoneNumbers
           },
           {
             headers: {
@@ -89,7 +100,7 @@ export default function AddStaffData(props) {
           if (response.status === 201) {
             Toast.fire({
               icon: "success",
-              title: "Staff added successfully",
+              title: `${props.name} added successfully`,
             });
           }
         });
@@ -327,6 +338,14 @@ export default function AddStaffData(props) {
                 className="txt-input"
                 placeholder="Postal Code"
                 onChange={(e) => setPostalCode(e.target.value)}
+              />
+            </div>
+            <div className="col">
+              <input
+                type="text"
+                className="txt-input"
+                placeholder="Phone number"
+                onChange={(e) => setPhoneNum(e.target.value)}
               />
             </div>
           </div>

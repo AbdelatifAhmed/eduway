@@ -32,11 +32,11 @@ export default function AddFaculty() {
   const [faculty, setFaculty] = useState("");
   const [facultyId, setFacultyId] = useState("");
   const [bylaw, setBylaw] = useState("");
-  const [band, setBand] = useState("");
-  const [phase, setPhase] = useState("");
-  const [semester, setSemester] = useState("");
-  const [examRole, setExamRole] = useState("");
-  const [semesterParent, setSemesterParent] = useState("");
+  const [band, setBand] = useState();
+  const [phase, setPhase] = useState();
+  const [semester, setSemester] = useState();
+  const [examRole, setExamRole] = useState();
+  const [semesterParent, setSemesterParent] = useState();
   const [description, setDescription] = useState("");
   const [code, setCode] = useState("");
   const [order, setOrder] = useState("");
@@ -648,6 +648,63 @@ export default function AddFaculty() {
       });
     }
   };
+  const handelPhaseDegree = async (event) => {
+    event.preventDefault();
+
+    const typeId = parseInt(type,10)
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
+    try {
+      await axios
+        .post(
+          "/api/ScientificDegree",
+          {
+            id: 0,
+            name,
+            order,
+            type:typeId,
+            description,
+            bylawId: bylaw,
+            bandId: band,
+            phaseId: phase,
+            semesterId: semester,
+            examRoleId: examRole,
+            parentId: semesterParent,
+            successPercentageCourse,
+            successPercentageBand,
+            successPercentageSemester,
+            successPercentagePhase,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status === 201) {
+            Toast.fire({
+              icon: "success",
+              title: "Phase Added successfully",
+            });
+          }
+        });
+    } catch (err) {
+      Toast.fire({
+        icon: "error",
+        title: "Error Occured",
+      });
+    }
+  };
 
   const handelScientificDegreeTypeChange = (event) => {
     setType(event);
@@ -667,6 +724,9 @@ export default function AddFaculty() {
       document.getElementById("scienticBand").value = null;
       document.getElementById("scienticSemester").value = null;
       document.getElementById("scienticExamRole").value = null;
+      setBand(null)
+      setSemester(null)
+      setExamRole(null)
     } else if (event == 4) {
       setBandDisabled(true);
       setPhaseDisabled(true);
@@ -675,6 +735,9 @@ export default function AddFaculty() {
       document.getElementById("scienticBand").value = null;
       document.getElementById("scienticPhase").value = null;
       document.getElementById("scienticExamRole").value = null;
+      setBand(null)
+      setPhase(null)
+      setExamRole(null)
     } else if (event == 5) {
       setBandDisabled(true);
       setPhaseDisabled(true);
@@ -683,6 +746,9 @@ export default function AddFaculty() {
       document.getElementById("scienticBand").value = null;
       document.getElementById("scienticSemester").value = null;
       document.getElementById("scienticPhase").value = null;
+      setBand(null)
+      setSemester(null)
+      setPhase(null)
     } else {
       setBandDisabled(true);
       setPhaseDisabled(true);
@@ -1630,7 +1696,7 @@ export default function AddFaculty() {
                     >
                       <Form.Select
                         onChange={(e) =>
-                          handelScientificDegreeTypeChange(e.target.value)
+                          handelScientificDegreeTypeChange(+e.target.value)
                         }
                       >
                         <option selected value={1}>
@@ -1654,6 +1720,7 @@ export default function AddFaculty() {
                       onChange={(e) => setBand(e.target.value)}
                       disabled={bandDisabled}
                       id="scienticBand"
+                      value = {band}
                     >
                       <option disabled selected value={null}>
                         Select band
@@ -1672,6 +1739,7 @@ export default function AddFaculty() {
                       onChange={(e) => setPhase(e.target.value)}
                       disabled={phaseDisabled}
                       id="scienticPhase"
+                      value = {phase}
                     >
                       <option disabled selected>
                         Select Phase
@@ -1690,6 +1758,7 @@ export default function AddFaculty() {
                       onChange={(e) => setSemester(e.target.value)}
                       disabled={semesterDisabled}
                       id="scienticSemester"
+                      value = {semester}
                     >
                       <option disabled selected>
                         Select Semster
@@ -1708,6 +1777,7 @@ export default function AddFaculty() {
                       onChange={(e) => setExamRole(e.target.value)}
                       disabled={examRoleDisabled}
                       id="scienticExamRole"
+                      value = {examRole}
                     >
                       <option disabled selected>
                         Select Exam Role
@@ -1824,7 +1894,9 @@ export default function AddFaculty() {
           <Button variant="secondary" onClick={() => setAddPhaseDegree(false)}>
             Close
           </Button>
-          <Button variant="success">Save Changes</Button>
+          <Button variant="success" onClick={ handelPhaseDegree}>
+            Save Changes
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

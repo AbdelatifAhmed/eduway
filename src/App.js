@@ -30,7 +30,7 @@ import AddTeacherAssistant from "./admin/AddTeacherAssistant.js";
 import AddStaff from "./admin/AddStaff.js";
 import AddControlMember from "./admin/addControlMember.js";
 import Control from "./admin/Control.js";
-
+import AddCourseGrade from "./Courses/courseGrade.js";
 export default function App() {
   return (
     <div>
@@ -60,6 +60,7 @@ export default function App() {
           <Route path="add-Administration" element={<AddAdministration />} />
           <Route path="add-control-member" element={<AddControlMember />} />
           <Route path="control" element={<Control />} />
+          <Route path="course-grades" element={<AddCourseGrade />} />
         </Route>
         {/* </Route> */}
         {/* </Route> */}

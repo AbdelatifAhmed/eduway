@@ -923,10 +923,10 @@ ul {
 } */
 
 /********************************** Student Admin Side ************************************************/
-.Student-admin {
+.pad {
   padding: 20px;
 }
-.Student-admin .head {
+/* .Student-admin .head {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -946,8 +946,8 @@ ul {
   color: white;
   padding: 7px;
   cursor: pointer;
-}
-
+} */
+/* 
 .Student-admin .butt .delete {
   border: 1px solid black;
   background-color: rgb(7, 7, 7);
@@ -957,9 +957,9 @@ ul {
   color: white;
   padding: 7px;
   cursor: pointer;
-}
+} */
 
-.Student-admin .butt2 .disp {
+/* .Student-admin .butt2 .disp {
   text-transform: capitalize;
   font-size: 17px;
   font-weight: bold;
@@ -988,7 +988,7 @@ ul {
 .Student-admin .butt3 i {
   margin-left: 7px;
   cursor: pointer;
-}
+} */
 
 /* .Student-admin .table-continar {
   width: 99%;
@@ -1033,6 +1033,8 @@ ul {
   background-color: gray;
   border-radius: 5px;
 } */
+
+
 
 .table-content {
   margin-top: 10px;

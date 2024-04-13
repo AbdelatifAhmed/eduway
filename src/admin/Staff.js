@@ -69,29 +69,29 @@ export default function Staff() {
       .catch((err) => console.log(err));
   }, []);
 
-  // if (!Array.isArray(administration) || administration.length === 0) {
-  //   return <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>No Administration found.</div>;
-  // }
+  if (!Array.isArray(administration) || administration.length === 0) {
+    return <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>No Administration found.</div>;
+  }
 
-  // if (!Array.isArray(staff) || staff.length === 0) {
-  //   return <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>No Staff found.</div>;
-  // }
+  if (!Array.isArray(staff) || staff.length === 0) {
+    return <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>No Staff found.</div>;
+  }
 
-  // if (!Array.isArray(teacher) || teacher.length === 0) {
-  //   return (
-  //     <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>
-  //       No teacher found.
-  //     </div>
-  //   );
-  // }
+  if (!Array.isArray(teacher) || teacher.length === 0) {
+    return (
+      <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>
+        No teacher found.
+      </div>
+    );
+  }
 
-  // if (!Array.isArray(teacherAssistant) || teacherAssistant.length === 0) {
-  //   return (
-  //     <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>
-  //       No Teacher Assistant found.
-  //     </div>
-  //   );
-  // }
+  if (!Array.isArray(teacherAssistant) || teacherAssistant.length === 0) {
+    return (
+      <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>
+        No Teacher Assistant found.
+      </div>
+    );
+  }
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 

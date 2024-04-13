@@ -42,14 +42,14 @@ export default function Login(props) {
           password: password,
         }
       );
-      const Token = Respond?.data?.token;
+      const accessToken = Respond?.data?.token;
       const dataDetails = Respond?.data;
-      const tokenSet = cookie.set("Bearer", Token);
+      const tokenSet = cookie.set("Bearer", accessToken);
       console.log(dataDetails);
       user_.setAuth({ userName, password, dataDetails, Token });
-      // setUserName('')
-      // setPassword('')
 
+      setUserName('')
+      setPassword('')  
       Navigate(from, { replace: true });
       // Navigate("/admin/faculty");
       // dataDetails.roles[0] === "Student"

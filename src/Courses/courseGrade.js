@@ -1,18 +1,20 @@
-import { FaSort } from "react-icons/fa";
-import Pagination from "../Components/Pagination";
-import {  useContext, useEffect, useState } from "react";
-import axios from "../Api/axios";
-import { User } from "../Auth/AuthContext";
-import { Link } from "react-router-dom";
-export default function Courses(props) {
-  const [courses, setCourses] = useState([]);
+import { useContext, useState , useEffect } from 'react'
+import { FaSort } from 'react-icons/fa'
+import Pagination from '../Components/Pagination'
+import { Link } from 'react-router-dom'
+import { User } from '../Auth/AuthContext';
+import axios from '../Api/axios';
+
+export default function AddCourseGrade() {
+    
+    const [courses, setCourses] = useState([]);
   const context = useContext(User);
   const token = context?.Auth?.token;
   // console.log(token);
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage] = useState(10);
+  const [recordsPerPage] = useState(5);
 
   useEffect(() => {
     axios
@@ -24,6 +26,16 @@ export default function Courses(props) {
       })
       .then((res) => setCourses(res.data.data))
       .catch((err) => console.log(err));
+
+    // axios
+    //   .get("/", {
+    //     headers: {
+    //       Accept: "application/json",
+    //       // Authorization: "Bearer" + token ,
+    //     },
+    //   })
+    //   .then((res) => setCourses(res.data))
+    //   .catch((err) => console.log(err));
   }, []);
 
   const indexOfLastRecord = currentPage * recordsPerPage;
@@ -31,40 +43,43 @@ export default function Courses(props) {
   const currentRecords = courses.slice(indexOfFirstRecord, indexOfLastRecord);
   const nPages = Math.ceil(courses.length / recordsPerPage);
 
-  const showCourses = courses.map((course) => (
+  const showCourses = currentRecords.map((course,index) => (
     <tr key={course.id}>
-      <td>{course.name}</td>
-      <td>{course.code}</td>
+      <td style={{fontWeight:'bold' , fontSize:"18px"}}>{index + 1 }</td>
+      <td>{course.id}</td>
+      <td>{course.title}</td>
+      <td>{course.category}</td>
+      <td>{course.price}</td>
       <td>{course.description}</td>
-      <td>{course.maxDegree}</td>
-      <td>{course.minDegree}</td>
-      <td>{course.type === 1 ? "اجباري" : "اختياري"}</td>
-      <td>{course.numberOfPoints === null ? "N/A" : course.numberOfPoints}</td>
-      <td>
-        {course.numberOfCreditHours === null
-          ? "N/A"
-          : course.numberOfCreditHours}
-      </td>
     </tr>
   ));
+
   return (
+    <>
     <div className="pad">
       <header>
-        <Link
-          to="/admin/add-course"
-          className="btn btn-info btn-lg"
-          style={{ color: "white" }}
-        >
-          + Add New Course
-        </Link>
+       
       </header>
       <div className="table-content">
-        <table className="table table-striped">
+        <table className="table table-striped  table-bordered border border-dark">
           <thead>
             <tr>
               <th scope="col" style={{ background: "#121431", color: "white" }}>
                 <div className="th-flex">
-                  <span className="th-name">Course Name</span>
+                  <span className="th-name"></span>
+                </div>
+              </th>
+              <th scope="col" style={{ background: "#121431", color: "white" }}>
+                <div className="th-flex">
+                  <span className="th-name">Student Code</span>
+                  <span>
+                    {/* <FaSort /> */}
+                  </span>
+                </div>
+              </th>
+              <th scope="col" style={{ background: "#121431", color: "white" }}>
+                <div className="th-flex">
+                  <span className="th-name">Student Name</span>
                   <span>
                     <FaSort />
                   </span>
@@ -72,7 +87,7 @@ export default function Courses(props) {
               </th>
               <th scope="col" style={{ background: "#121431", color: "white" }}>
                 <div className="th-flex">
-                  <span className="th-name">Course Code</span>
+                  <span className="th-name">Midterm</span>
                   <span>
                     <FaSort />
                   </span>
@@ -80,7 +95,7 @@ export default function Courses(props) {
               </th>
               <th scope="col" style={{ background: "#121431", color: "white" }}>
                 <div className="th-flex">
-                  <span className="th-name">Description</span>
+                  <span className="th-name">Practical / Training</span>
                   <span>
                     <FaSort />
                   </span>
@@ -88,39 +103,7 @@ export default function Courses(props) {
               </th>
               <th scope="col" style={{ background: "#121431", color: "white" }}>
                 <div className="th-flex">
-                  <span className="th-name">max Degree</span>
-                  <span>
-                    <FaSort />
-                  </span>
-                </div>
-              </th>
-              <th scope="col" style={{ background: "#121431", color: "white" }}>
-                <div className="th-flex">
-                  <span className="th-name">Min Degree</span>
-                  <span>
-                    <FaSort />
-                  </span>
-                </div>
-              </th>
-              <th scope="col" style={{ background: "#121431", color: "white" }}>
-                <div className="th-flex">
-                  <span className="th-name">Type</span>
-                  <span>
-                    <FaSort />
-                  </span>
-                </div>
-              </th>
-              <th scope="col" style={{ background: "#121431", color: "white" }}>
-                <div className="th-flex">
-                  <span className="th-name">Number Of Points</span>
-                  <span>
-                    <FaSort />
-                  </span>
-                </div>
-              </th>
-              <th scope="col" style={{ background: "#121431", color: "white" }}>
-                <div className="th-flex">
-                  <span className="th-name">Number Of Credit Hours</span>
+                  <span className="th-name">Oral</span>
                   <span>
                     <FaSort />
                   </span>
@@ -128,7 +111,7 @@ export default function Courses(props) {
               </th>
             </tr>
           </thead>
-          <tbody>{showCourses}</tbody>
+          <tbody className=''>{showCourses}</tbody>
         </table>
       </div>
       <Pagination
@@ -137,5 +120,6 @@ export default function Courses(props) {
         setCurrentPage={setCurrentPage}
       />
     </div>
-  );
+    </>
+  )
 }
