@@ -46,7 +46,7 @@ export default function Login(props) {
       const dataDetails = Respond?.data;
       const tokenSet = cookie.set("Bearer", accessToken);
       console.log(dataDetails);
-      user_.setAuth({ userName, password, dataDetails, Token });
+      user_.setAuth({ userName, password, dataDetails, accessToken });
 
       setUserName('')
       setPassword('')  

@@ -2,13 +2,13 @@ import { useContext, useState , useEffect } from 'react'
 import { FaSort } from 'react-icons/fa'
 import Pagination from '../Components/Pagination'
 import { Link } from 'react-router-dom'
-import { User } from '../Auth/AuthContext';
+import { AuthContext } from '../Auth/AuthContext';
 import axios from '../Api/axios';
 
 export default function AddCourseGrade() {
     
     const [courses, setCourses] = useState([]);
-  const context = useContext(User);
+  const context = useContext(AuthContext);
   const token = context?.Auth?.token;
   // console.log(token);
 

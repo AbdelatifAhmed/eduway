@@ -1,12 +1,12 @@
 import { useContext, useEffect, useState } from "react";
-import { User } from "./AuthContext";
+import { AuthContext } from "./AuthContext";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import { Outlet } from "react-router-dom";
 import LoadingSpinner from "../Components/Loading";
 
 export default function PersistLogin() {
-  const context = useContext(User);
+  const context = useContext(AuthContext);
   const token = context.Auth;
   const [Loading, setLoading] = useState(true);
   // Cookie

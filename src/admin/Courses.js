@@ -2,11 +2,11 @@ import { FaSort } from "react-icons/fa";
 import Pagination from "../Components/Pagination";
 import {  useContext, useEffect, useState } from "react";
 import axios from "../Api/axios";
-import { User } from "../Auth/AuthContext";
+import { AuthContext } from "../Auth/AuthContext";
 import { Link } from "react-router-dom";
 export default function Courses(props) {
   const [courses, setCourses] = useState([]);
-  const context = useContext(User);
+  const context = useContext(AuthContext);
   const token = context?.Auth?.token;
   // console.log(token);
 
