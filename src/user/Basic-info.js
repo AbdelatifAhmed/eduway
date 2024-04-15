@@ -17,7 +17,7 @@ export default function BasicInfo() {
                 <h1>Personal Data</h1>
               </legend>
               <div>
-                Arabic Name : <span className="">assad</span>
+                Arabic Name : <span className=""></span>
               </div>
               <div>
                 English Name : <span className=""></span>

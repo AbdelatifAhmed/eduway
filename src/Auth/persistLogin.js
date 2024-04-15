@@ -3,7 +3,7 @@ import { AuthContext } from "./AuthContext";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import { Outlet } from "react-router-dom";
-import LoadingSpinner from "../Components/Loading";
+import LoadingSpinner from "../Components/GetFacultyNames";
 
 export default function PersistLogin() {
   const context = useContext(AuthContext);

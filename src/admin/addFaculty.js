@@ -221,41 +221,51 @@ export default function AddFaculty() {
     }
   }, [bylaw, type]);
 
-  const showFaculty = facultyNames.map((index) => (
+  const [shows , setShows] = useState({
+   showFaculty : [] ,
+   showBaylws : [] ,
+   showBands : [] ,
+   showSemesters : [] ,
+   showExamRoles : [] ,
+   showPhases : [] ,
+   showParent : [] ,
+  })
+
+   shows.showFaculty = facultyNames.map((index) => (
     <option key={index.facultId} value={index?.facultId}>
       {index?.facultName}
     </option>
   ));
-  const showBaylws = bylawsNames.map((index) => (
+  shows.showBaylws = bylawsNames.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
   ));
 
-  const showBands = bandNames.map((index) => (
+  shows.showBands = bandNames.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
   ));
 
-  const showSemesters = semesterNames.map((index) => (
+   shows.showSemesters = semesterNames.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
   ));
 
-  const showExamRoles = examRoleNames.map((index) => (
+   shows.showExamRoles = examRoleNames.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
   ));
 
-  const showPhases = phaseNames.map((index) => (
+  shows.showPhases = phaseNames.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
   ));
-  const showParent = semesterParentNames.map((index) => (
+  shows.showParent = semesterParentNames.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
@@ -778,6 +788,15 @@ export default function AddFaculty() {
     setPhaseDisabled(true);
     setSemesterDisabled(true);
     setExamRoleDisabled(true);
+    setShows({
+      showFaculty : [] ,
+      showBaylws : [] ,
+      showBands : [] ,
+      showSemesters : [] ,
+      showExamRoles : [] ,
+      showPhases : [] ,
+      showParent : [] ,
+     })
   };
 
   return (
@@ -947,7 +966,7 @@ export default function AddFaculty() {
                     <option selected disabled>
                       Faculty
                     </option>
-                    {showFaculty}
+                    {shows.showFaculty}
                   </Form.Select>
                 </Form.Group>
                 <Form.Group className="mt-2">
@@ -1230,7 +1249,7 @@ export default function AddFaculty() {
               <option disabled selected>
                 Select Faculty
               </option>
-              {showFaculty}
+              {shows.showFaculty}
             </Form.Select>
           </FloatingLabel>
 
@@ -1300,7 +1319,7 @@ export default function AddFaculty() {
               <option disabled selected>
                 Select Faculty
               </option>
-              {showFaculty}
+              {shows.showFaculty}
             </Form.Select>
           </FloatingLabel>
 
@@ -1371,7 +1390,7 @@ export default function AddFaculty() {
               <option disabled selected>
                 Select Faculty
               </option>
-              {showFaculty}
+              {shows.showFaculty}
             </Form.Select>
           </FloatingLabel>
 
@@ -1441,7 +1460,7 @@ export default function AddFaculty() {
               <option disabled selected>
                 Select Faculty
               </option>
-              {showFaculty}
+              {shows.showFaculty}
             </Form.Select>
           </FloatingLabel>
 
@@ -1523,7 +1542,7 @@ export default function AddFaculty() {
               <option disabled selected>
                 Select Faculty
               </option>
-              {showFaculty}
+              {shows.showFaculty}
             </Form.Select>
           </FloatingLabel>
 
@@ -1591,7 +1610,7 @@ export default function AddFaculty() {
               <option disabled selected>
                 Select Faculty
               </option>
-              {showFaculty}
+              {shows.showFaculty}
             </Form.Select>
           </FloatingLabel>
 
@@ -1668,7 +1687,7 @@ export default function AddFaculty() {
                       <option disabled selected>
                         Select Faculty
                       </option>
-                      {showFaculty}
+                      {shows.showFaculty}
                     </Form.Select>
                   </FloatingLabel>
 
@@ -1684,7 +1703,7 @@ export default function AddFaculty() {
                       <option disabled selected value={null}>
                         Select Bylaw
                       </option>
-                      {showBaylws}
+                      {shows.showBaylws}
                     </Form.Select>
                   </FloatingLabel>
 
@@ -1725,7 +1744,7 @@ export default function AddFaculty() {
                       <option disabled selected value={null}>
                         Select band
                       </option>
-                      {showBands}
+                      {shows.showBands}
                     </Form.Select>
                   </FloatingLabel>
 
@@ -1744,7 +1763,7 @@ export default function AddFaculty() {
                       <option disabled selected>
                         Select Phase
                       </option>
-                      {showPhases}
+                      {shows.showPhases}
                     </Form.Select>
                   </FloatingLabel>
 
@@ -1763,7 +1782,7 @@ export default function AddFaculty() {
                       <option disabled selected>
                         Select Semster
                       </option>
-                      {showSemesters}
+                      {shows.showSemesters}
                     </Form.Select>
                   </FloatingLabel>
 
@@ -1782,7 +1801,7 @@ export default function AddFaculty() {
                       <option disabled selected>
                         Select Exam Role
                       </option>
-                      {showExamRoles}
+                      {shows.showExamRoles}
                     </Form.Select>
                   </FloatingLabel>
 
@@ -1804,7 +1823,7 @@ export default function AddFaculty() {
                       <option disabled selected>
                         Select Semester Parent
                       </option>
-                      {showParent}
+                      {shows.showParent}
                     </Form.Select>
                   </FloatingLabel>
                 </Form.Group>
