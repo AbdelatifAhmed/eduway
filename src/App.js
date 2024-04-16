@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import "../node_modules/bootstrap/dist/js/bootstrap.min.js";
 import Errorpage from "./Components/errorpage";
@@ -13,7 +12,6 @@ import RequireAuth from "./Auth/RequireAuth";
 import "./Css/all.min.css";
 import "./Css/main.css";
 import { Route, Routes } from "react-router-dom";
-
 import Api from "./api";
 import UserProvider from "./Auth/AuthContext";
 import PersistLogin from "./Auth/persistLogin";
@@ -30,7 +28,8 @@ import AddTeacherAssistant from "./admin/AddTeacherAssistant.js";
 import AddStaff from "./admin/AddStaff.js";
 import AddControlMember from "./admin/addControlMember.js";
 import Control from "./admin/Control.js";
-import AddCourseGrade from "./Courses/courseGrade.js";
+import AddCourseGrades from "./Courses/courseGrade.js";
+import Test2 from "./test2.js";
 export default function App() {
   return (
     <div>
@@ -38,6 +37,7 @@ export default function App() {
         {/* Public routes */}
         <Route path="/" element={<Login />} />
         <Route path="/ss" element={<Api />} />
+        <Route path="/test2" element={<Test2 />} />
         <Route path="/test" element={<Test />} />
         {/* Protected Routes */}
         {/* <Route element={<PersistLogin />}> */}
@@ -60,7 +60,7 @@ export default function App() {
           <Route path="add-Administration" element={<AddAdministration />} />
           <Route path="add-control-member" element={<AddControlMember />} />
           <Route path="control" element={<Control />} />
-          <Route path="course-grades" element={<AddCourseGrade />} />
+          <Route path="course-grades" element={<AddCourseGrades />} />
         </Route>
         {/* </Route> */}
         {/* </Route> */}

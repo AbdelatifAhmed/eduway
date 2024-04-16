@@ -57,10 +57,9 @@ export default function Control() {
   const handelChangeForSemesterCourse = (selevtedValue) => {
     setSelectedOptionsForTeacherCourse(selevtedValue);
     const output = selevtedValue.map((item) => ({
-      staddId: teacherId,
+      staffId: teacherId,
       courseId: item.id,
     }));
-    console.log(output);
     setTeacherCourses(output);
   };
 
@@ -92,27 +91,38 @@ export default function Control() {
       .get("/api/Control/GetAllSemester")
       .then((res) => setCurrentSemesters(res?.data?.data))
       .catch((err) => console.log(err));
-
-    getCoursesForTeacher();
   }, []);
 
   useEffect(() => {
-    axios
-      .get(`/api/AssessMethod/All${facultyId}`)
-      .then((res) => setAssessMethods(res?.data?.data))
-      .catch((err) => console.log(err));
+    getCoursesForTeacher();
+  }, [teacherId]);
 
-    axios
-      .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
-      .then((res) => setSemester(res?.data?.data))
-      .catch((err) => console.log(err));
+  useEffect(() => {
+    {
+      facultyId &&
+        axios
+          .get(`/api/AssessMethod/All${facultyId}`)
+          .then((res) => setAssessMethods(res?.data?.data))
+          .catch((err) => console.log(err));
+    }
+
+    {
+      facultyId &&
+        axios
+          .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
+          .then((res) => setSemester(res?.data?.data))
+          .catch((err) => console.log(err));
+    }
   }, [facultyId]);
 
   const getCoursesForTeacher = () => {
-    axios
-      .get(`/api/Staff/GetCourseStaffSemester${teacherId}`)
-      .then((res) => setCoursesName(res?.data?.data?.courseDoctorDtos))
-      .catch((err) => console.log(err));
+    {
+      teacherId &&
+        axios
+          .get(`/api/Staff/GetCourseStaffSemester${teacherId}`)
+          .then((res) => setCoursesName(res?.data?.data?.courseDoctorDtos))
+          .catch((err) => console.log(err));
+    }
   };
 
   const [shows, setShows] = useState({
@@ -169,6 +179,13 @@ export default function Control() {
       No Student Exists
     </option>
   );
+  shows.showCourses = courses ? (
+    courses.map((element) => <option value={element.id}>{element.name}</option>)
+  ) : (
+    <option disabled className="text-danger">
+      No Courses Exists
+    </option>
+  );
 
   shows.showSemesters = semester ? (
     semester.map((element) => (
@@ -190,24 +207,34 @@ export default function Control() {
     </option>
   );
 
-  shows.showCurrentSemesters = currentSemesters ? (
-    currentSemesters.map((element) => (
+
+  shows.showCurrentSemesters = currentSemesters?.semesterName ? (
+    currentSemesters?.semesterName.map((element) => (
       <tr value={element.id} style={{ width: "100%" }}>
-        <td style={{ fontSize: "20px", width: "100%" }} className="d-flex justify-content-between" value={element.id}>
+        <td
+          style={{ fontSize: "20px", width: "100%" }}
+          className="d-flex justify-content-between"
+          value={element.id}
+        >
           <span>{element.name}</span>
-          <span><Button
-            variant="outline-danger"
-            size="lg"
-            onClick={(e) => handelEndSemester(element)}
-          >
-            End
-          </Button></span>
+          <span>
+            <Button
+              variant="outline-danger"
+              size="lg"
+              onClick={(e) => handelEndSemester(element)}
+            >
+              End
+            </Button>
+          </span>
         </td>
       </tr>
     ))
   ) : (
     <tr disabled className="text-danger">
-      <td> No Department Exists </td>
+      <td className="text-danger" style={{ fontSize: "20px" }}>
+        {" "}
+        No Current Semester Exists{" "}
+      </td>
     </tr>
   );
 
@@ -246,8 +273,6 @@ export default function Control() {
   };
   const handelSubmitForTeacherCourse = (event) => {
     event.preventDefault();
-    console.log(teacherId);
-    console.log(coursesId);
     const Toast = Swal.mixin({
       toast: true,
       position: "top-end",
@@ -260,9 +285,7 @@ export default function Control() {
       },
     });
     axios
-      .post(`/api/Staff/AssignCourseStaff`, {
-        teacherCourses,
-      })
+      .post(`/api/Staff/AssignCourseStaff`, teacherCourses)
       .then((response) => {
         if (response.status === 201) {
           Toast.fire({
@@ -320,47 +343,49 @@ export default function Control() {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success mx-2",
-        cancelButton: "btn btn-danger"
+        cancelButton: "btn btn-danger",
       },
-      buttonsStyling: false
+      buttonsStyling: false,
     });
-    swalWithBootstrapButtons.fire({
-      title: `Are you sure you want to End  ${event.name}?`,
-      text: "You won't be able to revert this!",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Yes, Delete it!",
-      cancelButtonText: "No, cancel!",
-      reverseButtons: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-
-        axios.post(`/api/Control/EndSemester${event.id}`).then(()=>{
+    swalWithBootstrapButtons
+      .fire({
+        title: `Are you sure you want to End  ${event.name}?`,
+        text: "You won't be able to revert this!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .post(`/api/Control/EndSemester${event.id}`)
+            .then(() => {
+              swalWithBootstrapButtons.fire({
+                title: "Deleted!",
+                text: "Your Semester has been Ended.",
+                icon: "success",
+              });
+            })
+            .catch(() => {
+              swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: "An Error Occured During End Opreation.",
+                icon: "eroor",
+              });
+            });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
           swalWithBootstrapButtons.fire({
-            title: "Deleted!",
-            text: "Your Semester has been Ended.",
-            icon: "success"
+            title: "Cancelled",
+            text: "Your Semester is safe :)",
+            icon: "error",
           });
         }
-        ).catch(()=>{
-          swalWithBootstrapButtons.fire({
-            title: "Error!",
-            text: "An Error Occured During End Opreation.",
-            icon: "eroor"
-          });
-        })
-       
-      } else if (
-        /* Read more about handling dismissals below */
-        result.dismiss === Swal.DismissReason.cancel
-      ) {
-        swalWithBootstrapButtons.fire({
-          title: "Cancelled",
-          text: "Your Semester is safe :)",
-          icon: "error"
-        });
-      }
-    });
+      });
   };
   return (
     <div className="px-4">
@@ -442,9 +467,11 @@ export default function Control() {
           </div>
         </Tab>
 
-        <Tab eventKey="semester-courses" title="Semester Courses"></Tab>
+        <Tab eventKey="semester-courses" title="Semester Courses">
+          
+        </Tab>
 
-        <Tab eventKey="lecturer-courses" title="Teacher Courses">
+        <Tab eventKey="teacher-courses" title="Teacher Courses">
           <div style={{ border: "2px solid #121431", borderRadius: "10px" }}>
             <div
               style={{
@@ -607,7 +634,7 @@ export default function Control() {
                 fontSize: "30px",
               }}
             >
-              Add Student Semester
+              {currentSemesters.academyYearName ? currentSemesters.academyYearName: "NO Data "}
             </div>
             <div className="p-3">
               <Table borderedless className="">

@@ -69,114 +69,115 @@ export default function Staff() {
       .catch((err) => console.log(err));
   }, []);
 
-  if (!Array.isArray(administration) || administration.length === 0) {
-    return <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>No Administration found.</div>;
-  }
-
-  if (!Array.isArray(staff) || staff.length === 0) {
-    return <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>No Staff found.</div>;
-  }
-
-  if (!Array.isArray(teacher) || teacher.length === 0) {
-    return (
-      <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>
-        No teacher found.
-      </div>
-    );
-  }
-
-  if (!Array.isArray(teacherAssistant) || teacherAssistant.length === 0) {
-    return (
-      <div style={{ padding: "20px", fontSize: "30px", color: "red" }}>
-        No Teacher Assistant found.
-      </div>
-    );
-  }
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
 
-  const currentRecordsAdmin = administration.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
+  const currentRecordsAdmin =
+    administration &&
+    administration.slice(indexOfFirstRecord, indexOfLastRecord);
+  const currentRecordsStaff =
+    staff && staff.slice(indexOfFirstRecord, indexOfLastRecord);
+  const currentRecordsTeacher =
+    teacher && teacher.slice(indexOfFirstRecord, indexOfLastRecord);
+  const currentRecordsTeacherAssistant =
+    teacherAssistant &&
+    teacherAssistant.slice(indexOfFirstRecord, indexOfLastRecord);
+  const currentRecordsControlMember =
+    controlMember && controlMember.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  const nPagesForAdmin =
+    administration && Math.ceil(administration.length / recordsPerPage);
+  const nPagesForStaff = staff && Math.ceil(staff.length / recordsPerPage);
+  const nPagesForTeacher =
+    teacher && Math.ceil(teacher.length / recordsPerPage);
+  const nPagesForTeacherAssistant =
+    teacherAssistant && Math.ceil(teacherAssistant.length / recordsPerPage);
+  const nPagesForControlMember =
+    controlMember && Math.ceil(controlMember.length / recordsPerPage);
+
+  const showAdminstration = administration ? (
+    currentRecordsAdmin.map((admin) => (
+      <tr key={admin.staffId}>
+        <td>{admin.staffNameArbic}</td>
+        <td>{admin.staffNameEnglish}</td>
+        <td>{admin.email}</td>
+        <td>{admin.gender}</td>
+        <td>{admin.nationality}</td>
+        <td>{admin.religion}</td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={6}>No Data</td>
+    </tr>
   );
-  const currentRecordsStaff = staff.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
-  );
-  const currentRecordsTeacher = teacher.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
-  );
-  const currentRecordsTeacherAssistant = teacherAssistant.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
-  );
-  const currentRecordsControlMember = controlMember.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
+  const showStaff = staff ? (
+    currentRecordsStaff.map((admin) => (
+      <tr key={admin.staffId}>
+        <td>{admin.staffNameArbic}</td>
+        <td>{admin.staffNameEnglish}</td>
+        <td>{admin.email}</td>
+        <td>{admin.gender}</td>
+        <td>{admin.nationality}</td>
+        <td>{admin.religion}</td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={6}>No Data</td>
+    </tr>
   );
 
-  const nPagesForAdmin = Math.ceil(administration.length / recordsPerPage);
-  const nPagesForStaff = Math.ceil(staff.length / recordsPerPage);
-  const nPagesForTeacher = Math.ceil(teacher.length / recordsPerPage);
-  const nPagesForTeacherAssistant = Math.ceil(
-    teacherAssistant.length / recordsPerPage
-  );
-  const nPagesForControlMember = Math.ceil(
-    controlMember.length / recordsPerPage
+  const showTeacher = teacher ? (
+    currentRecordsTeacher.map((teacher) => (
+      <tr key={teacher.staffId}>
+        <td>{teacher.staffNameArbic}</td>
+        <td>{teacher.staffNameEnglish}</td>
+        <td>{teacher.email}</td>
+        <td>{teacher.gender}</td>
+        <td>{teacher.nationality}</td>
+        <td>{teacher.religion}</td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={6}>No Data</td>
+    </tr>
   );
 
-  const showAdminstration = currentRecordsAdmin.map((admin) => (
-    <tr key={admin.staffId}>
-      <td>{admin.staffNameArbic}</td>
-      <td>{admin.staffNameEnglish}</td>
-      <td>{admin.email}</td>
-      <td>{admin.gender}</td>
-      <td>{admin.nationality}</td>
-      <td>{admin.religion}</td>
+  const showTeacherAssistant = teacherAssistant ? (
+    currentRecordsTeacherAssistant.map((teacher) => (
+      <tr key={teacher.staffId}>
+        <td>{teacher.staffNameArbic}</td>
+        <td>{teacher.staffNameEnglish}</td>
+        <td>{teacher.email}</td>
+        <td>{teacher.gender}</td>
+        <td>{teacher.nationality}</td>
+        <td>{teacher.religion}</td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={6}>No Data</td>
     </tr>
-  ));
-  const showStaff = currentRecordsStaff.map((admin) => (
-    <tr key={admin.staffId}>
-      <td>{admin.staffNameArbic}</td>
-      <td>{admin.staffNameEnglish}</td>
-      <td>{admin.email}</td>
-      <td>{admin.gender}</td>
-      <td>{admin.nationality}</td>
-      <td>{admin.religion}</td>
-    </tr>
-  ));
-  const showTeacher = currentRecordsTeacher.map((teacher) => (
-    <tr key={teacher.staffId}>
-      <td>{teacher.staffNameArbic}</td>
-      <td>{teacher.staffNameEnglish}</td>
-      <td>{teacher.email}</td>
-      <td>{teacher.gender}</td>
-      <td>{teacher.nationality}</td>
-      <td>{teacher.religion}</td>
-    </tr>
-  ));
-  const showTeacherAssistant = currentRecordsTeacherAssistant.map((teacher) => (
-    <tr key={teacher.staffId}>
-      <td>{teacher.staffNameArbic}</td>
-      <td>{teacher.staffNameEnglish}</td>
-      <td>{teacher.email}</td>
-      <td>{teacher.gender}</td>
-      <td>{teacher.nationality}</td>
-      <td>{teacher.religion}</td>
-    </tr>
-  ));
+  );
 
-  const showControlMember = currentRecordsControlMember.map((teacher) => (
-    <tr key={teacher.staffId}>
-      <td>{teacher.staffNameArbic}</td>
-      <td>{teacher.staffNameEnglish}</td>
-      <td>{teacher.email}</td>
-      <td>{teacher.gender}</td>
-      <td>{teacher.nationality}</td>
-      <td>{teacher.religion}</td>
+  const showControlMember = controlMember ? (
+    currentRecordsControlMember.map((teacher) => (
+      <tr key={teacher.staffId}>
+        <td>{teacher.staffNameArbic}</td>
+        <td>{teacher.staffNameEnglish}</td>
+        <td>{teacher.email}</td>
+        <td>{teacher.gender}</td>
+        <td>{teacher.nationality}</td>
+        <td>{teacher.religion}</td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={6}>No Data</td>
     </tr>
-  ));
+  );
 
   return (
     <div className="p-3">
