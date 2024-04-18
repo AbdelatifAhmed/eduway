@@ -1,107 +1,88 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
-import { IoClose } from 'react-icons/io5';
-import { MdModeEditOutline } from 'react-icons/md';
+import { Accordion, Button, Table } from 'react-bootstrap';
 import axios from './Api/axios';
-
-export default function Test2() {
-  const [studentData, setStudentData] = useState([]);
+const Test2 = () => {
+  const [array1, setArray1] = useState([]);
+  const [array2Data, setArray2Data] = useState({});
 
   useEffect(() => {
-    // Fetch data from the API
-    const fetchData = async () => {
-      let data = null ;
-      try {
-        // Replace 'apiEndpoint' with your actual API endpoint
-         await axios('api/Course/GetStudentSemesterAssessMethodsBySpecificCourse1')
-        .then((res)=>{
-             data = res?.data?.data
-        })
-        // Assuming data structure is similar to what's used in the component
-        const processedData = data.studentDtos.map(student => ({ ...student, isDisabled: true }));
-        setStudentData(processedData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-    // Call the fetchData function
-    fetchData();
+    // Fetch array1 data from the server
+    fetchArray1Data();
   }, []);
 
-  const handleAssessmentDegreeChange = (studentIndex, assessIndex, newValue) => {
-    setStudentData(prevStudentData => {
-      const updatedStudentData = [...prevStudentData];
-      if (updatedStudentData[studentIndex]?.assesstMethodDtos[assessIndex]) {
-        updatedStudentData[studentIndex].assesstMethodDtos[assessIndex].assessDegree = newValue;
-      }
-      return updatedStudentData;
+  const fetchArray1Data = () => {
+    // Fetch array1 data from the server using Axios
+    axios.get('api/Control/GetAllSemester')
+      .then(response => {
+        const semesterName = response.data?.data?.semesterName ?? [];
+        setArray1(semesterName);
+        // Fetch array2 data for each object in array1
+        fetchArray2Data(semesterName);
+      })
+      .catch(error => console.error('Error fetching array1 data:', error));
+  };
+
+  const fetchArray2Data = (semesterName) => {
+    // Fetch array2 data for each object in array1
+    semesterName.forEach(obj => {
+      axios.get(`/api/Student/as${obj.id}`)
+        .then(response => {
+          setArray2Data(prevData => ({
+            ...prevData,
+            [obj.id]: response.data
+          }));
+        })
+        .catch(error => console.error(`Error fetching array2 data for semester with id ${obj.id}:`, error));
     });
   };
 
-  const toggleEdit = (index) => {
-    setStudentData(prevStudentData => {
-      const updatedStudentData = [...prevStudentData];
-      updatedStudentData[index].isDisabled = !updatedStudentData[index].isDisabled;
-      return updatedStudentData;
-    });
-  };
+  const handleDelete = (studentSemesterId) => {
+   
+    axios.delete(`/api/Student/studentSemesters/${studentSemesterId}`)
+      .then(response => {
+        
+        console.log('Student deleted successfully:', response.data);
+     })
+      .catch(error => {
+        console.error('Error deleting student:', error);
+      });
 
-  const sendDataToServer = () => {
-    console.log('Sending data to server:', studentData);
-    // Send studentData to the server
-  };
-
-  const uniqueAssessNames = studentData.flatMap(student => student.assesstMethodDtos.map(method => method.assessName));
-  const uniqueAssessNamesSet = new Set(uniqueAssessNames);
-  const uniqueAssessNamesArray = Array.from(uniqueAssessNamesSet);
-
-  const tableHeaders = uniqueAssessNamesArray.map(assessName => (
-    <th key={assessName}>{assessName}</th>
-  ));
-
-  const tableRows = studentData.map((student, index) => (
-    <tr key={student.studentCode}>
-      <td>{student.studentName}</td>
-      <td>{student.studentCode}</td>
-      {uniqueAssessNamesArray.map((assessName, assessIndex) => {
-        const method = student.assesstMethodDtos.find(method => method.assessName === assessName);
-        return (
-          <td key={`${student.studentCode}-${assessName}`}>
-            <input
-              value={method ? method.assessDegree : ""}
-              disabled={student.isDisabled}
-              onChange={(e) => handleAssessmentDegreeChange(index, assessIndex, e.target.value)}
-            />
-          </td>
-        );
-      })}
-      <td>
-        <Button
-          size="sm"
-          variant="dark"
-          onClick={() => toggleEdit(index)}
-        >
-          {student.isDisabled ? <MdModeEditOutline /> : <IoClose />}
-        </Button>
-      </td>
-    </tr>
-  ));
+ };
 
   return (
-    <div>
-      <table style={{ width: "100%" }}>
-        <thead>
-          <tr>
-            <th>Student Name</th>
-            <th>Student Code</th>
-            {tableHeaders}
-          </tr>
-        </thead>
-        <tbody>
-          {tableRows}
-        </tbody>
-      </table>
-      <Button onClick={sendDataToServer}>Send Data to Server</Button>
+    <div className='p-3'>
+      <Accordion defaultActiveKey="0">
+      {array1.map((obj, index) => (
+        <Accordion.Item key={obj.id} eventKey={`${index}`}>
+          <Accordion.Header>{obj.name}</Accordion.Header>
+          <Accordion.Body>
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Student Code</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                {array2Data[obj.id]?.data?.map((student, idx) => (
+                  <tr key={idx}>
+                    <td>{student.studentName}</td>
+                    <td>{student.studentCode}</td>
+                    <td>
+                      <Button variant="danger" onClick={() => handleDelete(student)}>Delete</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Accordion.Body>
+        </Accordion.Item>
+      ))}
+    </Accordion>
     </div>
   );
-}
+};
+
+
+export default Test2;

@@ -30,6 +30,8 @@ import AddControlMember from "./admin/addControlMember.js";
 import Control from "./admin/Control.js";
 import AddCourseGrades from "./Courses/courseGrade.js";
 import Test2 from "./test2.js";
+import FinalGrades from "./Courses/finalGrades.js";
+import StudentView from "./admin/studentView.js";
 export default function App() {
   return (
     <div>
@@ -50,6 +52,7 @@ export default function App() {
         <Route path="/admin/" element={<Admin />}>
           <Route path="faculty" element={<Faculty />} />
           <Route path="students" element={<Student />} />
+          <Route path="students/student/:studentId" element={<StudentView />} />
           <Route path="add-student" element={<AddStudent />} />
           <Route path="courses" element={<Courses />} />
           <Route path="add-course" element={<AddCourse />} />
@@ -61,6 +64,7 @@ export default function App() {
           <Route path="add-control-member" element={<AddControlMember />} />
           <Route path="control" element={<Control />} />
           <Route path="course-grades" element={<AddCourseGrades />} />
+          <Route path="final-grades" element={<FinalGrades />} />
         </Route>
         {/* </Route> */}
         {/* </Route> */}

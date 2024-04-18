@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../Api/axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 export default function AddStudent() {
   const [nameEG, setNameEg] = useState("");
   const [nameAr, setNameAr] = useState("");
+  const [studentCode, setStudentCode] = useState("");
   const [mail, setMail] = useState("");
   const [nationalId, setNationalId] = useState("");
   const [password, setPassword] = useState("");
@@ -71,8 +72,9 @@ export default function AddStudent() {
     try {
       await axios
         .post(
-          "https://gladly-in-quagga.ngrok-free.app/api/Student/AddStudent",
+          "/api/Student/AddStudent",
           {
+            studentCode,
             nameArabic: nameAr,
             nameEnglish: nameEG,
             nationalID: nationalId,
@@ -150,6 +152,14 @@ export default function AddStudent() {
             <input
               type="text"
               className="txt-input"
+              placeholder="Student Code"
+              onChange={(e) => setStudentCode(e.target.value)}
+            />
+          </div>
+          <div className="col">
+            <input
+              type="text"
+              className="txt-input"
               placeholder="Name in English"
               onChange={(e) => setNameEg(e.target.value)}
             />
@@ -162,7 +172,10 @@ export default function AddStudent() {
               onChange={(e) => setNameAr(e.target.value)}
             />
           </div>
-          <div className="col">
+         
+        </div>
+        <div className="row pt-3">
+        <div className="col">
             <input
               type="email"
               className="txt-input"
@@ -170,8 +183,6 @@ export default function AddStudent() {
               onChange={(e) => setMail(e.target.value)}
             />
           </div>
-        </div>
-        <div className="row pt-3">
           <div className="col">
             <input
               type="text"
@@ -180,7 +191,10 @@ export default function AddStudent() {
               onChange={(e) => setNationalId(e.target.value)}
             />
           </div>
-          <div className="col">
+          
+        </div>
+        <div className="row pt-3">
+        <div className="col">
             <input
               type="password"
               className="txt-input"
@@ -204,7 +218,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setGender(e.target.value)}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Gender
               </option>
               <option value={1}>Male</option>
@@ -225,7 +239,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setReligion(e.target.value)}
             >
-              <option disabled selected>
+              <option defaultValue={null} disabled>
                 Religion
               </option>
               <option value={1}>مسلم</option>
@@ -240,7 +254,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setNationality(e.target.value)}
             >
-              <option disabled selected>
+              <option disabled defaultValue={null}>
                 Nationality
               </option>
               <option value={1}>مصري</option>
@@ -273,7 +287,7 @@ export default function AddStudent() {
               name="city"
               onChange={(e) => setCity(e.target.value)}
             >
-              <option selected disabled>
+              <option defaultValue={null}  disabled>
                 City
               </option>
               <option value={1}>الغربية</option>
@@ -311,7 +325,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setGovernorate(e.target.value)}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Governorate
               </option>
               <option value={1}>الغربية</option>
@@ -324,7 +338,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setCountry(e.target.value)}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Country
               </option>
               <option value={1}>مصر</option>
@@ -411,7 +425,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setParentCountryId(e.target.value)}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Guardian Country
               </option>
               <option value={1}>مصر</option>
@@ -426,7 +440,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setParentGovernorateId(e.target.value)}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Guardian Governorate
               </option>
               <option value={1}>الغربية</option>
@@ -439,7 +453,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setParentCityId(e.target.value)}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Guardian City
               </option>
               <option value={1}>الغربية</option>

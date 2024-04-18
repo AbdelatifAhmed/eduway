@@ -5,6 +5,7 @@ import axios from "../Api/axios";
 import {
   Button,
   Col,
+  FormGroup,
   FormLabel,
   FormSelect,
   Offcanvas,
@@ -15,28 +16,37 @@ import { MdModeEditOutline } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
 
-export default function AddCourseGrades() {
+export default function FinalGrades() {
   const [courses, setCourses] = useState([]);
   const context = useContext(AuthContext);
   const token = context?.Auth?.token;
   const [selectedCourse, setSelectedCourse] = useState();
   const [studentData, setStudentData] = useState([]);
+  const [currentSemesterId, setCurrentSemesterId] = useState();
+  const [currentSemesters, setCurrentSemesters] = useState([]);
+
+
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
-  console.log(recordsPerPage);
-  const GLOBAL_STAFF_ID = 1;
+
   useEffect(() => {
-    if (GLOBAL_STAFF_ID) {
+
       axios
-        .get(`/api/Staff/GetCourseStaffSemester${GLOBAL_STAFF_ID}`)
-        .then((res) => 
-        
-        
-        setCourses(res?.data?.data))
-        .catch((err) => console.log(err));
-    }
+      .get("/api/Control/GetAllSemester")
+      .then((res) => setCurrentSemesters(res?.data?.data))
+      .catch((err) => console.log(err));
+      
   }, []);
+  
+  useEffect(()=>{
+    if(currentSemesterId) {
+      axios
+    .get(`/api/Control/GetAllCourse${currentSemesterId}`)
+    .then((res) => setCourses(res?.data?.data))
+    .catch((err) => console.log(err));
+    }
+  },[currentSemesterId])
 
   const [displayCourses, setDisplayCourses] = useState(false);
   const openCoursesDisplay = () => setDisplayCourses(true);
@@ -52,12 +62,12 @@ export default function AddCourseGrades() {
     studentData && studentData.slice(indexOfFirstRecord, indexOfLastRecord);
   const nPages = studentData && Math.ceil(studentData.length / recordsPerPage);
 
-  const showCourses = courses ? (
+  const showCourses = currentSemesterId && courses ? (
     courses.map((course, index) => (
       <tr courses="border-bottom border-warning" key={index}>
         <td style={{ fontWeight: "bold" }}>{index + 1}</td>
-        <td style={{ fontWeight: "bold" }}>{course.code}</td>
-        <td style={{ fontWeight: "bold" }}>{course.name}</td>
+        <td style={{ fontWeight: "bold" }}>{course.courseCode}</td>
+        <td style={{ fontWeight: "bold" }}>{course.courseName}</td>
         <td>
           <Button variant="warning" onClick={() => handelChoosenCourse(course)}>
             Select
@@ -78,9 +88,9 @@ export default function AddCourseGrades() {
       // if(selectedCourse){
       let data = null;
       try {
-        // axios.get(`api/Course/GetStudentSemesterAssessMethodsBySpecificCourse${selectedCourse?.id }`)
+        // axios.get(`api/Control/GetStudentSemesterAssessMethodsBySpecificCourseControlMembers${selectedCourse?.id }`)
         await axios(
-          "api/Course/GetStudentSemesterAssessMethodsBySpecificCourse5"
+          `api/Control/GetStudentSemesterAssessMethodsBySpecificCourseControlMembers${selectedCourse?.courseId }`
         ).then((res) => {
           data = res?.data?.data;
         });
@@ -171,6 +181,18 @@ export default function AddCourseGrades() {
     </tr>
   ));
 
+  const showCurrentSemesters = currentSemesters?.semesterName ? (
+    currentSemesters?.semesterName.map((element) => (
+      <option value={element.id}>{element.name}</option>
+    ))
+  ) : (
+    <tr disabled className="text-danger">
+      <td className="text-danger" style={{ fontSize: "20px" }}>
+        No Current Semester Exists
+      </td>
+    </tr>
+  );
+
   const sendEditedDataToServer = async () => {
     const Toast = Swal.mixin({
       toast: true,
@@ -251,8 +273,8 @@ export default function AddCourseGrades() {
               fontWeight: "bold",
             }}
           >
-            {selectedCourse?.name
-              ? `Course : ${selectedCourse?.name}`
+            {selectedCourse?.courseName
+              ? `Course : ${selectedCourse?.courseName}`
               : "Choose a Course"}
           </div>
           <Offcanvas
@@ -268,7 +290,22 @@ export default function AddCourseGrades() {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              
+            <FormGroup
+                  className="mb-3"
+                  controlId="exampleForm.ControlInput1"
+                >
+                  <FormLabel style={{ fontSize: "20px" }}>
+                    Semester Name
+                  </FormLabel>
+                  <FormSelect
+                    onChange={(e) => setCurrentSemesterId(e.target.value)}
+                  >
+                    <option disabled selected>
+                      Select a Semester
+                    </option>
+                    {showCurrentSemesters}
+                  </FormSelect>
+                </FormGroup>
               <Table hover>
                 <thead>
                   <tr className="border-bottom border-warning">

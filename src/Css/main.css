@@ -37,6 +37,29 @@ ul {
 .page {
   min-height: 100vh;
 }
+
+/********************** BootStrap Styling ********************************************************/
+
+/*Accordion Focus*/
+.accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(0,0,0,.125);
+}
+
+/*Tabs Color and bg*/
+.nav-link.active {
+  color: white !important;
+  background-color: var(--primary-color) !important;
+}
+
+.nav-link {
+  color: var(--primary-color) !important;
+  font-size: 20px;
+}
+
+
+
+
 /*************************** Login Page **********************************************************/
 .login-page {
   font-family: cursive;
@@ -1059,7 +1082,7 @@ ul {
 /********************** Add Student Form *******************************************/
 
 .add-student {
-  padding: 20px;
+  padding: 15px 20px 20px;
 }
 
 .add-student .header {
@@ -1077,11 +1100,18 @@ ul {
   font-weight: bold;
   outline: none;
   transition: 0.1s linear;
+  background-color: #F5F5F5;
+  color: #000;
+}
+
+.add-student .col input[type="date"] {
+  color:#aaa;
 }
 
 .add-student .col .txt-input:focus {
-  border: 1px solid #6675f0;
-  color: #6675f0;
+  border: 1px solid black;
+  outline: 3px solid black;
+  color: black;
 }
 
 .add-student .col .list {
@@ -1090,7 +1120,11 @@ ul {
   font-weight: bold;
   border: 1px solid var(--main-color);
   border-radius: 10px;
+  background-color: #F5F5F5;
+  color: black;
 }
+
+  
 
 .add-student .col .description {
   width: 100%;
@@ -1116,12 +1150,4 @@ ul {
   gap: 0.5em;
 }
 
-.nav-link.active {
-  color: white !important;
-  background-color: var(--primary-color) !important;
-}
 
-.nav-link {
-  color: var(--primary-color) !important;
-  font-size: 20px;
-}

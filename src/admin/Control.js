@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Tab, Tabs } from "react-bootstrap";
+import { AccordionBody, Tab, Tabs } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import axios from "../Api/axios";
 import Select from "react-select";
-import { Button, Row, Col, ListGroup, Table } from "react-bootstrap";
+import { Button, Row, Col, ListGroup, Table, Accordion } from "react-bootstrap";
 import Swal from "sweetalert2";
 import GetFacultyNames from "../Components/GetFacultyNames";
 import GetStudentNames from "../Components/getStudentNames";
@@ -19,6 +19,7 @@ export default function Control() {
   const [facultyId, setFacultyId] = useState();
   const [studentId, setStudentId] = useState();
   const [semesterId, setSemesterId] = useState();
+  const [currentSemesterId, setCurrentSemesterId] = useState();
   const [departmentId, setDepartmentId] = useState();
   const [assessMethods, setAssessMethods] = useState([]);
   const [courseAssessMethods, setCourseAssessMethods] = useState([]);
@@ -29,6 +30,7 @@ export default function Control() {
   const [teacherCourses, setTeacherCourses] = useState([]);
   const [teacherId, setTeacherId] = useState();
   const [coursesName, setCoursesName] = useState();
+  const [studentBySemester, setStudentBySemester] = useState([]);
 
   const resetVariables = () => {
     setCoursesId(null);
@@ -98,30 +100,94 @@ export default function Control() {
   }, [teacherId]);
 
   useEffect(() => {
-    {
-      facultyId &&
-        axios
-          .get(`/api/AssessMethod/All${facultyId}`)
-          .then((res) => setAssessMethods(res?.data?.data))
-          .catch((err) => console.log(err));
+    if (facultyId) {
+      axios
+        .get(`/api/AssessMethod/All${facultyId}`)
+        .then((res) => setAssessMethods(res?.data?.data))
+        .catch((err) => console.log(err));
     }
 
-    {
-      facultyId &&
-        axios
-          .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
-          .then((res) => setSemester(res?.data?.data))
-          .catch((err) => console.log(err));
+    if (facultyId) {
+      axios
+        .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
+        .then((res) => setSemester(res?.data?.data))
+        .catch((err) => console.log(err));
     }
   }, [facultyId]);
 
+  useEffect(() => {
+    getStudentBySemester();
+  }, [currentSemesterId]);
+
+  const getStudentBySemester = () => {
+    if (currentSemesterId) {
+      axios(`/api/Student/as${currentSemesterId}`)
+        .then((res) => {
+          setStudentBySemester(res?.data?.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const handelStudentDelete = (student) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success mx-2",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: `Are you sure you want to End${student.studentName}?`,
+        text: "You won't be able to revert this!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`api/Student/studentSemesters${student.studentSemesterId}`)
+            .then(() => {
+              swalWithBootstrapButtons.fire({
+                title: "Deleted!",
+                text: "Your Student has been Deleted.",
+                icon: "success",
+              });
+              getStudentBySemester(currentSemesterId);
+            })
+            .catch(() => {
+              swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: "An Error Occured During End Opreation.",
+                icon: "eroor",
+              });
+            });
+    
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            text: "Your Student is safe :)",
+            icon: "error",
+          });
+        }
+      });
+  };
+
   const getCoursesForTeacher = () => {
-    {
-      teacherId &&
-        axios
-          .get(`/api/Staff/GetCourseStaffSemester${teacherId}`)
-          .then((res) => setCoursesName(res?.data?.data?.courseDoctorDtos))
-          .catch((err) => console.log(err));
+    if (teacherId) {
+      axios
+        .get(`/api/Staff/GetCourseStaffSemester${teacherId}`)
+        .then((res) => setCoursesName(res?.data?.data?.courseDoctorDtos))
+        .catch((err) => console.log(err));
     }
   };
 
@@ -133,6 +199,7 @@ export default function Control() {
     showStudents: [],
     showSemesters: [],
     showCurrentSemesters: [],
+    showCurrentSemestersForStudentSemester: [],
     showDepartments: [],
   });
 
@@ -207,7 +274,6 @@ export default function Control() {
     </option>
   );
 
-
   shows.showCurrentSemesters = currentSemesters?.semesterName ? (
     currentSemesters?.semesterName.map((element) => (
       <tr value={element.id} style={{ width: "100%" }}>
@@ -237,6 +303,19 @@ export default function Control() {
       </td>
     </tr>
   );
+  shows.showCurrentSemestersForStudentSemester = currentSemesters?.semesterName ? (
+    currentSemesters?.semesterName.map((element) => (
+      <option value={element.id}>{element.name}</option>
+    ))
+  ) : (
+    <tr disabled className="text-danger">
+      <td className="text-danger" style={{ fontSize: "20px" }}>
+        No Current Semester Exists
+      </td>
+    </tr>
+  );
+
+            
 
   const handelSubmitForAccessMethod = (event) => {
     event.preventDefault();
@@ -467,8 +546,62 @@ export default function Control() {
           </div>
         </Tab>
 
-        <Tab eventKey="semester-courses" title="Semester Courses">
+        <Tab eventKey="semester-courses" title="Student Semester ">
+          <div style={{ border: "2px solid #121431", borderRadius: "10px" }}>
+            <div
+              style={{
+                background: "#121431",
+                color: "white",
+                padding: "20px",
+                fontSize: "30px",
+              }}
+            >
+             Student Semester 
+            </div>
           
+              <Form className="p-3">
+                <Form.Group
+                  className="mb-3"
+                  controlId="exampleForm.ControlInput1"
+                >
+                  <Form.Label style={{ fontSize: "20px" }}>
+                    Semester Name
+                  </Form.Label>
+                  <Form.Select
+                    onChange={(e) => setCurrentSemesterId(e.target.value)}
+                  >
+                    <option disabled selected>
+                      Select a Semester
+                    </option>
+                    {shows.showCurrentSemestersForStudentSemester}
+                  </Form.Select>
+                </Form.Group>
+                {currentSemesterId ? <Table>
+              <thead>
+                <tr style={{fontSize:"20px",fontWeight:"bold",}}>
+                <th></th>
+                <th>Student Code</th>
+                <th>Student Name</th>
+                <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+              {studentBySemester && studentBySemester.length > 0 ? studentBySemester?.map((item,counter)=>(
+                <tr style={{fontSize:"17px"}} id={`item-${counter}`}>
+                  <td>{counter + 1}</td>
+                  <td>{item.studentCode}</td>
+                  <td>{item.studentName}</td>
+                  <td><Button variant="danger" onClick={()=>handelStudentDelete(item)}>Delete</Button></td>
+                </tr>
+              )) :
+               <tr>
+                  <td colSpan={3} style={{textAlign:"center",fontSize:"20px",fontWeight:"bold",color:"red"}}>No Data</td>
+                </tr>}
+              </tbody>
+            </Table> : <h2 style={{textAlign:"center"}}>Select Semester</h2>}
+
+              </Form>
+            </div>
         </Tab>
 
         <Tab eventKey="teacher-courses" title="Teacher Courses">
@@ -634,7 +767,9 @@ export default function Control() {
                 fontSize: "30px",
               }}
             >
-              {currentSemesters.academyYearName ? currentSemesters.academyYearName: "NO Data "}
+              {currentSemesters.academyYearName
+                ? currentSemesters.academyYearName
+                : "NO Data "}
             </div>
             <div className="p-3">
               <Table borderedless className="">

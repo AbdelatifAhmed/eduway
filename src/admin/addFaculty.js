@@ -231,45 +231,50 @@ export default function AddFaculty() {
    showParent : [] ,
   })
 
-   shows.showFaculty = facultyNames.map((index) => (
+   shows.showFaculty = facultyNames ?  facultyNames?.map((index) => (
     <option key={index.facultId} value={index?.facultId}>
       {index?.facultName}
     </option>
-  ));
-  shows.showBaylws = bylawsNames.map((index) => (
-    <option key={index.id} value={index?.id}>
-      {index?.name}
-    </option>
-  ));
+  )) : <option>No Options</option>
 
-  shows.showBands = bandNames.map((index) => (
+  shows.showBaylws = bylawsNames ?  bylawsNames?.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
-  ));
+  )) : <option>No Options</option>
 
-   shows.showSemesters = semesterNames.map((index) => (
+  shows.showBands = bandNames ? bandNames?.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
-  ));
+    )) : <option>No Options</option>
 
-   shows.showExamRoles = examRoleNames.map((index) => (
-    <option key={index.id} value={index?.id}>
-      {index?.name}
-    </option>
-  ));
 
-  shows.showPhases = phaseNames.map((index) => (
+   shows.showSemesters = semesterNames ? semesterNames?.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
-  ));
-  shows.showParent = semesterParentNames.map((index) => (
+  )) : <option>No Options</option>
+
+
+   shows.showExamRoles = examRoleNames ? examRoleNames?.map((index) => (
     <option key={index.id} value={index?.id}>
       {index?.name}
     </option>
-  ));
+    )) : <option>No Options</option>
+
+  shows.showPhases = phaseNames ? phaseNames?.map((index) => (
+    <option key={index.id} value={index?.id}>
+      {index?.name}
+    </option>
+    )) : <option>No Options</option>
+
+  shows.showParent = semesterParentNames ? semesterParentNames?.map((index) => (
+    <option key={index.id} value={index?.id}>
+      {index?.name}
+    </option>
+    )) : <option>No Options</option>
+
 
   const handelAddFaculty = async (event) => {
     event.preventDefault();
