@@ -64,7 +64,7 @@ export default function Sidebar(props) {
           </NavLink>
         </li>
         <li className={props.changeActive ? "logout" : "logout active-1"}>
-          <NavLink to="s">
+          <NavLink to="/">
             <i className="fa-solid fa-arrow-right-from-bracket"></i>
             <span>Logout</span>
           </NavLink>

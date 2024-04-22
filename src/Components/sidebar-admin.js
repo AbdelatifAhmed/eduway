@@ -44,18 +44,24 @@ export default function SidebarAdmin(props) {
         </li>
         <li>
           <NavLink to="/admin/course-grades">
-            <i className="fa-solid fa-sliders fa-fw"></i>
+            <i className="fa-solid fa-file-import fa-fw"></i>
             <span>Enter Grades</span>
           </NavLink>
         </li>
         <li>
           <NavLink to="/admin/final-grades">
-            <i className="fa-solid fa-sliders fa-fw"></i>
+            <i className="fa-solid fa-file-arrow-up fa-fw"></i>
             <span>Enter Final Grades</span>
           </NavLink>
         </li>
+        <li>
+          <NavLink to="/admin/monitor-grades">
+            <i className="fa-solid fa-file-circle-check fa-fw"></i>
+            <span>Monitor Grades</span>
+          </NavLink>
+        </li>
         <li className={props.changeActive ? "logout" : "logout active-1"}>
-          <NavLink to="s">
+          <NavLink to="/">
             <i className="fa-solid fa-arrow-right-from-bracket"></i>
             <span>Logout</span>
           </NavLink>

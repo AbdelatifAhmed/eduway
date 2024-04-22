@@ -767,8 +767,8 @@ export default function Control() {
                 fontSize: "30px",
               }}
             >
-              {currentSemesters.academyYearName
-                ? currentSemesters.academyYearName
+             Academic Year :  {currentSemesters.academyYearName
+                ?  currentSemesters.academyYearName
                 : "NO Data "}
             </div>
             <div className="p-3">

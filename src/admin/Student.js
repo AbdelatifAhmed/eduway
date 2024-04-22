@@ -17,6 +17,10 @@ export default function Student(props) {
   const [recordsPerPage ,  setRecordsPerPage] = useState(10);
 
   useEffect(() => {
+      getStudents()
+  }, []);
+
+  const getStudents = () =>{
     axios
       .get("/api/Student/GetAllStudents", {
         headers: {
@@ -26,7 +30,7 @@ export default function Student(props) {
       })
       .then((res) => setStudent(res.data.data))
       .catch((err) => console.log(err));
-  }, []);
+  }
 
   const handelDelete = (std)=>{
     const swalWithBootstrapButtons = Swal.mixin({
@@ -56,8 +60,8 @@ export default function Student(props) {
                 text: "Your Student has been Deleted.",
                 icon: "success",
               });
-              // getStudentBySemester(currentSemesterId);
-            })
+              getStudents()
+              })
             .catch(() => {
               swalWithBootstrapButtons.fire({
                 title: "Error!",
