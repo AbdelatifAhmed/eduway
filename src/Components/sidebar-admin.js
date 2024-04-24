@@ -50,7 +50,7 @@ export default function SidebarAdmin(props) {
         </li>
         <li>
           <NavLink to="/admin/final-grades">
-            <i className="fa-solid fa-file-arrow-up fa-fw"></i>
+            <i className="fa-solid fa-file-circle-plus fa-fw"></i>
             <span>Enter Final Grades</span>
           </NavLink>
         </li>

@@ -1,10 +1,10 @@
 import { FaSort } from "react-icons/fa";
 import Pagination from "../Components/Pagination";
-import {  useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "../Api/axios";
 import { AuthContext } from "../Auth/AuthContext";
 import { Link } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { Button, Col, FormLabel, FormSelect, Row } from "react-bootstrap";
 import Swal from "sweetalert2";
 export default function Courses(props) {
   const [courses, setCourses] = useState([]);
@@ -14,13 +14,13 @@ export default function Courses(props) {
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage] = useState(10);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
 
   useEffect(() => {
-    getCourses()
+    getCourses();
   }, []);
 
- const  getCourses = () =>{
+  const getCourses = () => {
     axios
       .get("/api/Course", {
         headers: {
@@ -30,9 +30,9 @@ export default function Courses(props) {
       })
       .then((res) => setCourses(res.data.data))
       .catch((err) => console.log(err));
-  }
+  };
 
-  const handelDelete = (course)=>{
+  const handelDelete = (course) => {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success mx-2",
@@ -60,7 +60,7 @@ export default function Courses(props) {
                 text: "Your Student has been Deleted.",
                 icon: "success",
               });
-              getCourses()
+              getCourses();
             })
             .catch(() => {
               swalWithBootstrapButtons.fire({
@@ -69,9 +69,7 @@ export default function Courses(props) {
                 icon: "eroor",
               });
             });
-        } else if (
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire({
             title: "Cancelled",
             text: "Your Course is safe :)",
@@ -79,43 +77,89 @@ export default function Courses(props) {
           });
         }
       });
-  }
+  };
 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = courses.slice(indexOfFirstRecord, indexOfLastRecord);
-  const nPages = Math.ceil(courses.length / recordsPerPage);
+  const currentRecords =
+    courses && courses.slice(indexOfFirstRecord, indexOfLastRecord);
+  const nPages = courses && Math.ceil(courses.length / recordsPerPage);
 
-  const showCourses = currentRecords.map((course) => (
-    <tr key={course.id}>
-      <td>{course.name}</td>
-      <td>{course.code}</td>
-      <td>{course.description}</td>
-      <td>{course.maxDegree}</td>
-      <td>{course.minDegree}</td>
-      <td>{course.type === 1 ? "اجباري" : "اختياري"}</td>
-      <td>{course.numberOfPoints === null ? "N/A" : course.numberOfPoints}</td>
-      <td>
-        {course.numberOfCreditHours === null
-          ? "N/A"
-          : course.numberOfCreditHours}
-      </td>
-      <td className="d-flex gap-2">
-        <Button variant="danger" onClick={()=>handelDelete(course)}>Delete</Button>
-        <Link to={`course/${course.id}`} className="btn btn-warning text-dark">view</Link>
+  const showCourses = courses ? (
+    currentRecords.map((course) => (
+      <tr key={course.id}>
+        <td>{course.name}</td>
+        <td>{course.code}</td>
+        <td>{course.description}</td>
+        <td>{course.maxDegree}</td>
+        <td>{course.minDegree}</td>
+        <td>{course.type === 1 ? "اجباري" : "اختياري"}</td>
+        <td>
+          {course.numberOfPoints === null ? "N/A" : course.numberOfPoints}
+        </td>
+        <td>
+          {course.numberOfCreditHours === null
+            ? "N/A"
+            : course.numberOfCreditHours}
+        </td>
+        <td className="d-flex gap-2">
+          <Button variant="danger" onClick={() => handelDelete(course)}>
+            Delete
+          </Button>
+          <Link
+            to={`course/${course.id}`}
+            className="btn btn-warning text-dark"
+          >
+            view
+          </Link>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td
+        colSpan={9}
+        style={{
+          textAlign: "center",
+          fontSize: "20px",
+          fontWeight: "bold",
+          color: "red",
+        }}
+      >
+        No Data
       </td>
     </tr>
-  ));
+  );
+
   return (
     <div className="pad">
-      <header>
-        <Link
-          to="/admin/add-course"
-          className="btn btn-info btn-lg"
-          style={{ color: "white" }}
-        >
-          + Add New Course
-        </Link>
+      <header className="d-flex justify-content-between ">
+        <div>
+          <Link
+            to="/admin/add-course"
+            className="btn btn-info btn-lg"
+            style={{ color: "white" }}
+          >
+            + Add New Course
+          </Link>
+        </div>
+        <div style={{ width: "200px" }}>
+          <Row>
+            <Col className="d-flex justify-content-end ">
+              <FormLabel style={{ fontSize: "25px" }}>Display</FormLabel>
+            </Col>
+            <Col>
+              <FormSelect onChange={(e) => setRecordsPerPage(e.target.value)}>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+                <option value={30}>30</option>
+                <option value={40}>40</option>
+                <option value={50}>50</option>
+              </FormSelect>
+            </Col>
+          </Row>
+        </div>
+        <div></div>
       </header>
       <div className="table-content">
         <table className="table table-striped">
@@ -188,8 +232,7 @@ export default function Courses(props) {
               <th scope="col" style={{ background: "#121431", color: "white" }}>
                 <div className="th-flex">
                   <span className="th-name">Operations</span>
-                  <span>
-                  </span>
+                  <span></span>
                 </div>
               </th>
             </tr>

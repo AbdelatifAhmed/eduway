@@ -218,7 +218,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setGender(e.target.value)}
             >
-              <option defaultValue={null} disabled>
+              <option selected disabled>
                 Gender
               </option>
               <option value={1}>Male</option>
@@ -239,7 +239,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setReligion(e.target.value)}
             >
-              <option defaultValue={null} disabled>
+              <option selected disabled>
                 Religion
               </option>
               <option value={1}>مسلم</option>
@@ -254,7 +254,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setNationality(e.target.value)}
             >
-              <option disabled defaultValue={null}>
+              <option disabled selected>
                 Nationality
               </option>
               <option value={1}>مصري</option>
@@ -287,7 +287,7 @@ export default function AddStudent() {
               name="city"
               onChange={(e) => setCity(e.target.value)}
             >
-              <option defaultValue={null}  disabled>
+              <option selected  disabled>
                 City
               </option>
               <option value={1}>الغربية</option>
@@ -325,7 +325,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setGovernorate(e.target.value)}
             >
-              <option defaultValue={null} disabled>
+              <option selected disabled>
                 Governorate
               </option>
               <option value={1}>الغربية</option>
@@ -338,7 +338,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setCountry(e.target.value)}
             >
-              <option defaultValue={null} disabled>
+              <option selected disabled>
                 Country
               </option>
               <option value={1}>مصر</option>
@@ -425,7 +425,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setParentCountryId(e.target.value)}
             >
-              <option defaultValue={null} disabled>
+              <option selected disabled>
                 Guardian Country
               </option>
               <option value={1}>مصر</option>
@@ -440,7 +440,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setParentGovernorateId(e.target.value)}
             >
-              <option defaultValue={null} disabled>
+              <option selected disabled>
                 Guardian Governorate
               </option>
               <option value={1}>الغربية</option>
@@ -453,7 +453,7 @@ export default function AddStudent() {
               className="list"
               onChange={(e) => setParentCityId(e.target.value)}
             >
-              <option defaultValue={null} disabled>
+              <option selected disabled>
                 Guardian City
               </option>
               <option value={1}>الغربية</option>
