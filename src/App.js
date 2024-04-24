@@ -34,6 +34,8 @@ import FinalGrades from "./Courses/finalGrades.js";
 import StudentView from "./admin/studentView.js";
 import CourseView from "./admin/CourseView.js";
 import MonitorGrades from "./Courses/MonitorGrades.js";
+import StudentResult from "./Reports/StudentResult.js";
+import StudentCourse from "./Reports/StudentCourse.js";
 export default function App() {
   return (
     <div>
@@ -69,6 +71,8 @@ export default function App() {
           <Route path="course-grades" element={<AddCourseGrades />} />
           <Route path="final-grades" element={<FinalGrades />} />
           <Route path="monitor-grades" element={<MonitorGrades />} />
+          <Route path="student-course" element={<StudentCourse />} />
+          <Route path="student-course/student/:studentId" element={<StudentResult />} />
         </Route>
         {/* </Route> */}
         {/* </Route> */}

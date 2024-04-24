@@ -236,7 +236,7 @@ export default function FinalGrades() {
         <header style={{ paddingRight: "15px" }}>
           <div className="d-flex justify-content-between ">
             <div>
-              <Button variant="dark" onClick={sendEditedDataToServer}>
+              <Button variant="success"  onClick={sendEditedDataToServer}>
                 Save
               </Button>
             </div>
@@ -259,7 +259,7 @@ export default function FinalGrades() {
               </Row>
             </div>
             <div>
-              <Button variant="dark" onClick={openCoursesDisplay}>
+              <Button variant="dark" onClick={openCoursesDisplay} className="button1">
                 Select Course
               </Button>
             </div>
