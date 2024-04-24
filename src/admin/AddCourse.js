@@ -38,9 +38,9 @@ export default function AddCourse() {
   //GET FOR API
   const [getCourses, setGetCourses] = useState([]);
   const [getDepartment, setGetDepartment] = useState([]);
-  const showDepartment = getDepartment.map(()=>(
-    <option></option>
-  ))
+  const showDepartment = getDepartment? getDepartment.map((dept)=>(
+    <option value={dept.departmentId}>{dept.departmentName}</option>
+  )) : <option disabled className="text-danger">No Data</option>
 
   useEffect(() => {
     axios
@@ -219,12 +219,10 @@ export default function AddCourse() {
         {/* End of row */}
         <div className="row pt-3">
           <div className="col">
-            <input
-              type="text"
-              className="txt-input"
-              placeholder="Course Department"
-              onChange={(e) => setDepartmentId(+e.target.value)}
-            />
+            <select  onChange={(e) => setDepartmentId(+e.target.value)} className="list">
+              <option selected disabled>Choose a Department</option>
+              {showDepartment}
+            </select>
           </div>
           <div className="col">
             <input
