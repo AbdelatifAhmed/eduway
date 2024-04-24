@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "../Api/axios";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Button } from "react-bootstrap";
 
 export default function StudentResult() {
     const StudentId = useParams()
@@ -14,20 +15,53 @@ export default function StudentResult() {
         console.log(err);
       })
     },[])
+
+    const navigator = useNavigate();
+    const goBack = () => {
+      navigator(-1);
+    };
   return (
     <div className="student-result pad">
-
+      <div className="mb-2">
+        <Button variant="dark" onClick={goBack} >Back To Student Course</Button>
+      </div>
       <header className="para">
-        <div className="item">
+        <div className="item-1">
           <span>
             student name : <span>{studentData?.studentName || ""}</span>
           </span>
         </div>
-        <div className="item">
+        <div className="item-1">
           <span>
             student code : <span>{studentData?.studentCode}</span>
           </span>
         </div>
+        <div className="item-1">
+          <span>
+            Status : <span>{studentData?.studentSemesterStatus}</span>
+          </span>
+        </div>
+        <div className="item">
+          <span>
+            Semester Percentage : <span>{studentData?.studentSemesterPercentage}</span>
+          </span>
+        </div>
+        <div className="item">
+          <span>
+            Semester Char : <span>{studentData?.studentSemesterChar}</span>
+          </span>
+        </div>
+        <div className="item">
+          <span>
+          Cumulative Percentage : <span>{studentData?.studentCumulativePercentage}</span>
+          </span>
+        </div>
+        <div className="item">
+          <span>
+          Cumulative Char  : <span>{studentData?.studentCumulativeChar}</span>
+          </span>
+        </div>
+        
       </header>
       <hr />
       <table>

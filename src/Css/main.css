@@ -1073,12 +1073,18 @@ ul {
   background-color:  rgb(12, 12, 58);
   padding: 12px 10px;
   display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
   border-radius: 0 10px 0 10px;
 }
+
 .student-result .item{
-  justify-content: space-between;
-  width: 50%;
-  
+  /* justify-content: space-between; */
+  width: calc(25% - 20px);
+}
+.student-result .item-1{
+  /* justify-content: space-between; */
+  width: calc((100% / 3) - 30px);
 }
 
 

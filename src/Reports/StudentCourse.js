@@ -17,12 +17,14 @@ export default function StudentCourse() {
   useEffect(() => {
     axios("/api/AcademyYear/N")
       .then((res) => {
-        setAcademicYears(res?.data);
+        setAcademicYears(res?.data?.data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
+
+
   const showAcademicYears =
     academicYears && academicYears.length > 0 ? (
       academicYears.map((element, index) => (
@@ -43,7 +45,7 @@ export default function StudentCourse() {
     if (academicYearId) {
       axios(`/api/Control/SA${academicYearId}`)
         .then((res) => {
-          setSemesters(res?.data);
+          setSemesters(res?.data?.data);
         })
         .catch((err) => {
           console.log(err);
