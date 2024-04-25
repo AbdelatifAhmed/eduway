@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import axios from "../Api/axios";
-import Pagination from "../Components/Pagination";
-import { FaSort } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import axios from "../../Api/axios";
+import Pagination from "../../Components/Pagination";
 import StaffData from "./StaffData";
 
 export default function Staff() {

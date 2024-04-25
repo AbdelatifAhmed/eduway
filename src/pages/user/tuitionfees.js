@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Sidebar from "../Components/sidebar";
-import Navbar from "../Components/navbar";
+import Sidebar from "../../Components/sidebar";
+import Navbar from "../../Components/navbar";
 export default function TuitionFees() {
   const [changeActive, setChangeActive] = useState(true);
   return (

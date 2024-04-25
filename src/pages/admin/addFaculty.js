@@ -1,4 +1,4 @@
-import axios from "../Api/axios";
+import axios from "../../Api/axios";
 import { useEffect, useState } from "react";
 import { Col, Container, FloatingLabel, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";

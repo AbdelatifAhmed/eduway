@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
-import Pagination from "../Components/Pagination";
-import { AuthContext } from "../Auth/AuthContext";
-import axios from "../Api/axios";
+import Pagination from "../../Components/Pagination";
+import { AuthContext } from "../../Auth/AuthContext";
+import axios from "../../Api/axios";
 import {
   Button,
   Col,

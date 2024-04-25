@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Button,
   Col,
   FloatingLabel,
   FormGroup,
@@ -8,9 +9,10 @@ import {
   Row,
   Table,
 } from "react-bootstrap";
-import axios from "../Api/axios";
-import Pagination from "../Components/Pagination";
-import { Link } from "react-router-dom";
+import axios from "../../Api/axios";
+import Pagination from "../../Components/Pagination";
+import { Link, useNavigate } from "react-router-dom";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function StudentCourse() {
   const [academicYears, setAcademicYears] = useState([]);
@@ -81,7 +83,7 @@ export default function StudentCourse() {
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [recordsPerPage, setRecordsPerPage] = useState(10);
+  const [recordsPerPage] = useState(10);
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   const currentRecords =
@@ -115,8 +117,17 @@ export default function StudentCourse() {
         </td>
       </tr>
     );
+    const navigator = useNavigate();
+  const goBack = () => {
+    navigator(-1);
+  };
   return (
     <div className="pad">
+      <div>
+        <Button onClick={goBack}>
+        <FaArrowLeft/>
+        </Button>
+        </div>
       <header>
         <Row>
           <Col>

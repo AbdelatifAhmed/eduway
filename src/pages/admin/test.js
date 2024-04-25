@@ -1,5 +1,3 @@
-import Select from "react-select";
-import axios from "../Api/axios";
 import React, { useState, useEffect } from 'react';
 import { Table, Pagination } from 'react-bootstrap';
 function Test() {

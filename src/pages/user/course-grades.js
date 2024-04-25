@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
-import Sidebar from "../Components/sidebar";
-import Navbar from "../Components/navbar";
-import CourseGradesTable from "../Components/course-grades-table";
+import Sidebar from "../../Components/sidebar";
+import Navbar from "../../Components/navbar";
+import CourseGradesTable from "../../Components/course-grades-table";
 export default function CourseGrades() {
   const [changeActive, setChangeActive] = useState(true);
   return (

@@ -1,4 +1,4 @@
-import AddStaffData from "./addStaffData";
+import AddStaffData from "../admin/addStaffData";
 
 export default function AddControlMember() {
   return (

@@ -1,8 +1,8 @@
 import { FaSort } from "react-icons/fa";
-import Pagination from "../Components/Pagination";
+import Pagination from "../../Components/Pagination";
 import { useContext, useEffect, useState } from "react";
-import axios from "../Api/axios";
-import { AuthContext } from "../Auth/AuthContext";
+import axios from "../../Api/axios";
+import { AuthContext } from "../../Auth/AuthContext";
 import { Link } from "react-router-dom";
 import { Button, Col, FormLabel, FormSelect, Row } from "react-bootstrap";
 import Swal from "sweetalert2";

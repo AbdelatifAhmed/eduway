@@ -60,6 +60,12 @@ export default function SidebarAdmin(props) {
             <span>Monitor Grades</span>
           </NavLink>
         </li>
+        <li>
+          <NavLink to="/admin/reports">
+            <i className="fa-solid fa-folder-open fa-fw"></i>
+            <span>Reports</span>
+          </NavLink>
+        </li>
         <li className={props.changeActive ? "logout" : "logout active-1"}>
           <NavLink to="/">
             <i className="fa-solid fa-arrow-right-from-bracket"></i>

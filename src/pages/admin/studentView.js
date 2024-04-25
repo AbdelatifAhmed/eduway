@@ -1,9 +1,9 @@
-import axios from "../Api/axios";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import axios from "../../Api/axios";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function AddStudent() {
+export default function StudentView() {
   const [nameEG, setNameEg] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [studentCode, setStudentCode] = useState("");
@@ -33,6 +33,46 @@ export default function AddStudent() {
   const [parentCityId, setParentCityId] = useState();
   const [parentStreet, setParentStreet] = useState("");
   const [parentPhoneNum, setParentPhoneNum] = useState("");
+  const [studentAddress,setStudentAddress] = useState([])
+  const Studentid = useParams();
+  console.log(date);
+  useEffect(() => {
+    axios
+      .get(`/api/Student/GetStudent?uId=${Studentid?.studentId}`)
+      .then((res) => {
+        const resData = res?.data?.data;
+
+        console.log(resData);
+        setCountry( resData?.studentAddress.split(',')[0] )
+        setGovernorate( resData?.studentAddress.split(',')[1])
+        setCity( resData?.studentAddress.split(',')[2])
+        setStreet( resData?.studentAddress.split(',')[3])
+
+        // Setting each state variable with the corresponding value from the fetched data object
+        setNameEg(resData?.nameEnglish || "");
+        setNameAr(resData?.nameArabic || "");
+        setStudentCode(resData?.studentCode || "");
+        setMail(resData?.email || "");
+        setNationalId(resData?.nationalID || "");
+        setDate(resData?.dateOfBirth)
+        // Similarly for other state variables
+        setGender(resData?.gender || "");
+        setDate(resData?.dateOfBirth || "");
+        setReligion(resData?.religion || "");
+        setNationality(resData?.nationality || "");
+        setPlaceOfBirth(resData?.placeOfBirth || "");
+        setPostalCode(resData?.postalCode || "");
+        setReleasePlace(resData?.releasePlace || "");
+        // Continue setting other state variables
+        setPrequalification(resData?.preQualification || "");
+        setPrequalificationYear(resData?.qualificationYear || "");
+        setSeatNumber(resData?.seatNumber || "");
+        setDegree(resData?.degree || "");
+        setParentName(resData?.parentName || "");
+        setParentJop(resData?.parentJob || "");
+        setParentStreet(resData?.parentAddress.split(",")[0] || "");
+      });
+  }, []);
 
   const navigator = useNavigate();
   const goBack = () => {
@@ -71,8 +111,8 @@ export default function AddStudent() {
     });
     try {
       await axios
-        .post(
-          "/api/Student/AddStudent",
+        .put(
+          "/api/Student/Update",
           {
             studentCode,
             nameArabic: nameAr,
@@ -114,7 +154,7 @@ export default function AddStudent() {
           if (response.status === 201) {
             Toast.fire({
               icon: "success",
-              title: "Signed in successfully",
+              title: response?.data?.message,
             });
           }
         });
@@ -131,7 +171,7 @@ export default function AddStudent() {
         style={{ marginLeft: "20px" }}
         className="d-flex  justify-content-between"
       >
-        <h1 className="d-inline">Add Student </h1>
+        <h1 className="d-inline">Update Student </h1>
         <div className="d-flex  gap-2 p-2">
           <button className="btn btn-info btn-md " style={{ color: "white" }}>
             Save
@@ -144,7 +184,7 @@ export default function AddStudent() {
           </button>
         </div>
       </div>
-      
+
       <div className="add-student">
         <div className="header">Basic Information</div>
         <div className="row">
@@ -153,6 +193,7 @@ export default function AddStudent() {
               type="text"
               className="txt-input"
               placeholder="Student Code"
+              value={studentCode}
               onChange={(e) => setStudentCode(e.target.value)}
             />
           </div>
@@ -161,6 +202,7 @@ export default function AddStudent() {
               type="text"
               className="txt-input"
               placeholder="Name in English"
+              value={nameEG}
               onChange={(e) => setNameEg(e.target.value)}
             />
           </div>
@@ -168,19 +210,20 @@ export default function AddStudent() {
             <input
               type="text"
               className="txt-input"
+              value={nameAr}
               placeholder="Name in Arabic"
               onChange={(e) => setNameAr(e.target.value)}
             />
           </div>
-         
         </div>
         <div className="row pt-3">
-        <div className="col">
+          <div className="col">
             <input
               type="email"
               className="txt-input"
               placeholder="Mail"
               onChange={(e) => setMail(e.target.value)}
+              value={mail}
             />
           </div>
           <div className="col">
@@ -188,26 +231,8 @@ export default function AddStudent() {
               type="text"
               className="txt-input"
               placeholder="National Id"
+              value={nationalId}
               onChange={(e) => setNationalId(e.target.value)}
-            />
-          </div>
-          
-        </div>
-        <div className="row pt-3">
-        <div className="col">
-            <input
-              type="password"
-              className="txt-input"
-              placeholder="password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <div className="col">
-            <input
-              type="password"
-              className="txt-input"
-              placeholder="Confirm Password"
-              onChange={(e) => setConPassword(e.target.value)}
             />
           </div>
         </div>
@@ -217,8 +242,9 @@ export default function AddStudent() {
             <select
               className="list"
               onChange={(e) => setGender(e.target.value)}
+              value={Gender}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Gender
               </option>
               <option value={1}>Male</option>
@@ -232,14 +258,16 @@ export default function AddStudent() {
               placeholder="Date of birth"
               title="Date of birth"
               onChange={(e) => setDate(e.target.value)}
+              value={date}
             />
           </div>
           <div className="col">
             <select
               className="list"
               onChange={(e) => setReligion(e.target.value)}
+              value={religion}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Religion
               </option>
               <option value={1}>مسلم</option>
@@ -253,8 +281,9 @@ export default function AddStudent() {
             <select
               className="list"
               onChange={(e) => setNationality(e.target.value)}
+              value={nationality}
             >
-              <option disabled selected>
+              <option disabled defaultValue={null}>
                 Nationality
               </option>
               <option value={1}>مصري</option>
@@ -267,6 +296,7 @@ export default function AddStudent() {
               className="txt-input"
               placeholder="Place of Birth"
               onChange={(e) => setPlaceOfBirth(e.target.value)}
+              value={placeOfBirth}
             />
           </div>
           <div className="col">
@@ -275,6 +305,7 @@ export default function AddStudent() {
               className="txt-input"
               placeholder="Release place"
               onChange={(e) => setReleasePlace(e.target.value)}
+              value={releasePlace}
             />
           </div>
         </div>
@@ -285,9 +316,10 @@ export default function AddStudent() {
               className="list"
               id="exampleSelectVendor"
               name="city"
+              value={city}
               onChange={(e) => setCity(e.target.value)}
             >
-              <option selected  disabled>
+              <option defaultValue={null} disabled>
                 City
               </option>
               <option value={1}>الغربية</option>
@@ -324,8 +356,9 @@ export default function AddStudent() {
             <select
               className="list"
               onChange={(e) => setGovernorate(e.target.value)}
+              value={governorate}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Governorate
               </option>
               <option value={1}>الغربية</option>
@@ -337,8 +370,9 @@ export default function AddStudent() {
             <select
               className="list"
               onChange={(e) => setCountry(e.target.value)}
+              value={country}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Country
               </option>
               <option value={1}>مصر</option>
@@ -353,6 +387,7 @@ export default function AddStudent() {
               type="text"
               className="txt-input"
               placeholder="Street"
+              value={street}
               onChange={(e) => setStreet(e.target.value)}
             />
           </div>
@@ -361,6 +396,7 @@ export default function AddStudent() {
               type="text"
               className="txt-input"
               placeholder="Postal Code"
+              value={postalCode}
               onChange={(e) => setPostalCode(e.target.value)}
             />
           </div>
@@ -372,6 +408,7 @@ export default function AddStudent() {
               type="text"
               className="txt-input"
               placeholder="Prequalification"
+              value={prequalification}
               onChange={(e) => setPrequalification(e.target.value)}
             />
           </div>
@@ -380,6 +417,7 @@ export default function AddStudent() {
               type="date"
               className="txt-input"
               title="Prequalification Year"
+              value={prequalificationYear}
               onChange={(e) => setPrequalificationYear(e.target.value)}
             />
           </div>
@@ -390,6 +428,7 @@ export default function AddStudent() {
               type="number"
               className="txt-input"
               placeholder="Seat Number"
+              value={seatNumber}
               onChange={(e) => setSeatNumber(e.target.value)}
             />
           </div>
@@ -398,6 +437,7 @@ export default function AddStudent() {
               type="number"
               className="txt-input"
               placeholder="Degeree"
+              value={degree}
               onChange={(e) => setDegree(e.target.value)}
             />
           </div>
@@ -409,6 +449,7 @@ export default function AddStudent() {
               type="text"
               className="txt-input"
               placeholder="Guardian Name"
+              value={parentName}
               onChange={(e) => setParentName(e.target.value)}
             />
           </div>
@@ -417,15 +458,17 @@ export default function AddStudent() {
               type="text"
               className="txt-input"
               placeholder="Guardian Job"
+              value={parentJop}
               onChange={(e) => setParentJop(e.target.value)}
             />
           </div>
           <div className="col">
             <select
               className="list"
+              value={parentCountryId}
               onChange={(e) => setParentCountryId(e.target.value)}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Guardian Country
               </option>
               <option value={1}>مصر</option>
@@ -438,9 +481,10 @@ export default function AddStudent() {
           <div className="col">
             <select
               className="list"
+              value={parentGovernorateId}
               onChange={(e) => setParentGovernorateId(e.target.value)}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Guardian Governorate
               </option>
               <option value={1}>الغربية</option>
@@ -451,9 +495,10 @@ export default function AddStudent() {
           <div className="col">
             <select
               className="list"
+              value={parentCityId}
               onChange={(e) => setParentCityId(e.target.value)}
             >
-              <option selected disabled>
+              <option defaultValue={null} disabled>
                 Guardian City
               </option>
               <option value={1}>الغربية</option>
@@ -491,6 +536,7 @@ export default function AddStudent() {
               type="text"
               className="txt-input"
               placeholder="Guardian Street"
+              value={parentStreet}
               onChange={(e) => setParentStreet(e.target.value)}
             />
           </div>
@@ -499,6 +545,7 @@ export default function AddStudent() {
               type="text"
               className="txt-input"
               placeholder="Phone Number"
+              value={parentPhoneNum}
               onChange={(e) => setParentPhoneNum(e.target.value)}
             />
           </div>
