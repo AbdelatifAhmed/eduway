@@ -15,7 +15,7 @@ export default function Reports() {
           </Card.Text>
         </Card.Body>
           <Card.Footer >
-          <Link to={"/admin/student-course"} className="btn btn-dark">Go to page</Link>
+          <Link to={"/admin/student-result"} className="btn btn-dark">Go to page</Link>
           </Card.Footer>
       </Card>
 
@@ -28,7 +28,7 @@ export default function Reports() {
           </Card.Text>
         </Card.Body>
           <Card.Footer >
-          <Link to={"/admin/semester-course"} className="btn btn-dark">Go to page</Link>
+          <Link to={"/admin/semester-result"} className="btn btn-dark">Go to page</Link>
           </Card.Footer>
       </Card>
     </div>

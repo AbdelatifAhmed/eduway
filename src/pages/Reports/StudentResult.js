@@ -34,7 +34,7 @@ export default function StudentResult() {
         <td>{course.courseStatus}</td>
         <td>
           {course?.courseDegreeDetiles.map((deg) => (
-            <div>
+            <div style = {{whiteSpace:'nowrap'}}>
               {deg.assessMethodsName} : 
               <span
                 style={
@@ -51,7 +51,7 @@ export default function StudentResult() {
       </tr>
     ))
   ) : (
-    <tr>
+    <tr >
       <td
         colSpan={8}
         style={{ fontSize: "20px", textAlign: "center", color: "red" }}
@@ -61,7 +61,7 @@ export default function StudentResult() {
     </tr>
   );
   return (
-    <div className="student-result pad">
+    <div className="result pad">
       <div className="mb-2">
         <Button onClick={goBack}>
         <FaArrowLeft />
@@ -118,7 +118,8 @@ export default function StudentResult() {
         </div>
       </header>
       <hr />
-      <table style={{ overflow: "scroll" }}>
+     <div className="table-content" >
+     <table>
         <thead>
           <tr>
             <td></td>
@@ -147,6 +148,7 @@ export default function StudentResult() {
         </thead>
         <tbody>{showCourses}</tbody>
       </table>
+     </div>
     </div>
   );
 }

@@ -97,7 +97,7 @@ export default function Student(props) {
       <td>{student.religion}</td>
       <td className="d-flex gap-2">
         <Button variant="danger" onClick={()=>handelDelete(student)}>Delete</Button>
-        <Link to={`student/${student.userId}`} className="btn btn-warning text-dark">view</Link>
+        <Link to={`student/${student.studentId}`} className="btn btn-warning text-dark">view</Link>
       </td>
     </tr>
   )): <tr>

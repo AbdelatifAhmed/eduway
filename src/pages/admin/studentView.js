@@ -38,10 +38,9 @@ export default function StudentView() {
   console.log(date);
   useEffect(() => {
     axios
-      .get(`/api/Student/GetStudent?uId=${Studentid?.studentId}`)
+      .get(`/api/Student/InfoData${Studentid?.studentId}`)
       .then((res) => {
         const resData = res?.data?.data;
-
         console.log(resData);
         setCountry( resData?.studentAddress.split(',')[0] )
         setGovernorate( resData?.studentAddress.split(',')[1])
@@ -71,7 +70,11 @@ export default function StudentView() {
         setParentName(resData?.parentName || "");
         setParentJop(resData?.parentJob || "");
         setParentStreet(resData?.parentAddress.split(",")[0] || "");
-      });
+      })
+      .catch((err)=>
+    {
+      console.log(err);
+    })
   }, []);
 
   const navigator = useNavigate();

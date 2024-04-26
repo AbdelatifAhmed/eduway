@@ -30,13 +30,14 @@ import AddControlMember from "./pages/admin/addControlMember.js";
 import Control from "./pages/admin/Control.js";
 import AddCourseGrades from "./pages/Courses/courseGrade.js";
 import Test2 from "./test2.js";
-import FinalGrades from "./Courses/finalGrades.js";
+import FinalGrades from "./pages/Courses/finalGrades.js";
 import StudentView from "./pages/admin/studentView.js";
 import CourseView from "./pages/admin/CourseView.js";
 import MonitorGrades from "./pages/Courses/MonitorGrades.js";
+import Reports from "./pages/Reports/Reports.js";
 import StudentResult from "./pages/Reports/StudentResult.js";
 import StudentCourse from "./pages/Reports/StudentCourse.js";
-import Reports from "./pages/Reports/Reports.js";
+import SemesterResult from "./pages/Reports/SemesterResult.js";
 export default function App() {
   return (
     <div>
@@ -73,8 +74,9 @@ export default function App() {
           <Route path="final-grades" element={<FinalGrades />} />
           <Route path="monitor-grades" element={<MonitorGrades />} />
           <Route path="reports" element={<Reports />} />
-          <Route path="student-course" element={<StudentCourse />} />
-          <Route path="student-course/student/:studentId" element={<StudentResult />} />
+          <Route path="student-result" element={<StudentCourse />} />
+          <Route path="student-result/student/:studentId" element={<StudentResult />} />
+          <Route path="semester-result" element={<SemesterResult />} />
         </Route>
         {/* </Route> */}
         {/* </Route> */}

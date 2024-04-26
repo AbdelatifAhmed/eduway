@@ -1,59 +1,93 @@
-import React, { useState, useEffect } from 'react';
-import { Table, Pagination } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import axios from '../../Api/axios';
+import { Table } from 'react-bootstrap';
+
 function Test() {
-  const [data, setData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-
-  // Fetch data from API when the component mounts
+  const [data , setStudents] = useState([])
   useEffect(() => {
-    fetchData();
+   
+      axios(`/api/Control/SSR${3},${1}`)
+        .then((res) => {
+          setStudents(res?.data?.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
   }, []);
-
-  // Simulated data fetching function
-  const fetchData = () => {
-    // Replace this with actual API call to fetch data
-    const newData = [...Array(100).keys()].map((index) => ({
-      id: index + 1,
-      name: `Item ${index + 1}`,
-    }));
-    setData(newData);
-  };
-
-  // Logic to calculate current items based on pagination
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
   return (
-    <div>
-      <Table striped bordered hover>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentItems.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.name}</td>
+    <Table style={{width:"100%", }}>
+       <thead>
+        <tr>
+          <th>Student Code</th>
+          <th>Student Name</th>
+          <th>Semester Percentage</th>
+          <th>Semester Char</th>
+          <th>Cumulative Percentage</th>
+          <th>Cumulative Char</th>
+          <th>Semester Status</th>
+          <th>Course Code</th>
+          <th>Course Name</th>
+          <th>Course Degree</th>
+          <th>Course Char</th>
+          <th>Number Of Points</th>
+          <th>Course Status</th>
+          <th>Course Degree Detiles</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data.studentsDetiels?.map((student, index) => ( 
+          <React.Fragment key={index}>
+            <tr>
+              <td rowSpan={student.studentCourseDetiles.length}>
+                {student.studentCode}
+              </td>
+              <td rowSpan={student.studentCourseDetiles.length}>
+                {student.studentName}
+              </td>
+              <td rowSpan={student.studentCourseDetiles.length}>
+                {student.studentSemesterPercentage}
+              </td>
+              <td rowSpan={student.studentCourseDetiles.length}>
+                {student.studentSemesterChar}
+              </td>
+              <td rowSpan={student.studentCourseDetiles.length}>
+                {student.studentCumulativePercentage}
+              </td>
+              <td rowSpan={student.studentCourseDetiles.length}>
+                {student.studentCumulativeChar}
+              </td>
+              <td rowSpan={student.studentCourseDetiles.length}>
+                {student.studentSemesterStatus}
+              </td>
+              {/* Render first course details */}
+              <td>{student.studentCourseDetiles[0].courseCode}</td>
+              <td>{student.studentCourseDetiles[0].courseName}</td>
+              <td>{student.studentCourseDetiles[0].courseDegree}</td>
+              <td>{student.studentCourseDetiles[0].courseChar}</td>
+              <td>{student.studentCourseDetiles[0].numberOfPoints}</td>
+              <td>{student.studentCourseDetiles[0].courseStatus}</td>
+              <td>{student.studentCourseDetiles[0].courseDegreeDetiles?.map((assess)=>(
+                <div>{assess.assessMethodsName} :<span>{assess.degree}</span></div>
+              ))}</td>
             </tr>
-          ))}
-        </tbody>
-      </Table>
-      <Pagination>
-        {Array.from({ length: Math.ceil(data.length / itemsPerPage) }).map((_, index) => (
-          <Pagination.Item key={index} active={index + 1 === currentPage} onClick={() => paginate(index + 1)}>
-            {index + 1}
-          </Pagination.Item>
+            {/* Render subsequent course details if any */}
+            {student.studentCourseDetiles?.slice(1)?.map((course, courseIndex) => (
+              <tr key={courseIndex}>
+                <td>{course.courseCode}</td>
+                <td>{course.courseName}</td>
+                <td>{course.courseDegree}</td>
+                <td>{course.courseChar}</td>
+                <td>{course.numberOfPoints}</td>
+                <td>{course.courseStatus}</td>
+                <td>{course.courseDegreeDetiles?.map((assess)=>(
+                <div>{assess.assessMethodsName} :<span>{assess.degree}</span></div>
+              ))}</td>
+              </tr>
+            ))}
+          </React.Fragment>
         ))}
-      </Pagination>
-    </div>
+      </tbody>
+    </Table>
   );
 }
 
