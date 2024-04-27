@@ -7,11 +7,10 @@ import {
   FormLabel,
   FormSelect,
   Row,
-  Table,
 } from "react-bootstrap";
 import axios from "../../Api/axios";
 import Pagination from "../../Components/Pagination";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 
 export default function SemesterResult() {
@@ -141,6 +140,10 @@ export default function SemesterResult() {
       </header>
       <section className="mt-3">
         <div className="result">
+        <div className="para mb-2">
+          <div className="item-2">Academic Year : <span>{students.academyYearName}</span></div>
+          <div className="item-2">Semester Name : <span>{students.semesterName}</span></div>
+        </div>
           <div className="table-container" style={{ overflow: "scroll" }}>
             <table>
               <thead>

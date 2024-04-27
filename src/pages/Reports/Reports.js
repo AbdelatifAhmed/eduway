@@ -22,6 +22,19 @@ export default function Reports() {
       <Card variant="top" bg="white" text="dark" style={{ width: "18rem" ,textAlign:"center"}} >
         <Card.Img variant="top" src={stdImg} alt="Logo" />
         <Card.Body>
+          <Card.Title as="h4">Course Result</Card.Title>
+          <Card.Text className="text-muted">
+            Reports for All Students in specific course in specific semester for any academic year  
+          </Card.Text>
+        </Card.Body>
+          <Card.Footer >
+          <Link to={"/admin/course-result"} className="btn btn-dark">Go to page</Link>
+          </Card.Footer>
+      </Card>
+
+      <Card variant="top" bg="white" text="dark" style={{ width: "18rem" ,textAlign:"center"}} >
+        <Card.Img variant="top" src={stdImg} alt="Logo" />
+        <Card.Body>
           <Card.Title as="h4">Semester Result</Card.Title>
           <Card.Text className="text-muted">
             Reports for All Students in specific semester for any academic year  
@@ -30,7 +43,7 @@ export default function Reports() {
           <Card.Footer >
           <Link to={"/admin/semester-result"} className="btn btn-dark">Go to page</Link>
           </Card.Footer>
-      </Card>
+      </Card>      
     </div>
   );
 }

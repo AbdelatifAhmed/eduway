@@ -35,18 +35,17 @@ export default function StudentView() {
   const [parentPhoneNum, setParentPhoneNum] = useState("");
   const [studentAddress,setStudentAddress] = useState([])
   const Studentid = useParams();
-  console.log(date);
+  console.log(seatNumber);
   useEffect(() => {
     axios
       .get(`/api/Student/InfoData${Studentid?.studentId}`)
       .then((res) => {
         const resData = res?.data?.data;
         console.log(resData);
-        setCountry( resData?.studentAddress.split(',')[0] )
-        setGovernorate( resData?.studentAddress.split(',')[1])
-        setCity( resData?.studentAddress.split(',')[2])
-        setStreet( resData?.studentAddress.split(',')[3])
-
+        setCountry( resData?.studentCountrysId)
+        setGovernorate( resData?.studentGovernoratesId)
+        setCity( resData?.studentCitysId)
+        setStreet( resData?.studentStreet)
         // Setting each state variable with the corresponding value from the fetched data object
         setNameEg(resData?.nameEnglish || "");
         setNameAr(resData?.nameArabic || "");
@@ -69,7 +68,10 @@ export default function StudentView() {
         setDegree(resData?.degree || "");
         setParentName(resData?.parentName || "");
         setParentJop(resData?.parentJob || "");
-        setParentStreet(resData?.parentAddress.split(",")[0] || "");
+        setParentStreet(resData?.parentStreet || "");
+        setParentCountryId(resData?.parentCountrysId || "");
+        setParentGovernorateId(resData?.parentGovernoratesId || "");
+        setParentCityId(resData?.parentCitysId || "");
       })
       .catch((err)=>
     {

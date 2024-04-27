@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Accordion, Button, Table } from "react-bootstrap";
-import axios from '../../Api/axios'
+import axios from "../../Api/axios";
 import Swal from "sweetalert2";
 export default function MonitorGrades() {
   const [array1, setArray1] = useState([]);
@@ -41,59 +41,114 @@ export default function MonitorGrades() {
   };
 
   const handelMonitor = (course) => {
-      const swalWithBootstrapButtons = Swal.mixin({
-        customClass: {
-          confirmButton: "btn btn-success mx-2",
-          cancelButton: "btn btn-danger",
-        },
-        buttonsStyling: false,
-      });
-      swalWithBootstrapButtons
-        .fire({
-          title: `Are you sure you want to Monitor ${course.courseName}?`,
-          text: "You won't be able to revert this!",
-          icon: "question",
-          showCancelButton: true,
-          confirmButtonText: "Yes, Monitor it!",
-          cancelButtonText: "No, cancel!",
-          reverseButtons: true,
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            axios
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success mx-2",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: `Are you sure you want to Monitor ${course.courseName}?`,
+        text: "You won't be able to revert this!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Monitor it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          axios
             .post(`/api/Control/RaisingGradesCourse${course.courseId}`)
-              .then(() => {
-                swalWithBootstrapButtons.fire({
-                  title: "Monitored!",
-                  text: "Your Grades have been Raised .",
-                  icon: "success",
-                });
-              })
-              .catch(() => {
-                swalWithBootstrapButtons.fire({
-                  title: "Error!",
-                  text: "Error Occured",
-                  icon: "eroor",
-                });
+            .then((res) => {
+              swalWithBootstrapButtons.fire({
+                title: "Monitored!",
+                text: res?.data?.message,
+                icon: "success",
               });
-          } else if (
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            swalWithBootstrapButtons.fire({
-              title: "Cancelled",
-              text: "You just have Caneled the Operation",
-              icon: "error",
+            })
+            .catch(() => {
+              swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: "Error Occured",
+                icon: "eroor",
+              });
             });
-          }
-        });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            text: "You just have Caneled the Operation",
+            icon: "error",
+          });
+        }
+      });
   };
+  const handelMonitorForSemester = (semester) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success mx-2",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: `Are you sure you want to Monitor ${semester.name}?`,
+        text: "You won't be able to revert this!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Monitor it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .post(`/api/Control/RaisingGradesSemester${semester.id}`)
+            .then((res) => {
+              swalWithBootstrapButtons.fire({
+                title: "Monitored!",
+                text: res?.data?.message,
+                icon: "success",
+              });
+            })
+            .catch(() => {
+              swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: "Error Occured",
+                icon: "eroor",
+              });
+            });
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            text: "You just have Caneled the Operation",
+            icon: "error",
+          });
+        }
+      });
+  };
+
+console.log(array1);
   return (
     <div className="p-3 ">
       <Accordion defaultActiveKey="0">
         {array1.map((obj, index) => (
           <Accordion.Item key={obj.id} eventKey={`${index}`}>
-            <Accordion.Header><span style={{fontWeight:"bold",fontSize:"20px"}}>{obj.name}</span></Accordion.Header>
+            <Accordion.Header>
+              <div className="d-flex justify-content-between align-items-center" style={{width:'50%'}}>
+              <span>
+                  <Button variant="secondary" onClick={()=>handelMonitorForSemester(obj)}>Monitor Semester</Button>
+                </span>
+                <span style={{ fontWeight: "bold", fontSize: "20px" }}>
+                  {obj.name}
+                </span>
+              </div>
+            </Accordion.Header>
             <Accordion.Body>
+              <div className="result">
               <Table striped bordered hover>
                 <thead>
                   <tr>
@@ -120,6 +175,7 @@ export default function MonitorGrades() {
                   ))}
                 </tbody>
               </Table>
+              </div>
             </Accordion.Body>
           </Accordion.Item>
         ))}

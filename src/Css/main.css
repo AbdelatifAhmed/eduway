@@ -1083,6 +1083,10 @@ ul {
   /* justify-content: space-between; */
   width: calc((100% / 3) - 30px);
 }
+.result .item-2 {
+  /* justify-content: space-between; */
+  width: calc((50%) - 30px);
+}
 
 .result table {
   width: 100%;
@@ -1106,4 +1110,9 @@ ul {
   font-weight: bold;
   white-space: nowrap;
   padding: 10px;
+  text-align: center;
+}
+
+.result table tbody tr:nth-child(even) {
+  background-color: white;
 }

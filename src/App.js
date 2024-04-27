@@ -38,6 +38,9 @@ import Reports from "./pages/Reports/Reports.js";
 import StudentResult from "./pages/Reports/StudentResult.js";
 import StudentCourse from "./pages/Reports/StudentCourse.js";
 import SemesterResult from "./pages/Reports/SemesterResult.js";
+import CourseResult from "./pages/Reports/courseResult.js";
+import CourseResultView from "./pages/Reports/CourseResultView.js";
+import Notes from "./pages/Courses/Notes.js";
 export default function App() {
   return (
     <div>
@@ -77,6 +80,9 @@ export default function App() {
           <Route path="student-result" element={<StudentCourse />} />
           <Route path="student-result/student/:studentId" element={<StudentResult />} />
           <Route path="semester-result" element={<SemesterResult />} />
+          <Route path="course-result" element={<CourseResult />} />
+          <Route path="course-result/course/:semesterId/:academicYearId/:courseId" element={<CourseResultView />} />
+          <Route path="notes" element={<Notes />} />
         </Route>
         {/* </Route> */}
         {/* </Route> */}

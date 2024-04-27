@@ -33,8 +33,8 @@ export default function StudentResult() {
         <td>{course.numberOfPoints}</td>
         <td>{course.courseStatus}</td>
         <td>
-          {course?.courseDegreeDetiles.map((deg) => (
-            <div style = {{whiteSpace:'nowrap'}}>
+          {course?.courseDegreeDetiles.map((deg,index_d) => (
+            <div key={index_d} style = {{whiteSpace:'nowrap'}}>
               {deg.assessMethodsName} : 
               <span
                 style={
@@ -122,28 +122,28 @@ export default function StudentResult() {
      <table>
         <thead>
           <tr>
-            <td></td>
-            <td style={{ fontWeight: "bold", fontSize: "18px" }}>
+            <th></th>
+            <th style={{ fontWeight: "bold", fontSize: "18px" }}>
               Course code
-            </td>
-            <td style={{ fontWeight: "bold", fontSize: "18px" }}>
+            </th>
+            <th style={{ fontWeight: "bold", fontSize: "18px" }}>
               Course name
-            </td>
-            <td style={{ fontWeight: "bold", fontSize: "18px" }}>
+            </th>
+            <th style={{ fontWeight: "bold", fontSize: "18px" }}>
               Course Degree
-            </td>
-            <td style={{ fontWeight: "bold", fontSize: "18px" }}>
+            </th>
+            <th style={{ fontWeight: "bold", fontSize: "18px" }}>
               Course Char
-            </td>
-            <td style={{ fontWeight: "bold", fontSize: "18px" }}>
+            </th>
+            <th style={{ fontWeight: "bold", fontSize: "18px" }}>
               number of points
-            </td>
-            <td style={{ fontWeight: "bold", fontSize: "18px" }}>
+            </th>
+            <th style={{ fontWeight: "bold", fontSize: "18px" }}>
               Course Status
-            </td>
-            <td style={{ fontWeight: "bold", fontSize: "18px" }}>
+            </th>
+            <th style={{ fontWeight: "bold", fontSize: "18px" }}>
               Course Degree Details
-            </td>
+            </th>
           </tr>
         </thead>
         <tbody>{showCourses}</tbody>
