@@ -9,8 +9,6 @@ export default function StudentView() {
   const [studentCode, setStudentCode] = useState("");
   const [mail, setMail] = useState("");
   const [nationalId, setNationalId] = useState("");
-  const [password, setPassword] = useState("");
-  const [conPassowrd, setConPassword] = useState("");
   const [Gender, setGender] = useState();
   const [date, setDate] = useState("");
   const [religion, setReligion] = useState();
@@ -33,7 +31,6 @@ export default function StudentView() {
   const [parentCityId, setParentCityId] = useState();
   const [parentStreet, setParentStreet] = useState("");
   const [parentPhoneNum, setParentPhoneNum] = useState("");
-  const [studentAddress,setStudentAddress] = useState([])
   const Studentid = useParams();
   console.log(seatNumber);
   useEffect(() => {
@@ -124,8 +121,6 @@ export default function StudentView() {
             nameEnglish: nameEG,
             nationalID: nationalId,
             email: mail,
-            password: password,
-            confirmPasswor: conPassowrd,
             placeOfBirth: placeOfBirth,
             gender: numericGender,
             nationality: numericNationality,
