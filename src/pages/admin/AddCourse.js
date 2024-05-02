@@ -38,8 +38,13 @@ export default function AddCourse() {
   //GET FOR API
   const [getCourses, setGetCourses] = useState([]);
   const [getDepartment, setGetDepartment] = useState([]);
+  const [phaseDegrees, setPhaseDegrees] = useState([]);
   const showDepartment = getDepartment? getDepartment.map((dept)=>(
     <option value={dept.departmentId}>{dept.departmentName}</option>
+  )) : <option disabled className="text-danger">No Data</option>
+
+  const showPhaseDegrees = phaseDegrees? phaseDegrees?.map((phase)=>(
+    <option value={phase.id}>{phase.name}</option>
   )) : <option disabled className="text-danger">No Data</option>
 
   useEffect(() => {
@@ -62,6 +67,16 @@ export default function AddCourse() {
         },
       })
       .then((res) => setGetDepartment(res.data.data))
+      .catch((err) => console.log(err));
+
+    axios
+      .get("api/ScientificDegree/GetAllSemesters", {
+        headers: {
+          Accept: "application/json",
+          // Authorization: "Bearer" + token ,
+        },
+      })
+      .then((res) => setPhaseDegrees(res.data.data))
       .catch((err) => console.log(err));
 
   }, []);
@@ -121,7 +136,7 @@ export default function AddCourse() {
           if (response.status === 201) {
             Toast.fire({
               icon: "success",
-              title: "Signed in successfully",
+              title: response?.data?.message,
             });
           }
         });
@@ -163,7 +178,7 @@ export default function AddCourse() {
           </div>
           <div className="col">
             <select className="list" onChange={(e) => setType(+e.target.value)}>
-              <option disabled selected>
+              <option hidden defaultValue>
                 Type
               </option>
               <option value={1}>اجباري</option>
@@ -178,7 +193,7 @@ export default function AddCourse() {
               className="list"
               onChange={(e) => isSelected(+e.target.value)}
             >
-              <option disabled selected>
+              <option hidden defaultValue>
                 category
               </option>
               <option value={1} onSelect={() => setIsDisapledHours(false)}>
@@ -220,17 +235,15 @@ export default function AddCourse() {
         <div className="row pt-3">
           <div className="col">
             <select  onChange={(e) => setDepartmentId(+e.target.value)} className="list">
-              <option selected disabled>Choose a Department</option>
+              <option defaultValue hidden>Choose a Department</option>
               {showDepartment}
             </select>
           </div>
           <div className="col">
-            <input
-              type="text"
-              className="txt-input"
-              placeholder="Phase Degree"
-              onChange={(e) => setScientificDegreeId(+e.target.value)}
-            />
+            <select  onChange={(e) => setScientificDegreeId(+e.target.value)} className="list">
+              <option defaultValue hidden>Choose a Phase Degree</option>
+              {showPhaseDegrees}
+            </select>
           </div>
         </div>
         {/* End of row */}
@@ -244,8 +257,8 @@ export default function AddCourse() {
               readOnly={isDisapledHours}
               style={
                 isDisapledHours
-                  ? { background: "#ddd" }
-                  : { background: "transparent" }
+                  ? { background: "#ddd", outline:"none" }
+                  : { background: "#fff" }
               }
               id="hours"
             />
@@ -259,8 +272,8 @@ export default function AddCourse() {
               readOnly={isDisapledPoints}
               style={
                 isDisapledPoints
-                  ? { background: "#ddd" }
-                  : { background: "transparent" }
+                  ? { background: "#ddd" , outline:"none"}
+                  : { background: "#fff" , }
               }
               id="points"
             />

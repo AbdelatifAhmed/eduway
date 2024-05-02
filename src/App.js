@@ -41,50 +41,110 @@ import SemesterResult from "./pages/Reports/SemesterResult.js";
 import CourseResult from "./pages/Reports/courseResult.js";
 import CourseResultView from "./pages/Reports/CourseResultView.js";
 import Notes from "./pages/Courses/Notes.js";
+import Unauthorized from "./Components/unauthorized.js";
+import Basic from "./pages/admin/basic.js";
 export default function App() {
   return (
     <div>
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Login />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/ss" element={<Api />} />
         <Route path="/test2" element={<Test2 />} />
         <Route path="/test" element={<Test />} />
         {/* Protected Routes */}
         {/* <Route element={<PersistLogin />}> */}
-        {/* <Route element={<RequireAuth />}> */}
-        <Route path="/user/Basic-info" element={<BasicInfo />} />
-        <Route path="/user/examtable" element={<ExamTable />} />
-        <Route path="/user/time-table" element={<TimeTable />} />
-        <Route path="/user/tuitionFees" element={<TuitionFees />} />
-        <Route path="/user/course-grades" element={<CourseGrades />} />
-        <Route path="/admin/" element={<Admin />}>
-          <Route path="faculty" element={<Faculty />} />
-          <Route path="students" element={<Student />} />
-          <Route path="students/student/:studentId" element={<StudentView />} />
-          <Route path="add-student" element={<AddStudent />} />
-          <Route path="courses" element={<Courses />} />
-          <Route path="courses/course/:courseId" element={<CourseView />} />
-          <Route path="add-course" element={<AddCourse />} />
-          <Route path="staff" element={<Staff />} />
-          <Route path="add-Staff" element={<AddStaff />} />
-          <Route path="add-teacher" element={<AddTeacher />} />
-          <Route path="add-teacherAssistant" element={<AddTeacherAssistant />} />
-          <Route path="add-Administration" element={<AddAdministration />} />
-          <Route path="add-control-member" element={<AddControlMember />} />
-          <Route path="control" element={<Control />} />
-          <Route path="course-grades" element={<AddCourseGrades />} />
-          <Route path="final-grades" element={<FinalGrades />} />
-          <Route path="monitor-grades" element={<MonitorGrades />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="student-result" element={<StudentCourse />} />
-          <Route path="student-result/student/:studentId" element={<StudentResult />} />
-          <Route path="semester-result" element={<SemesterResult />} />
-          <Route path="course-result" element={<CourseResult />} />
-          <Route path="course-result/course/:semesterId/:academicYearId/:courseId" element={<CourseResultView />} />
-          <Route path="notes" element={<Notes />} />
+        <Route element={<RequireAuth allowedRoles={["Student"]} />}>
+          <Route path="/user/Basic-info" element={<BasicInfo />} />
+          <Route path="/user/examtable" element={<ExamTable />} />
+          <Route path="/user/time-table" element={<TimeTable />} />
+          <Route path="/user/tuitionFees" element={<TuitionFees />} />
+          <Route path="/user/course-grades" element={<CourseGrades />} />
         </Route>
-        {/* </Route> */}
+
+        <Route path="/admin/" element={<Admin />}>
+          <Route
+            element={
+              <RequireAuth
+                allowedRoles={[
+                  "Administration",
+                  "ControlMembers",
+                  "Teacher",
+                  "TeacherAssistant",
+                  "Staff",
+                ]}
+              />
+            }
+          >
+            <Route path="basic" element={<Basic />} />
+          </Route>
+            <Route
+            element={<RequireAuth allowedRoles={["Administration"]} />}
+          >
+            <Route path="faculty" element={<Faculty />} />
+            <Route path="courses" element={<Courses />} />
+            <Route path="courses/course/:courseId" element={<CourseView />} />
+            <Route path="add-course" element={<AddCourse />} />
+            <Route path="staff" element={<Staff />} />
+            <Route path="add-Staff" element={<AddStaff />} />
+            <Route path="add-teacher" element={<AddTeacher />} />
+            <Route
+              path="add-teacherAssistant"
+              element={<AddTeacherAssistant />}
+            />
+            <Route path="add-Administration" element={<AddAdministration />} />
+            <Route path="add-control-member" element={<AddControlMember />} />
+            <Route path="control" element={<Control />} />
+          </Route>
+
+
+          <Route
+            element={<RequireAuth allowedRoles={["Administration", "Staff"]} />}
+          >
+              <Route path="students" element={<Student />} />
+            <Route
+              path="students/student/:studentId"
+              element={<StudentView />}
+            />
+            <Route path="add-student" element={<AddStudent />} />
+          </Route>
+        
+
+          <Route element={
+              <RequireAuth
+                allowedRoles={["Administration","Teacher","TeacherAssistant"]}/>
+            }>
+            <Route path="course-grades" element={<AddCourseGrades />} />
+            </Route>
+          <Route
+            element={
+              <RequireAuth allowedRoles={[ "Administration","ControlMembers"]} />
+            }
+          >
+            <Route path="final-grades" element={<FinalGrades />} />
+            <Route path="monitor-grades" element={<MonitorGrades />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="student-result" element={<StudentCourse />} />
+            <Route
+              path="student-result/student/:studentId"
+              element={<StudentResult />}
+            />
+            <Route path="semester-result" element={<SemesterResult />} />
+            <Route path="course-result" element={<CourseResult />} />
+            <Route
+              path="course-result/course/:semesterId/:academicYearId/:courseId"
+              element={<CourseResultView />}
+            />
+          </Route>
+          <Route
+            element={
+              <RequireAuth allowedRoles={[ "Administration","Teacher",'TeacherAssistant']} />
+            }
+          >
+            <Route path="notes" element={<Notes />} />
+          </Route>
+        </Route>
         {/* </Route> */}
         {/* Catch All missing Pages */}
         <Route path="*" element={<Errorpage />} />

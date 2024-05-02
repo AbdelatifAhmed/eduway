@@ -32,7 +32,7 @@ export default function StudentView() {
   const [parentStreet, setParentStreet] = useState("");
   const [parentPhoneNum, setParentPhoneNum] = useState("");
   const Studentid = useParams();
-  console.log(seatNumber);
+  console.log(Gender);
   useEffect(() => {
     axios
       .get(`/api/Student/InfoData${Studentid?.studentId}`)
@@ -50,6 +50,7 @@ export default function StudentView() {
         setMail(resData?.email || "");
         setNationalId(resData?.nationalID || "");
         setDate(resData?.dateOfBirth)
+        setParentPhoneNum(resData?.getPhoneStudentDtos?.phone)
         // Similarly for other state variables
         setGender(resData?.gender || "");
         setDate(resData?.dateOfBirth || "");
@@ -116,6 +117,7 @@ export default function StudentView() {
         .put(
           "/api/Student/Update",
           {
+            id:Studentid?.studentId,
             studentCode,
             nameArabic: nameAr,
             nameEnglish: nameEG,
@@ -151,7 +153,7 @@ export default function StudentView() {
           }
         )
         .then((response) => {
-          if (response.status === 201) {
+          if (response.status === 200) {
             Toast.fire({
               icon: "success",
               title: response?.data?.message,
@@ -400,6 +402,16 @@ export default function StudentView() {
               onChange={(e) => setPostalCode(e.target.value)}
             />
           </div>
+          <div className="col">
+            <input
+              type="text"
+              className="txt-input"
+              placeholder="Phone Number"
+              maxLength={11}
+              value={parentPhoneNum}
+              onChange={(e) => setParentPhoneNum(e.target.value)}
+            />
+          </div>
         </div>
         <div className="header mt-4">Pre-Qualification</div>
         <div className="row">
@@ -540,15 +552,7 @@ export default function StudentView() {
               onChange={(e) => setParentStreet(e.target.value)}
             />
           </div>
-          <div className="col">
-            <input
-              type="text"
-              className="txt-input"
-              placeholder="Phone Number"
-              value={parentPhoneNum}
-              onChange={(e) => setParentPhoneNum(e.target.value)}
-            />
-          </div>
+       
         </div>
       </div>
     </form>

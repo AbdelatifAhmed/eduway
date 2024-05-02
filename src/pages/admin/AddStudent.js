@@ -364,6 +364,15 @@ export default function AddStudent() {
               onChange={(e) => setPostalCode(e.target.value)}
             />
           </div>
+          <div className="col">
+            <input
+              type="text"
+              className="txt-input"
+              placeholder="Phone Number"
+              maxLength={11}
+              onChange={(e) => setParentPhoneNum(e.target.value)}
+            />
+          </div>
         </div>
         <div className="header mt-4">Pre-Qualification</div>
         <div className="row">
@@ -492,14 +501,6 @@ export default function AddStudent() {
               className="txt-input"
               placeholder="Guardian Street"
               onChange={(e) => setParentStreet(e.target.value)}
-            />
-          </div>
-          <div className="col">
-            <input
-              type="text"
-              className="txt-input"
-              placeholder="Phone Number"
-              onChange={(e) => setParentPhoneNum(e.target.value)}
             />
           </div>
         </div>

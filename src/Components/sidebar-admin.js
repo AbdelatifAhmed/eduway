@@ -13,6 +13,12 @@ export default function SidebarAdmin(props) {
       </div>
       <ul className="list">
         <li>
+          <NavLink to="/admin/basic">
+            <i className="fa-solid fa-address-card fa-fw"></i>
+            <span>Basic</span>
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/admin/faculty">
             <i className="fa-solid fa-school fa-fw"></i>
             <span>Faculty</span>

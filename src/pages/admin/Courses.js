@@ -4,8 +4,10 @@ import { useContext, useEffect, useState } from "react";
 import axios from "../../Api/axios";
 import { AuthContext } from "../../Auth/AuthContext";
 import { Link } from "react-router-dom";
-import { Button, Col, FormLabel, FormSelect, Row } from "react-bootstrap";
+import { Button, Col, FormLabel, FormSelect, Modal, Row } from "react-bootstrap";
 import Swal from "sweetalert2";
+import { FaFilePen } from "react-icons/fa6";
+
 export default function Courses(props) {
   const [courses, setCourses] = useState([]);
   const context = useContext(AuthContext);
@@ -54,18 +56,18 @@ export default function Courses(props) {
         if (result.isConfirmed) {
           axios
             .delete(`api/Course${course.id}`)
-            .then(() => {
+            .then((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Deleted!",
-                text: "Your Student has been Deleted.",
+                text: "Your Course has been Deleted.",
                 icon: "success",
               });
               getCourses();
             })
-            .catch(() => {
+            .catch((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Error!",
-                text: "Error Occured",
+                text: res?.data?.message ,
                 icon: "eroor",
               });
             });
@@ -106,6 +108,10 @@ export default function Courses(props) {
           <Button variant="danger" onClick={() => handelDelete(course)}>
             Delete
           </Button>
+          <Button variant="secondary" onClick={() => handlePrerequisteShow()}>
+          <FaFilePen/>
+          </Button>
+
           <Link
             to={`course/${course.id}`}
             className="btn btn-warning text-dark"
@@ -131,8 +137,27 @@ export default function Courses(props) {
     </tr>
   );
 
+  const [show, setShow] = useState(false);
+
+  const handlePrerequisteClose = () => setShow(false);
+  const handlePrerequisteShow = () => setShow(true);
+
   return (
     <div className="pad">
+       <Modal show={show} onHide={handlePrerequisteClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Prerequisite</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handlePrerequisteClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handlePrerequisteClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <header className="d-flex justify-content-between ">
         <div>
           <Link
