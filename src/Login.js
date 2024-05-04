@@ -18,9 +18,7 @@ export default function Login(props) {
   const Navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from?.pathname ;
-  console.log(user_.Auth);
   async function handelLogin(e) {
-    console.log(userName);
     e.preventDefault();
     try {
       let Respond = await axios.post(
@@ -38,8 +36,9 @@ export default function Login(props) {
       setIsError(false)
       const accessToken = Respond?.data?.token;
       const dataDetails = Respond?.data;
-      cookie.set("Bearer ", accessToken);
-      console.log(dataDetails);
+      console.log();
+      // cookie.set("Bearer", accessToken);
+      // cookie.set('Refresh',Respond?.data?.refreshToken)
       user_.setAuth({ userName, password, dataDetails, accessToken });
 
       setUserName('')
