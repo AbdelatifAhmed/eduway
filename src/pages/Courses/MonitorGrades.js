@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 export default function MonitorGrades() {
-  const axios = useAxiosPrivate()
+  const axios = useAxiosPrivate();
   const [array1, setArray1] = useState([]);
   const [array2Data, setArray2Data] = useState({});
 
@@ -133,16 +133,29 @@ export default function MonitorGrades() {
       });
   };
 
-console.log(array1);
   return (
     <div className="p-3 ">
       <Accordion defaultActiveKey="0">
         {array1.map((obj, index) => (
           <Accordion.Item key={obj.id} eventKey={`${index}`}>
             <Accordion.Header>
-              <div className="d-flex justify-content-between align-items-center" style={{width:'50%'}}>
-              <span>
-                  <Button variant="secondary" onClick={()=>handelMonitorForSemester(obj)}>Monitor Semester</Button>
+              <div
+                className="d-flex justify-content-between align-items-center"
+                style={{ width: "50%" }}
+              >
+                <span>
+                  {/* <Button
+                    variant="secondary"
+                    onClick={() => handelMonitorForSemester(obj)}
+                  >
+                    Monitor Semester
+                  </Button> */}
+                  <span
+                    className="btn btn-secondary text-light"
+                    onClick={() =>  handelMonitorForSemester(obj)}
+                  >
+                    Monitor semester 
+                  </span>
                 </span>
                 <span style={{ fontWeight: "bold", fontSize: "20px" }}>
                   {obj.name}
@@ -151,32 +164,42 @@ console.log(array1);
             </Accordion.Header>
             <Accordion.Body>
               <div className="result">
-              <Table striped bordered hover>
-                <thead>
-                  <tr>
-                    <th>Course Name</th>
-                    <th>Course Code</th>
-                    <th>Monitor</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {array2Data[obj.id]?.data?.map((course, idx) => (
-                    <tr key={idx}>
-                      <td>{course.courseName}</td>
-                      <td>{course.courseCode}</td>
-                      <td>
-                        <Button
+                <Table striped bordered hover>
+                  <thead>
+                    <tr>
+                      <th>Course Name</th>
+                      <th>Course Code</th>
+                      <th>Monitor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {array2Data ? (
+                      array2Data[obj.id]?.data?.map((course, idx) => (
+                        <tr key={idx}>
+                          <td>{course.courseName}</td>
+                          <td>{course.courseCode}</td>
+                          <td>
+                            {/* <Button
                           variant="secondary"
                           className="text-light"
                           onClick={() => handelMonitor(course)}
                         >
                           Monitor
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
+                        </Button> */}
+                            <span
+                              className="btn btn-secondary text-light"
+                              onClick={() => handelMonitor(course)}
+                            >
+                              Monitor
+                            </span>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>No Data</tr>
+                    )}
+                  </tbody>
+                </Table>
               </div>
             </Accordion.Body>
           </Accordion.Item>

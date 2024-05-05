@@ -1,48 +1,50 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "./AuthContext";
-import axios from "axios";
-import Cookies from "universal-cookie";
 import { Outlet } from "react-router-dom";
-import LoadingSpinner from "../Components/GetFacultyNames";
+import { useState, useEffect } from "react";
+import useRefreshToken from '../hooks/useRefreshToken';
+import useAuth from '../hooks/useAuth';
+import { Spinner } from "react-bootstrap";
 
-export default function PersistLogin() {
-  const context = useContext(AuthContext);
-  const token = context.Auth;
-  const [Loading, setLoading] = useState(true);
-  // Cookie
-  const cookie = new Cookies();
-  const TookenCookie = cookie.get("Bearer");
-  console.log(`the token in cookie is : ${TookenCookie}`);
-  useEffect(() => {
-    async function Refresh() {
-      try {
-        axios.defaults.withCredentials = true;
-        await axios
-          .get(
-            "https://gladly-in-quagga.ngrok-free.app/api/Auth/refreshToken",
-            null,
-            {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer" + TookenCookie,
-                Cookie: `Bearer=${TookenCookie}`,
-              },
+const PersistLogin = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const refresh = useRefreshToken();
+    const { Auth  } = useAuth();
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const verifyRefreshToken = async () => {
+            try {
+                await refresh()
             }
-          )
-          .then((data) => {
-            cookie.set("Bearer", data.token);
-            context.Auth((prev) => {
-              return { ...prev, token: data.token };
-            });
-          });
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    !token ? Refresh() : setLoading(false);
-  }, []);
+            catch (err) {
+                console.error(err)
+            }
+            finally {
+                isMounted && setIsLoading(false);
+            }
+        }
+        
+        !Auth?.accessToken ? verifyRefreshToken() : setIsLoading(false);
 
-  return Loading ? <LoadingSpinner /> : <Outlet />;
+        return () => isMounted = false;
+    }, [])
+
+    // useEffect(() => {
+    //     console.log(`isLoading: ${isLoading}`)
+    //     console.log(`aT: ${JSON.stringify(Auth?.accessToken)}`)
+    // }, [isLoading])
+
+    return (
+        <>
+            {
+            isLoading
+                    ? <div className="d-flex justify-content-center align-items-center " style={{height:"100vh"}}>
+                        <Spinner animation="border"  variant="info" style={{}}/>
+                    </div>
+                    : <Outlet />
+            }
+        </>
+    )
 }
+
+export default PersistLogin

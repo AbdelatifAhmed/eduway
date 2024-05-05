@@ -36,14 +36,10 @@ export default function Login(props) {
       setIsError(false)
       const accessToken = Respond?.data?.token;
       const dataDetails = Respond?.data;
-      console.log(accessToken);
-      // cookie.set("Bearer", accessToken);
-      // cookie.set('Refresh',Respond?.data?.refreshToken)
       user_.setAuth({ userName, password, dataDetails, accessToken });
 
       setUserName('')
       setPassword('')  
-        //  Navigate("/test")
       dataDetails?.roles[0] === "Student"
         ? Navigate("/user/Basic-info")
         :  Navigate("/admin/basic")

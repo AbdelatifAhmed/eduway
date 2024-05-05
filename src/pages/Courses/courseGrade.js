@@ -24,7 +24,6 @@ export default function AddCourseGrades() {
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
-  console.log(recordsPerPage);
   const GLOBAL_STAFF_ID = 1;
   useEffect(() => {
     if (GLOBAL_STAFF_ID) {

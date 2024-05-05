@@ -1,8 +1,6 @@
 import { FaSort } from "react-icons/fa";
 import Pagination from "../../Components/Pagination";
-import { useContext, useEffect, useState } from "react";
-import axios from "../../Api/axios";
-import { AuthContext } from "../../Auth/AuthContext";
+import {  useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {Button, Col, FormLabel, FormSelect, Row} from "react-bootstrap"
 import Swal from "sweetalert2";
@@ -11,9 +9,6 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 export default function Student(props) {
   const axios = useAxiosPrivate()
   const [students, setStudent] = useState([]);
-  const context = useContext(AuthContext);
-  // const token = context?.Auth?.token;
-  // console.log(token);
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
