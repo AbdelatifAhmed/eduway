@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../../Api/axios';
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
+import useAxiosPrivate from '../../hooks/useAxiosPrivatet';
+import useRefreshToken from "../../hooks/useRefreshToken";
+
 
 function Test() {
   const [data , setStudents] = useState([])
+  const axiosPrivate=  useAxiosPrivate()
   useEffect(() => {
    
-      axios(`/api/Control/SSR${3},${1}`)
+    axiosPrivate(`api/Control/SSR/${3}/${1}`)
         .then((res) => {
           setStudents(res?.data?.data);
         })
@@ -14,7 +18,12 @@ function Test() {
           console.log(err);
         });
   }, []);
+
+  const refresh =useRefreshToken()
+
   return (
+    <>
+    <Button onClick={()=>refresh()}>Click</Button>
     <Table style={{width:"100%", }}>
        <thead>
         <tr>
@@ -87,7 +96,7 @@ function Test() {
           </React.Fragment>
         ))}
       </tbody>
-    </Table>
+    </Table></>
   );
 }
 

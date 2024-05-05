@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Accordion, Button, Table } from "react-bootstrap";
-import axios from "../../Api/axios";
 import Swal from "sweetalert2";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+
 export default function MonitorGrades() {
+  const axios = useAxiosPrivate()
   const [array1, setArray1] = useState([]);
   const [array2Data, setArray2Data] = useState({});
 

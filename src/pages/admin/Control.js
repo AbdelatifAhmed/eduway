@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import {  Tab, Tabs } from "react-bootstrap";
 import { Form } from "react-bootstrap";
-import axios from "../../Api/axios";
 import Select from "react-select";
 import { Button, Row, Col, ListGroup, Table} from "react-bootstrap";
 import Swal from "sweetalert2";
 import GetFacultyNames from "../../Components/GetFacultyNames";
 import GetStudentNames from "../../Components/getStudentNames";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+
 
 export default function Control() {
+  const axios = useAxiosPrivate()
   const [courses, setCourses] = useState([]);
   const [faculty, setFaculty] = useState([]);
   const [student, setStudent] = useState([]);

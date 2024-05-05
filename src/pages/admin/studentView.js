@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import axios from "../../Api/axios";
 import { useNavigate, useParams } from "react-router-dom";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 export default function StudentView() {
+  const axios = useAxiosPrivate()
   const [nameEG, setNameEg] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [studentCode, setStudentCode] = useState("");

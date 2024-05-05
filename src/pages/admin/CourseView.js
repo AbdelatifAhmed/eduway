@@ -1,10 +1,11 @@
-import axios from "../../Api/axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Select from "react-select";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 export default function CourseView() {
+  const axios = useAxiosPrivate()
   const {courseId} = useParams();
   const [name, setName] = useState("");
   const [code, setCode] = useState("");

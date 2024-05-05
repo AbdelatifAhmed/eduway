@@ -1,8 +1,8 @@
-import { useState } from "react";
-import Sidebar from "../../Components/sidebar";
-import Navbar from "../../Components/navbar";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+
+
 export default function Basic() {
-  const [changeActive, setChangeActive] = useState(true);
+  const axios = useAxiosPrivate()
   return (
     <div className="page">
         <div className="basic-info">

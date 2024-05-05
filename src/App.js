@@ -13,7 +13,6 @@ import "./Css/main.css";
 import { Route, Routes } from "react-router-dom";
 import Api from "./api";
 import RequireAuth from "./Auth/RequireAuth";
-import UserProvider from "./Auth/AuthContext";
 import PersistLogin from "./Auth/persistLogin";
 import Student from "./pages/admin/Student";
 import Admin from "./pages/admin/admin";

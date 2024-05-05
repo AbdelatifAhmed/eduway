@@ -9,11 +9,6 @@ export default axios.create({
   },
 });
 
-export const axiosPrivate = axios.create({
-  baseURL: BASE_URL,
-  headers: { 'Content-Type': 'application/json' },
-  withCredentials: true
-});
 // https://eduway-api.runasp.net/
 // https://gladly-in-quagga.ngrok-free.app/
 // https://fakestoreapi.com/

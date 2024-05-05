@@ -1,4 +1,3 @@
-import axios from "../../Api/axios";
 import { useEffect, useState } from "react";
 import { Col, Container, FloatingLabel, Row } from "react-bootstrap";
 import Button from "react-bootstrap/Button";
@@ -6,8 +5,10 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import Swal from "sweetalert2";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 export default function AddFaculty() {
+  const axios = useAxiosPrivate()
   const [addFacultyShow, setAddFacultyShow] = useState(false);
   const [addBylaw, setAddBylaw] = useState(false);
   const [addSemester, setAddSemester] = useState(false);

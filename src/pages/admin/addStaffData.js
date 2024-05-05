@@ -1,9 +1,10 @@
-import axios from "../../Api/axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 export default function AddStaffData(props) {
+  const axios = useAxiosPrivate()
   const [nameEG, setNameEg] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [mail, setMail] = useState("");

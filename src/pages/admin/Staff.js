@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Tab, Tabs } from "react-bootstrap";
-import axios from "../../Api/axios";
 import Pagination from "../../Components/Pagination";
 import StaffData from "./StaffData";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 export default function Staff() {
+  const axios = useAxiosPrivate()
   const [administration, setAdministration] = useState([]);
   const [staff, setStaff] = useState([]);
   const [teacher, setTeacher] = useState([]);

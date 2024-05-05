@@ -16,8 +16,8 @@ export default function Login(props) {
   const cookie = new Cookies();
   //navigate
   const Navigate = useNavigate();
-  const location = useLocation();
-  const from = location?.state?.from?.pathname ;
+  // const location = useLocation();
+  // const from = location?.state?.from?.pathname ;
   async function handelLogin(e) {
     e.preventDefault();
     try {
@@ -36,13 +36,14 @@ export default function Login(props) {
       setIsError(false)
       const accessToken = Respond?.data?.token;
       const dataDetails = Respond?.data;
-      console.log();
+      console.log(accessToken);
       // cookie.set("Bearer", accessToken);
       // cookie.set('Refresh',Respond?.data?.refreshToken)
       user_.setAuth({ userName, password, dataDetails, accessToken });
 
       setUserName('')
       setPassword('')  
+        //  Navigate("/test")
       dataDetails?.roles[0] === "Student"
         ? Navigate("/user/Basic-info")
         :  Navigate("/admin/basic")

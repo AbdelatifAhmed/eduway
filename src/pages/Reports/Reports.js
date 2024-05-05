@@ -1,6 +1,5 @@
 import {  Card } from "react-bootstrap";
 import stdImg from '../../images/student-reports.jpg'
-import semImg from '../../images/semester.jpg'
 import { Link } from "react-router-dom";
 
 export default function Reports() {

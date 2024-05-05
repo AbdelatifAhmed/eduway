@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import axios from "../../Api/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { FaArrowLeft } from "react-icons/fa";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 
 export default function StudentResult() {
+  const axios = useAxiosPrivate()
   const StudentId = useParams();
   const [studentData, setStudentData] = useState([]);
   useEffect(() => {

@@ -8,12 +8,13 @@ import {
   FormSelect,
   Row,
 } from "react-bootstrap";
-import axios from "../../Api/axios";
 import Pagination from "../../Components/Pagination";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 export default function SemesterResult() {
+  const axios = useAxiosPrivate()
   const [academicYears, setAcademicYears] = useState([]);
   useEffect(() => {
     axios("/api/AcademyYear/N")

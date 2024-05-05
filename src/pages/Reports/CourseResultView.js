@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import axios from "../../Api/axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { FaArrowLeft } from "react-icons/fa";
 import Pagination from "../../Components/Pagination";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 export default function StudentResult() {
+  const axios = useAxiosPrivate()
   const { semesterId, academicYearId, courseId } = useParams();
   const [courseData, setCourseData] = useState([]);
   useEffect(() => {

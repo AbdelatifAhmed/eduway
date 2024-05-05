@@ -6,7 +6,10 @@ import { AuthContext } from "../../Auth/AuthContext";
 import { Link } from "react-router-dom";
 import {Button, Col, FormLabel, FormSelect, Row} from "react-bootstrap"
 import Swal from "sweetalert2";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+
 export default function Student(props) {
+  const axios = useAxiosPrivate()
   const [students, setStudent] = useState([]);
   const context = useContext(AuthContext);
   // const token = context?.Auth?.token;

@@ -1,7 +1,5 @@
-import { useContext, useState, useEffect } from "react";
+import {  useState, useEffect } from "react";
 import Pagination from "../../Components/Pagination";
-import { AuthContext } from "../../Auth/AuthContext";
-import axios from "../../Api/axios";
 import {
   Button,
   Col,
@@ -14,11 +12,13 @@ import {
 import { MdModeEditOutline } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+
 
 export default function AddCourseGrades() {
+  const axios = useAxiosPrivate()
   const [courses, setCourses] = useState([]);
-  const context = useContext(AuthContext);
-  const token = context?.Auth?.token;
+
   const [selectedCourse, setSelectedCourse] = useState();
   const [studentData, setStudentData] = useState([]);
   //pagination
