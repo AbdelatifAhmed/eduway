@@ -385,6 +385,7 @@ export default function AddFaculty() {
           getAllBaylw();
         });
     } catch (err) {
+      console.log(err);
       Toast.fire({
         icon: "error",
         title: "Error Occured",
@@ -996,6 +997,7 @@ export default function AddFaculty() {
                 <Form.Group>
                   <FloatingLabel label="Type">
                     <Form.Select aria-label="Default select example">
+                      <option defaultValue hidden>Select Type</option>
                       <option value={1}>Credit Hours</option>
                       <option value={2}>Credit Points</option>
                     </Form.Select>

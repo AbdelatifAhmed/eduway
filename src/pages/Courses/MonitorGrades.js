@@ -26,7 +26,7 @@ export default function MonitorGrades() {
   const fetchArray2Data = (semesterName) => {
     semesterName.forEach((obj) => {
       axios
-        .get(`/api/Control/GetAllCourse${obj.id}`)
+        .get(`/api/Control/GetAllCourse/${obj.id}`)
         .then((response) => {
           setArray2Data((prevData) => ({
             ...prevData,
@@ -63,7 +63,7 @@ export default function MonitorGrades() {
       .then((result) => {
         if (result.isConfirmed) {
           axios
-            .post(`/api/Control/RaisingGradesCourse${course.courseId}`)
+            .post(`/api/Control/RaisingGradesCourse/${course.courseId}`)
             .then((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Monitored!",

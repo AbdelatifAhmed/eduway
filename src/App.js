@@ -117,7 +117,6 @@ export default function App() {
               element={
                 <RequireAuth
                   allowedRoles={[
-                    "Administration",
                     "Teacher",
                     "TeacherAssistant",
                   ]}
@@ -130,13 +129,12 @@ export default function App() {
             <Route
               element={
                 <RequireAuth
-                  allowedRoles={["Administration", "ControlMembers"]}
+                  allowedRoles={["ControlMembers"]}
                 />
               }
             >
               <Route path="final-grades" element={<FinalGrades />} />
               <Route path="monitor-grades" element={<MonitorGrades />} />
-              <Route path="reports" element={<Reports />} />
               <Route path="student-result" element={<StudentCourse />} />
               <Route
                 path="student-result/student/:studentId"
@@ -148,6 +146,16 @@ export default function App() {
                 path="course-result/course/:semesterId/:academicYearId/:courseId"
                 element={<CourseResultView />}
               />
+            </Route>
+
+            <Route
+              element={
+                <RequireAuth
+                  allowedRoles={["Administration","ControlMembers"]}
+                />
+              }
+            >
+            <Route path="reports" element={<Reports />} />
             </Route>
 
             <Route

@@ -5,6 +5,7 @@ import Select from "react-select";
 import { Button, Row, Col, ListGroup, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import { IoMdClose } from "react-icons/io";
 
 export default function Control() {
   const axios = useAxiosPrivate();
@@ -111,12 +112,13 @@ export default function Control() {
         .catch((err) => console.log(err));
     }
 
-    if (facultyId) {
+    // if (facultyId) {
       axios
-        .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
+        // .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
+        .get(`/api/ScientificDegree/GetAllSemesters`)
         .then((res) => setSemester(res?.data?.data))
         .catch((err) => console.log(err));
-    }
+    // }
   }, [facultyId]);
 
   useEffect(() => {
@@ -184,11 +186,61 @@ export default function Control() {
         }
       });
   };
+  const handelDeleteCourseForTeacher = (course) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success mx-2",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: `Are you sure you want to Delete ${course.courseName}?`,
+        text: "You won't be able to revert this!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`api/Staff/staffSemester/${course.courseId}`)
+            .then((res) => {
+              swalWithBootstrapButtons.fire({
+                title: "Deleted!",
+                text: res?.data?.message,
+                icon: "success",
+              });
+              getCoursesForTeacher(teacherId);
+            })
+            .catch((res) => {
+              swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: res?.data?.message,
+                icon: "eroor",
+              });
+            });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            text: "Your Course is safe :)",
+            icon: "error",
+          });
+        }
+      });
+  };
+
 
   const getCoursesForTeacher = () => {
     if (teacherId) {
       axios
-        .get(`/api/Staff/GetCourseStaffSemester/${teacherId}`)
+        .get(`/api/Staff/CSSA/${teacherId}`)
         .then((res) => setCoursesName(res?.data?.data?.courseDoctorDtos))
         .catch((err) => console.log(err));
     }
@@ -231,8 +283,11 @@ export default function Control() {
   );
 
   shows.showCoursesName = coursesName ? (
-    coursesName.map((element) => (
-      <ListGroup.Item variant="primary">{element.courseName}</ListGroup.Item>
+    coursesName.map((element,index) => (
+      <ListGroup.Item key={index} variant="primary" className="d-flex justify-content-between">
+      <span>{element.courseName}</span>
+      <span style={{cursor:"pointer",color:"red"}} onClick={()=>handelDeleteCourseForTeacher(element)}><IoMdClose/></span>
+      </ListGroup.Item>
     ))
   ) : (
     <ListGroup.Item variant="danger">
@@ -377,10 +432,10 @@ export default function Control() {
         getCoursesForTeacher();
         resetVariables();
       })
-      .catch(() => {
+      .catch((res) => {
         Toast.fire({
           icon: "error",
-          title: "Error Occured",
+          title: res?.data?.message,
         });
       });
   };
@@ -723,7 +778,7 @@ export default function Control() {
                   {shows.showStudents}
                 </Form.Select>
               </Form.Group>
-              <Form.Group
+              {/* <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlInput1"
               >
@@ -736,7 +791,7 @@ export default function Control() {
                   </option>
                   {shows.showFaculty}
                 </Form.Select>
-              </Form.Group>
+              </Form.Group> */}
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlInput1"
@@ -793,8 +848,8 @@ export default function Control() {
               }}
             >
               Academic Year :{" "}
-              {currentSemesters.academyYearName
-                ? currentSemesters.academyYearName
+              {currentSemesters?.academyYearName
+                ? currentSemesters?.academyYearName
                 : "NO Data "}
             </div>
             <div className="p-3">

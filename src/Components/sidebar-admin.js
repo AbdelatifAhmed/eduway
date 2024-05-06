@@ -56,24 +56,6 @@ export default function SidebarAdmin(props) {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/admin/course-grades">
-            <i className="fa-solid fa-file-import fa-fw"></i>
-            <span>Enter Grades</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/admin/final-grades">
-            <i className="fa-solid fa-file-circle-plus fa-fw"></i>
-            <span>Enter Final Grades</span>
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/admin/monitor-grades">
-            <i className="fa-solid fa-file-circle-check fa-fw"></i>
-            <span>Monitor Grades</span>
-          </NavLink>
-        </li>
-        <li>
           <NavLink to="/admin/reports">
             <i className="fa-solid fa-folder-open fa-fw"></i>
             <span>Reports</span>
@@ -87,6 +69,12 @@ export default function SidebarAdmin(props) {
             <span>Enter Grades</span>
           </NavLink>
         </li>
+        <li>
+         <NavLink to="/admin/notes">
+           <i className="fa-solid fa-file-import fa-fw"></i>
+           <span>Notes</span>
+         </NavLink>
+       </li>
         </> : role && role[0] === "Staff" ? 
         <>
         <li>
@@ -101,6 +89,12 @@ export default function SidebarAdmin(props) {
          <NavLink to="/admin/course-grades">
            <i className="fa-solid fa-file-import fa-fw"></i>
            <span>Enter Grades</span>
+         </NavLink>
+       </li>
+       <li>
+         <NavLink to="/admin/notes">
+           <i className="fa-solid fa-file-import fa-fw"></i>
+           <span>Notes</span>
          </NavLink>
        </li>
        </>

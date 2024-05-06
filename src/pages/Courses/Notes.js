@@ -64,7 +64,7 @@ export default function Notes() {
     const fetchData = async () => {
       if (selectedCourse) {
         try {
-          await axios(`api/Course/SCInfo${selectedCourse?.courseId}`)
+          await axios(`api/Course/SCInfo/${selectedCourse?.courseId}`)
           .then(
             (res) => {
               setNotesData(res?.data?.data);

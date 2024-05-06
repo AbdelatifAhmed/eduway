@@ -51,7 +51,7 @@ export default function Student(props) {
       .then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete(`api/Student/student${std.studentId}`)
+            .delete(`api/Student/${std.studentId}`)
             .then(() => {
               swalWithBootstrapButtons.fire({
                 title: "Deleted!",

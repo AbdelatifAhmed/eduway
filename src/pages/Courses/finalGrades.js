@@ -40,7 +40,7 @@ export default function FinalGrades() {
   useEffect(()=>{
     if(currentSemesterId) {
       axios
-    .get(`/api/Control/GetAllCourse${currentSemesterId}`)
+    .get(`/api/Control/GetAllCourse/${currentSemesterId}`)
     .then((res) => setCourses(res?.data?.data))
     .catch((err) => console.log(err));
     }
@@ -88,7 +88,7 @@ export default function FinalGrades() {
       try {
         // axios.get(`api/Control/GetStudentSemesterAssessMethodsBySpecificCourseControlMembers${selectedCourse?.id }`)
         await axios(
-          `api/Control/GetStudentSemesterAssessMethodsBySpecificCourseControlMembers${selectedCourse?.courseId }`
+          `api/Control/GetStudentSemesterAssessMethodsBySpecificCourseControlMembers/${selectedCourse?.courseId }`
         ).then((res) => {
           data = res?.data?.data;
         });

@@ -56,7 +56,7 @@ export default function Courses(props) {
       .then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete(`api/Course${course.id}`)
+            .delete(`api/Course/${course.id}`)
             .then((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Deleted!",
@@ -69,7 +69,7 @@ export default function Courses(props) {
               swalWithBootstrapButtons.fire({
                 title: "Error!",
                 text: res?.data?.message ,
-                icon: "eroor",
+                icon: "error",
               });
             });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
