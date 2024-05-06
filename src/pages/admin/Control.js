@@ -26,6 +26,9 @@ export default function Control() {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedOptionsForTeacherCourse, setSelectedOptionsForTeacherCourse] =
     useState([]);
+  const [premissionRoles, setPremissionRoles] = useState([]);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [selectedUserName, setSelectedUserName] = useState("");
   const [teacher, setTeacher] = useState([]);
   const [teacherCourses, setTeacherCourses] = useState([]);
   const [teacherId, setTeacherId] = useState();
@@ -65,6 +68,49 @@ export default function Control() {
     setTeacherCourses(output);
   };
 
+  const handelPermissions = async (userId) => {
+    axios.get(`api/Auth/GetUserRoles/${userId}`)
+      .then(res => {
+        setPremissionRoles(res?.data?.data?.roles);
+        setSelectedUserId(res?.data?.data?.userId);
+        setSelectedUserName(res?.data?.data?.userName);
+      })
+      .catch(err => console.log(err));
+  }
+
+  const handleCheckboxChange = (roleId) => {
+    const updatedPermissions = premissionRoles.map(role => {
+      if (role.id === roleId) {
+        return { ...role, isSelected: !role.isSelected };
+      }
+      return role;
+    });
+    setPremissionRoles(updatedPermissions);
+  }
+
+  const handleSavePermissions = (e) => {
+    e.preventDefault()
+    const payload = {
+      userId: selectedUserId,
+      userName: selectedUserName,
+      roles: premissionRoles.map(role => ({
+        id: role.id,
+        name: role.name,
+        isSelected: role.isSelected
+      }))
+    };
+
+    axios.post('/api/Auth/ChangeUserRoles', payload)
+      .then(res => {
+        // Handle success
+        console.log(res.data);
+      })
+      .catch(err => {
+        // Handle error
+        console.log(err);
+      });
+  }
+
   useEffect(() => {
     axios
       .get("/api/Course")
@@ -80,9 +126,10 @@ export default function Control() {
       })
       .catch((err) => console.log(err));
 
-      axios.get("/api/Student/GetAllStudents")
+    axios
+      .get("/api/Student/GetAllStudents")
       .then((res) => setStudent(res?.data?.data))
-      .catch(err=>console.log(err))
+      .catch((err) => console.log(err));
 
     axios
       .get("/api/Teacher/GetAllTeacher")
@@ -113,11 +160,11 @@ export default function Control() {
     }
 
     // if (facultyId) {
-      axios
-        // .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
-        .get(`/api/ScientificDegree/GetAllSemesters`)
-        .then((res) => setSemester(res?.data?.data))
-        .catch((err) => console.log(err));
+    axios
+      // .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
+      .get(`/api/ScientificDegree/GetAllSemesters`)
+      .then((res) => setSemester(res?.data?.data))
+      .catch((err) => console.log(err));
     // }
   }, [facultyId]);
 
@@ -236,7 +283,6 @@ export default function Control() {
       });
   };
 
-
   const getCoursesForTeacher = () => {
     if (teacherId) {
       axios
@@ -283,10 +329,19 @@ export default function Control() {
   );
 
   shows.showCoursesName = coursesName ? (
-    coursesName.map((element,index) => (
-      <ListGroup.Item key={index} variant="primary" className="d-flex justify-content-between">
-      <span>{element.courseName}</span>
-      <span style={{cursor:"pointer",color:"red"}} onClick={()=>handelDeleteCourseForTeacher(element)}><IoMdClose/></span>
+    coursesName.map((element, index) => (
+      <ListGroup.Item
+        key={index}
+        variant="primary"
+        className="d-flex justify-content-between"
+      >
+        <span>{element.courseName}</span>
+        <span
+          style={{ cursor: "pointer", color: "red" }}
+          onClick={() => handelDeleteCourseForTeacher(element)}
+        >
+          <IoMdClose />
+        </span>
       </ListGroup.Item>
     ))
   ) : (
@@ -296,8 +351,8 @@ export default function Control() {
   );
 
   shows.showStudents = student ? (
-    student.map((element) => (
-      <option value={element.studentId}>{element.studentNameEnglish}</option>
+    student.map((element,index) => (
+      <option key={index} value={element.studentId}>{element.studentNameEnglish}</option>
     ))
   ) : (
     <option disabled className="text-danger">
@@ -305,7 +360,7 @@ export default function Control() {
     </option>
   );
   shows.showCourses = courses ? (
-    courses.map((element) => <option value={element.id}>{element.name}</option>)
+    courses.map((element,index) => <option key={index} value={element.id}>{element.name}</option>)
   ) : (
     <option disabled className="text-danger">
       No Courses Exists
@@ -313,8 +368,8 @@ export default function Control() {
   );
 
   shows.showSemesters = semester ? (
-    semester.map((element) => (
-      <option value={element.id}>{element.name}</option>
+    semester.map((element,index) => (
+      <option key={index} value={element.id}>{element.name}</option>
     ))
   ) : (
     <option disabled className="text-danger">
@@ -323,8 +378,8 @@ export default function Control() {
   );
 
   shows.showDepartments = department ? (
-    department.map((element) => (
-      <option value={element.departmentId}>{element.departmentName}</option>
+    department.map((element,index) => (
+      <option key={index} value={element.departmentId}>{element.departmentName}</option>
     ))
   ) : (
     <option disabled className="text-danger">
@@ -333,8 +388,8 @@ export default function Control() {
   );
 
   shows.showCurrentSemesters = currentSemesters?.semesterName ? (
-    currentSemesters?.semesterName.map((element) => (
-      <tr value={element.id} style={{ width: "100%" }}>
+    currentSemesters?.semesterName.map((element,index) => (
+      <tr key={index} value={element.id} style={{ width: "100%" }}>
         <td
           style={{ fontSize: "20px", width: "100%" }}
           className="d-flex justify-content-between"
@@ -363,15 +418,11 @@ export default function Control() {
   );
   shows.showCurrentSemestersForStudentSemester =
     currentSemesters?.semesterName ? (
-      currentSemesters?.semesterName.map((element) => (
-        <option value={element.id}>{element.name}</option>
+      currentSemesters?.semesterName.map((element,index) => (
+        <option key={index} value={element.id}>{element.name}</option>
       ))
     ) : (
-      <tr disabled className="text-danger">
-        <td className="text-danger" style={{ fontSize: "20px" }}>
-          No Current Semester Exists
-        </td>
-      </tr>
+      <option disabled style={{textAlign:"center" , color:"red" , padding:"5px"}}>No data</option>
     );
 
   const handelSubmitForAccessMethod = (event) => {
@@ -552,7 +603,7 @@ export default function Control() {
                   Faculty Name
                 </Form.Label>
                 <Form.Select onChange={(e) => setFacultyId(e.target.value)}>
-                  <option disabled selected>
+                  <option hidden defaultValue>
                     Select a faculty
                   </option>
                   {shows.showFaculty}
@@ -566,7 +617,7 @@ export default function Control() {
                   Course Name
                 </Form.Label>
                 <Form.Select onChange={(e) => setCoursesId(e.target.value)}>
-                  <option disabled selected>
+                  <option hidden defaultValue>
                     Select a Course
                   </option>
                   {shows.showCourses}
@@ -627,7 +678,7 @@ export default function Control() {
                 <Form.Select
                   onChange={(e) => setCurrentSemesterId(e.target.value)}
                 >
-                  <option disabled selected>
+                  <option hidden defaultValue>
                     Select a Semester
                   </option>
                   {shows.showCurrentSemestersForStudentSemester}
@@ -646,7 +697,7 @@ export default function Control() {
                   <tbody>
                     {studentBySemester && studentBySemester.length > 0 ? (
                       studentBySemester?.map((item, counter) => (
-                        <tr style={{ fontSize: "17px" }} id={`item-${counter}`}>
+                        <tr key={counter} style={{ fontSize: "17px" }} id={`item-${counter}`}>
                           <td>{counter + 1}</td>
                           <td>{item.studentCode}</td>
                           <td>{item.studentName}</td>
@@ -705,7 +756,7 @@ export default function Control() {
                   Teacher Name
                 </Form.Label>
                 <Form.Select onChange={(e) => setTeacherId(e.target.value)}>
-                  <option disabled selected>
+                  <option defaultValue hidden>
                     Select a Teacher
                   </option>
                   {shows.showTeachers}
@@ -772,7 +823,7 @@ export default function Control() {
                   Student Name
                 </Form.Label>
                 <Form.Select onChange={(e) => setStudentId(e.target.value)}>
-                  <option disabled selected>
+                  <option hidden defaultValue>
                     Select a Student
                   </option>
                   {shows.showStudents}
@@ -800,7 +851,7 @@ export default function Control() {
                   Semester Name
                 </Form.Label>
                 <Form.Select onChange={(e) => setSemesterId(e.target.value)}>
-                  <option disabled selected>
+                  <option defaultValue hidden>
                     Select a Semester
                   </option>
                   {shows.showSemesters}
@@ -815,7 +866,7 @@ export default function Control() {
                   Department Name
                 </Form.Label>
                 <Form.Select onChange={(e) => setDepartmentId(e.target.value)}>
-                  <option disabled selected>
+                  <option defaultValue hidden>
                     Select a Department
                   </option>
                   {shows.showDepartments}
@@ -834,8 +885,53 @@ export default function Control() {
             </Form>
           </div>
         </Tab>
+
         <Tab eventKey="premissions" title="Permissions">
-          Tab content for Contact
+        <div>
+      <div style={{ border: "2px solid #121431", borderRadius: "10px" }}>
+        <div
+          style={{
+            background: "#121431",
+            color: "white",
+            padding: "20px",
+            fontSize: "30px",
+          }}
+        >
+          Give Permissions
+        </div>
+        <Form style={{ padding: "10px" }}>
+          <Form.Group
+            className="mb-3"
+            controlId="exampleForm.ControlInput1"
+          >
+            <Form.Label style={{ fontSize: "20px" }}>
+              Teacher Name
+            </Form.Label>
+            <Select
+              options={teacher}
+              getOptionLabel={(e) => e.staffNameEnglish}
+              getOptionValue={(e) => e.userId}
+              onChange={(e) => handelPermissions(e.userId)}
+            />
+          </Form.Group>
+
+          <div className="mb-3">
+            {premissionRoles?.map((role,index) => (
+              <div key={index} className="d-flex gap-3">
+                <input
+                  type="checkbox"
+                  checked={role.isSelected}
+                  onChange={() => handleCheckboxChange(role.id)}
+                  id= {`permission-${index}`}
+                  />
+                  <label htmlFor={`permission-${index}`} style={{fontSize:"18px",fontWeight:"bold"}}>{role.name}</label>
+              </div>
+            ))}
+          </div>
+          <Button variant="success" onClick={e=>handleSavePermissions(e)}>Save Changes</Button>
+        </Form>
+      </div>
+    </div>
         </Tab>
         <Tab eventKey="end-semester" title="End Semester">
           <div style={{ border: "2px solid #121431", borderRadius: "10px" }}>
@@ -853,7 +949,7 @@ export default function Control() {
                 : "NO Data "}
             </div>
             <div className="p-3">
-              <Table borderedless className="">
+              <Table borderedless="true" className="">
                 <tbody>{shows.showCurrentSemesters}</tbody>
               </Table>
             </div>

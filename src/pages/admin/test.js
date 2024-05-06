@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from '../../Api/axios';
 import { Button, Table } from 'react-bootstrap';
 import useAxiosPrivate from '../../hooks/useAxiosPrivatet';
 import useRefreshToken from "../../hooks/useRefreshToken";

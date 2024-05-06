@@ -49,7 +49,6 @@ export default function App() {
         {/* Public routes */}
         <Route path="/" element={<Login />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/ss" element={<Api />} />
         <Route path="/test2" element={<Test2 />} />
         <Route path="/test" element={<Test />} />
         {/* Protected Routes */}
@@ -77,6 +76,7 @@ export default function App() {
                 />
               }
             >
+        <Route path="ss" element={<Api />} />
               <Route path="basic" element={<Basic />} />
             </Route>
 
