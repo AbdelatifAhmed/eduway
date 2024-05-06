@@ -1,8 +1,19 @@
+import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
-
-
 export default function Basic() {
   const axios = useAxiosPrivate()
+  const [data,setData] = useState()
+  console.log(data);
+  useEffect(()=>{
+    axios.get('api/Staff/BasicData')
+    .then(res=>{
+      setData(res?.data?.data);
+    })
+    .catch(err=>{
+      console.log(err);
+    })
+  },[])
+
   return (
     <div className="page">
         <div className="basic-info">
@@ -12,80 +23,32 @@ export default function Basic() {
                 <h1>Personal Data</h1>
               </legend>
               <div>
-                Arabic Name : <span className=""></span>
+                Arabic Name : <span className="">{data && data?.nameArabic}</span>
               </div>
               <div>
-                English Name : <span className=""></span>
+                English Name : <span className="">{data && data?.nameEnglish}</span>
               </div>
               <div>
-                Gender : <span className=""></span>
+                Gender : <span className="">{data && data?.gender}</span>
+              </div>
+              
+              <div>
+                Nationality : <span className="">{data && data?.nationality}</span>
               </div>
               <div>
-                Student id : <span className=""></span>
+                Religion :<span className="">{data && data?.religion}</span>
               </div>
               <div>
-                Nationality : <span className=""></span>
+                Date of birth : <span className="">{data && data?.dateOfBirth}</span>
               </div>
               <div>
-                Religion <span className=""></span>:
+                National ID \ passport No : <span className="">{data && data?.nationalID}</span>
               </div>
               <div>
-                Date of birth : <span className=""></span>
+                Release Place : <span className="">{data && data?.releasePlace}</span>
               </div>
               <div>
-                National ID \ passport No : <span className=""></span>
-              </div>
-              <div>
-                Release Date : <span className=""></span>
-              </div>
-              <div>
-                Place of birth : <span className=""></span>
-              </div>
-            </fieldset>
-          </div>
-          <div className="item">
-            <fieldset>
-              <legend>
-                <h1>Family Member Data</h1>
-              </legend>
-              <div>
-                Gurdian Name : <span className=""></span>
-              </div>
-
-              <div>
-                Address : <span className=""></span>
-              </div>
-
-              <div>
-                Jop : <span className=""></span>
-              </div>
-
-              <div>
-                Mobile : <span className=""></span>
-              </div>
-
-              <div>
-                Home Tel : <span className=""></span>
-              </div>
-
-              <div>
-                City : <span className=""></span>
-              </div>
-
-              <div>
-                Email : <span className=""></span>
-              </div>
-
-              <div>
-                Fax : <span className=""></span>
-              </div>
-
-              <div>
-                National ID \ passport No : <span className=""></span>
-              </div>
-
-              <div>
-                Place of birth : <span className=""></span>
+                Place of birth : <span className="">{data && data?.placeOfBirth}</span>
               </div>
             </fieldset>
           </div>
@@ -99,7 +62,7 @@ export default function Basic() {
               </div>
 
               <div>
-                Address : <span></span>
+                Address : <span>{data && data?.staffAddress}</span>
               </div>
 
               <div>
@@ -111,11 +74,11 @@ export default function Basic() {
               </div>
 
               <div>
-                Fax : <span></span>
+                Postal Code : <span>{data && data?.postalCode}</span>
               </div>
 
               <div>
-                Email : <span></span>
+                Email : <span>{data && data?.email}</span>
               </div>
 
               <div>
@@ -137,11 +100,11 @@ export default function Basic() {
               </div>
 
               <div>
-                Pre-Qualification : <span></span>
+                Pre-Qualification : <span>{data && data?.preQualification}</span>
               </div>
 
               <div>
-                Qualification Year : <span></span>
+                Qualification Year : <span>{data && data?.qualificationYear}</span>
               </div>
 
               <div>
@@ -149,11 +112,11 @@ export default function Basic() {
               </div>
 
               <div>
-                Degrees : <span></span>
+                Degree : <span>{data && data?.degree}</span>
               </div>
 
               <div>
-                Seat Number : <span></span>
+                Seat Number : <span>{data && data?.seatNumber}</span>
               </div>
 
               <div>

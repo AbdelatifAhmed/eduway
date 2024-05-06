@@ -10,7 +10,7 @@ export default function StudentResult() {
   const StudentId = useParams();
   const [studentData, setStudentData] = useState([]);
   useEffect(() => {
-    axios(`api/Control/SISR${StudentId.studentId}`)
+    axios(`api/Control/SISR/${StudentId.studentId}`)
       .then((res) => {
         setStudentData(res?.data?.data);
       })

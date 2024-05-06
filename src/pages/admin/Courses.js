@@ -159,7 +159,7 @@ export default function Courses(props) {
           </Button>
         </Modal.Footer>
       </Modal>
-      <header className="d-flex justify-content-between ">
+      <header className="d-flex justify-content-between align-items-center" style={{paddingRight:"20px"}}>
         <div>
           <Link
             to="/admin/add-course"
@@ -185,7 +185,6 @@ export default function Courses(props) {
             </Col>
           </Row>
         </div>
-        <div></div>
       </header>
       <div className="table-content">
         <table className="table table-striped">

@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {  Tab, Tabs } from "react-bootstrap";
+import { Tab, Tabs } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import Select from "react-select";
-import { Button, Row, Col, ListGroup, Table} from "react-bootstrap";
+import { Button, Row, Col, ListGroup, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
-import GetFacultyNames from "../../Components/GetFacultyNames";
-import GetStudentNames from "../../Components/getStudentNames";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
-
 export default function Control() {
-  const axios = useAxiosPrivate()
+  const axios = useAxiosPrivate();
   const [courses, setCourses] = useState([]);
   const [faculty, setFaculty] = useState([]);
   const [student, setStudent] = useState([]);
@@ -75,11 +72,16 @@ export default function Control() {
       })
       .catch((err) => console.log(err));
 
-    GetFacultyNames().then((res) =>
-      setFaculty(res?.data?.data?.getFacultyDtos)
-    );
+    axios
+      .get("/api/Facult/Faculty")
+      .then((res) => {
+        setFaculty(res?.data?.data?.getFacultyDtos);
+      })
+      .catch((err) => console.log(err));
 
-    GetStudentNames().then((res) => setStudent(res?.data?.data));
+      axios.get("/api/Student/GetAllStudents")
+      .then((res) => setStudent(res?.data?.data))
+      .catch(err=>console.log(err))
 
     axios
       .get("/api/Teacher/GetAllTeacher")
@@ -104,7 +106,7 @@ export default function Control() {
   useEffect(() => {
     if (facultyId) {
       axios
-        .get(`/api/AssessMethod/All${facultyId}`)
+        .get(`/api/AssessMethod/All/${facultyId}`)
         .then((res) => setAssessMethods(res?.data?.data))
         .catch((err) => console.log(err));
     }
@@ -123,7 +125,7 @@ export default function Control() {
 
   const getStudentBySemester = () => {
     if (currentSemesterId) {
-      axios(`/api/Student/as${currentSemesterId}`)
+      axios(`/api/Student/as/${currentSemesterId}`)
         .then((res) => {
           setStudentBySemester(res?.data?.data);
         })
@@ -154,7 +156,7 @@ export default function Control() {
       .then((result) => {
         if (result.isConfirmed) {
           axios
-            .delete(`api/Student/studentSemesters${student.studentSemesterId}`)
+            .delete(`api/Student/studentSemesters/${student.studentSemesterId}`)
             .then(() => {
               swalWithBootstrapButtons.fire({
                 title: "Deleted!",
@@ -170,7 +172,6 @@ export default function Control() {
                 icon: "eroor",
               });
             });
-    
         } else if (
           /* Read more about handling dismissals below */
           result.dismiss === Swal.DismissReason.cancel
@@ -187,7 +188,7 @@ export default function Control() {
   const getCoursesForTeacher = () => {
     if (teacherId) {
       axios
-        .get(`/api/Staff/GetCourseStaffSemester${teacherId}`)
+        .get(`/api/Staff/GetCourseStaffSemester/${teacherId}`)
         .then((res) => setCoursesName(res?.data?.data?.courseDoctorDtos))
         .catch((err) => console.log(err));
     }
@@ -305,19 +306,18 @@ export default function Control() {
       </td>
     </tr>
   );
-  shows.showCurrentSemestersForStudentSemester = currentSemesters?.semesterName ? (
-    currentSemesters?.semesterName.map((element) => (
-      <option value={element.id}>{element.name}</option>
-    ))
-  ) : (
-    <tr disabled className="text-danger">
-      <td className="text-danger" style={{ fontSize: "20px" }}>
-        No Current Semester Exists
-      </td>
-    </tr>
-  );
-
-            
+  shows.showCurrentSemestersForStudentSemester =
+    currentSemesters?.semesterName ? (
+      currentSemesters?.semesterName.map((element) => (
+        <option value={element.id}>{element.name}</option>
+      ))
+    ) : (
+      <tr disabled className="text-danger">
+        <td className="text-danger" style={{ fontSize: "20px" }}>
+          No Current Semester Exists
+        </td>
+      </tr>
+    );
 
   const handelSubmitForAccessMethod = (event) => {
     event.preventDefault();
@@ -558,52 +558,75 @@ export default function Control() {
                 fontSize: "30px",
               }}
             >
-             Student Semester 
+              Student Semester
             </div>
-          
-              <Form className="p-3">
-                <Form.Group
-                  className="mb-3"
-                  controlId="exampleForm.ControlInput1"
-                >
-                  <Form.Label style={{ fontSize: "20px" }}>
-                    Semester Name
-                  </Form.Label>
-                  <Form.Select
-                    onChange={(e) => setCurrentSemesterId(e.target.value)}
-                  >
-                    <option disabled selected>
-                      Select a Semester
-                    </option>
-                    {shows.showCurrentSemestersForStudentSemester}
-                  </Form.Select>
-                </Form.Group>
-                {currentSemesterId ? <Table>
-              <thead>
-                <tr style={{fontSize:"20px",fontWeight:"bold",}}>
-                <th></th>
-                <th>Student Code</th>
-                <th>Student Name</th>
-                <th>Delete</th>
-                </tr>
-              </thead>
-              <tbody>
-              {studentBySemester && studentBySemester.length > 0 ? studentBySemester?.map((item,counter)=>(
-                <tr style={{fontSize:"17px"}} id={`item-${counter}`}>
-                  <td>{counter + 1}</td>
-                  <td>{item.studentCode}</td>
-                  <td>{item.studentName}</td>
-                  <td><Button variant="danger" onClick={()=>handelStudentDelete(item)}>Delete</Button></td>
-                </tr>
-              )) :
-               <tr>
-                  <td colSpan={3} style={{textAlign:"center",fontSize:"20px",fontWeight:"bold",color:"red"}}>No Data</td>
-                </tr>}
-              </tbody>
-            </Table> : <h2 style={{textAlign:"center"}}>Select Semester</h2>}
 
-              </Form>
-            </div>
+            <Form className="p-3">
+              <Form.Group
+                className="mb-3"
+                controlId="exampleForm.ControlInput1"
+              >
+                <Form.Label style={{ fontSize: "20px" }}>
+                  Semester Name
+                </Form.Label>
+                <Form.Select
+                  onChange={(e) => setCurrentSemesterId(e.target.value)}
+                >
+                  <option disabled selected>
+                    Select a Semester
+                  </option>
+                  {shows.showCurrentSemestersForStudentSemester}
+                </Form.Select>
+              </Form.Group>
+              {currentSemesterId ? (
+                <Table>
+                  <thead>
+                    <tr style={{ fontSize: "20px", fontWeight: "bold" }}>
+                      <th></th>
+                      <th>Student Code</th>
+                      <th>Student Name</th>
+                      <th>Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {studentBySemester && studentBySemester.length > 0 ? (
+                      studentBySemester?.map((item, counter) => (
+                        <tr style={{ fontSize: "17px" }} id={`item-${counter}`}>
+                          <td>{counter + 1}</td>
+                          <td>{item.studentCode}</td>
+                          <td>{item.studentName}</td>
+                          <td>
+                            <Button
+                              variant="danger"
+                              onClick={() => handelStudentDelete(item)}
+                            >
+                              Delete
+                            </Button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan={4}
+                          style={{
+                            textAlign: "center",
+                            fontSize: "20px",
+                            fontWeight: "bold",
+                            color: "red",
+                          }}
+                        >
+                          No Data
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </Table>
+              ) : (
+                <h2 style={{ textAlign: "center" }}>Select Semester</h2>
+              )}
+            </Form>
+          </div>
         </Tab>
 
         <Tab eventKey="teacher-courses" title="Teacher Courses">
@@ -769,8 +792,9 @@ export default function Control() {
                 fontSize: "30px",
               }}
             >
-             Academic Year :  {currentSemesters.academyYearName
-                ?  currentSemesters.academyYearName
+              Academic Year :{" "}
+              {currentSemesters.academyYearName
+                ? currentSemesters.academyYearName
                 : "NO Data "}
             </div>
             <div className="p-3">

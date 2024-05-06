@@ -4,18 +4,43 @@ import { Button } from "react-bootstrap";
 import { FaArrowLeft } from "react-icons/fa";
 import Pagination from "../../Components/Pagination";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import Swal from "sweetalert2";
 
 export default function StudentResult() {
   const axios = useAxiosPrivate()
+  const navigate = useNavigate()
   const { semesterId, academicYearId, courseId } = useParams();
   const [courseData, setCourseData] = useState([]);
   useEffect(() => {
-    axios(`api/Control/SISC${semesterId},${academicYearId},${courseId}`)
+    axios(`api/Control/SISC/${semesterId}/${academicYearId}/${courseId}`)
       .then((res) => {
         setCourseData(res?.data?.data);
       })
       .catch((err) => {
         console.log(err);
+        if(err?.response?.status === 403)
+          {
+            const swalWithBootstrapButtons = Swal.mixin({
+              customClass: {
+                confirmButton: "btn btn-success mx-2",
+                cancelButton: "btn btn-danger",
+              },
+              buttonsStyling: false,
+            });
+            swalWithBootstrapButtons
+            .fire({
+              title: `Forbidden`,
+              text: "you have no access for this page",
+              icon: "error",
+              confirmButtonText: "Go Back",
+              reverseButtons: true,
+              backdrop:"rgba(0,0,0,0.34)"
+            })
+            .then((result) => {
+              if (result.isConfirmed) {
+                navigate(-1);
+                  }})
+          }
       });
   }, []);
 

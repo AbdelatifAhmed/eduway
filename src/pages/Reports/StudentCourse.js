@@ -46,7 +46,7 @@ export default function StudentCourse() {
   const [semesterId, setSemesterId] = useState();
   useEffect(() => {
     if (academicYearId) {
-      axios(`/api/Control/SA${academicYearId}`)
+      axios(`/api/Control/SA/${academicYearId}`)
         .then((res) => {
           setSemesters(res?.data?.data);
         })
@@ -72,7 +72,7 @@ export default function StudentCourse() {
   const [students, setStudents] = useState([]);
   useEffect(() => {
     if (semesterId) {
-      axios(`/api/Student/as${semesterId}`)
+      axios(`/api/Student/as/${semesterId}`)
         .then((res) => {
           setStudents(res?.data?.data);
         })

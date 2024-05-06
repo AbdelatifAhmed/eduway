@@ -15,7 +15,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 export default function CourseResult() {
-  const axios = useAxiosPrivate()
+  const axios = useAxiosPrivate();
   const [academicYears, setAcademicYears] = useState([]);
   useEffect(() => {
     axios("/api/AcademyYear/N")
@@ -26,7 +26,6 @@ export default function CourseResult() {
         console.log(err);
       });
   }, []);
-
 
   const showAcademicYears =
     academicYears && academicYears.length > 0 ? (
@@ -46,7 +45,7 @@ export default function CourseResult() {
   const [semesterId, setSemesterId] = useState();
   useEffect(() => {
     if (academicYearId) {
-      axios(`/api/Control/SA${academicYearId}`)
+      axios(`/api/Control/SA/${academicYearId}`)
         .then((res) => {
           setSemesters(res?.data?.data);
         })
@@ -72,7 +71,7 @@ export default function CourseResult() {
   const [students, setStudents] = useState([]);
   useEffect(() => {
     if (semesterId) {
-      axios(`/api/Control/GetAllCourse${semesterId}`)
+      axios(`/api/Control/GetAllCourse/${semesterId}`)
         .then((res) => {
           setStudents(res?.data?.data);
         })
@@ -99,7 +98,12 @@ export default function CourseResult() {
           <td>{element.courseCode}</td>
           <td>{element.courseName}</td>
           <td>
-            <Link to={`course/${semesterId}/${academicYearId}/${element.courseId}`} className="btn btn-warning text-dark" >View</Link>
+            <Link
+              to={`course/${semesterId}/${academicYearId}/${element.courseId}`}
+              className="btn btn-warning text-dark"
+            >
+              View
+            </Link>
           </td>
         </tr>
       ))
@@ -118,7 +122,7 @@ export default function CourseResult() {
         </td>
       </tr>
     );
-    const navigator = useNavigate();
+  const navigator = useNavigate();
   const goBack = () => {
     navigator(-1);
   };
@@ -126,9 +130,9 @@ export default function CourseResult() {
     <div className="pad">
       <div>
         <Button onClick={goBack}>
-        <FaArrowLeft/>
+          <FaArrowLeft />
         </Button>
-        </div>
+      </div>
       <header>
         <Row>
           <Col>
@@ -164,7 +168,6 @@ export default function CourseResult() {
               </FloatingLabel>
             </FormGroup>
           </Col>
-
         </Row>
       </header>
       <section className="mt-3">
@@ -183,11 +186,11 @@ export default function CourseResult() {
           </thead>
           <tbody>{showStudents}</tbody>
         </Table>
-             <Pagination
-                nPages={nPages}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-              />
+        <Pagination
+          nPages={nPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
       </section>
     </div>
   );

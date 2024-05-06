@@ -103,7 +103,7 @@ export default function Student(props) {
   </tr>
   return (
     <div className="pad">
-      <header className="d-flex justify-content-between ">
+      <header className="d-flex justify-content-between align-items-center" style={{paddingRight:"20px"}}>
         <div>
         <Link
           to="/admin/add-student"
@@ -131,7 +131,7 @@ export default function Student(props) {
                 </Col>
               </Row>
             </div>
-        <div></div>
+        
       </header>
       <div className="table-content">
         <table className="table table-striped ">
