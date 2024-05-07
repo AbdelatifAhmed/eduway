@@ -41,12 +41,12 @@ export default function AddCourse() {
   const [getCourses, setGetCourses] = useState([]);
   const [getDepartment, setGetDepartment] = useState([]);
   const [phaseDegrees, setPhaseDegrees] = useState([]);
-  const showDepartment = getDepartment? getDepartment.map((dept)=>(
-    <option value={dept.departmentId}>{dept.departmentName}</option>
+  const showDepartment = getDepartment? getDepartment.map((dept,index)=>(
+    <option key={index} value={dept.departmentId}>{dept.departmentName}</option>
   )) : <option disabled className="text-danger">No Data</option>
 
-  const showPhaseDegrees = phaseDegrees? phaseDegrees?.map((phase)=>(
-    <option value={phase.id}>{phase.name}</option>
+  const showPhaseDegrees = phaseDegrees? phaseDegrees?.map((phase,index)=>(
+    <option key={index} value={phase.id}>{phase.name}</option>
   )) : <option disabled className="text-danger">No Data</option>
 
   useEffect(() => {

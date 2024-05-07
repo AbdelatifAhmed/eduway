@@ -135,17 +135,7 @@ export default function App() {
             >
               <Route path="final-grades" element={<FinalGrades />} />
               <Route path="monitor-grades" element={<MonitorGrades />} />
-              <Route path="student-result" element={<StudentCourse />} />
-              <Route
-                path="student-result/student/:studentId"
-                element={<StudentResult />}
-              />
-              <Route path="semester-result" element={<SemesterResult />} />
-              <Route path="course-result" element={<CourseResult />} />
-              <Route
-                path="course-result/course/:semesterId/:academicYearId/:courseId"
-                element={<CourseResultView />}
-              />
+              
             </Route>
 
             <Route
@@ -156,6 +146,17 @@ export default function App() {
               }
             >
             <Route path="reports" element={<Reports />} />
+            <Route path="student-result" element={<StudentCourse />} />
+              <Route
+                path="student-result/student/:studentId"
+                element={<StudentResult />}
+              />
+              <Route path="semester-result" element={<SemesterResult />} />
+              <Route path="course-result" element={<CourseResult />} />
+              <Route
+                path="course-result/course/:semesterId/:academicYearId/:courseId"
+                element={<CourseResultView />}
+              />
             </Route>
 
             <Route

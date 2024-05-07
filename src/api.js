@@ -51,7 +51,6 @@ export default function Api() {
 
     axios.post('/api/Auth/ChangeUserRoles', payload)
       .then(res => {
-        // Handle success
         console.log(res.data);
       })
       .catch(err => {

@@ -6,6 +6,7 @@ import { Button, Row, Col, ListGroup, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 import { IoMdClose } from "react-icons/io";
+import Pagination from "../../Components/Pagination";
 
 export default function Control() {
   const axios = useAxiosPrivate();
@@ -38,11 +39,9 @@ export default function Control() {
   const resetVariables = () => {
     setCoursesId(null);
     setFacultyId(null);
-    setTeacherId(null);
     setCoursesName(null);
     setSelectedOptions([]);
     setSelectedOptionsForTeacherCourse([]);
-    setTeacherId(null);
     setCoursesName(null);
     setDepartmentId(null);
     setSemesterId(null);
@@ -183,6 +182,13 @@ export default function Control() {
         });
     }
   };
+  const [currentPage, setCurrentPage] = useState(1);
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords =
+  studentBySemester && studentBySemester.slice(indexOfFirstRecord, indexOfLastRecord);
+  const nPages = studentBySemester && Math.ceil(studentBySemester.length / recordsPerPage);
 
   const handelStudentDelete = (student) => {
     const swalWithBootstrapButtons = Swal.mixin({
@@ -261,13 +267,13 @@ export default function Control() {
                 text: res?.data?.message,
                 icon: "success",
               });
-              getCoursesForTeacher(teacherId);
+              getCoursesForTeacher();
             })
             .catch((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Error!",
                 text: res?.data?.message,
-                icon: "eroor",
+                icon: "error",
               });
             });
         } else if (
@@ -481,12 +487,11 @@ export default function Control() {
           });
         }
         getCoursesForTeacher();
-        resetVariables();
       })
-      .catch((res) => {
+      .catch((err) => {
         Toast.fire({
           icon: "error",
-          title: res?.data?.message,
+          title: err?.response?.data?.message,
         });
       });
   };
@@ -654,7 +659,7 @@ export default function Control() {
           </div>
         </Tab>
 
-        <Tab eventKey="semester-courses" title="Student Semester ">
+        <Tab eventKey="student-semester" title="Student Semester ">
           <div style={{ border: "2px solid #121431", borderRadius: "10px" }}>
             <div
               style={{
@@ -685,6 +690,7 @@ export default function Control() {
                 </Form.Select>
               </Form.Group>
               {currentSemesterId ? (
+                <>
                 <Table>
                   <thead>
                     <tr style={{ fontSize: "20px", fontWeight: "bold" }}>
@@ -696,7 +702,7 @@ export default function Control() {
                   </thead>
                   <tbody>
                     {studentBySemester && studentBySemester.length > 0 ? (
-                      studentBySemester?.map((item, counter) => (
+                      currentRecords?.map((item, counter) => (
                         <tr key={counter} style={{ fontSize: "17px" }} id={`item-${counter}`}>
                           <td>{counter + 1}</td>
                           <td>{item.studentCode}</td>
@@ -728,6 +734,11 @@ export default function Control() {
                     )}
                   </tbody>
                 </Table>
+                 <Pagination
+                 nPages={nPages}
+                 currentPage={currentPage}
+                 setCurrentPage={setCurrentPage}
+               /></>
               ) : (
                 <h2 style={{ textAlign: "center" }}>Select Semester</h2>
               )}

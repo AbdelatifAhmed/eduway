@@ -33,13 +33,11 @@ export default function StudentView() {
   const [parentStreet, setParentStreet] = useState("");
   const [parentPhoneNum, setParentPhoneNum] = useState("");
   const Studentid = useParams();
-  console.log(Gender);
   useEffect(() => {
     axios
-      .get(`/api/Student/InfoData${Studentid?.studentId}`)
+      .get(`/api/Student/InfoData/${Studentid?.studentId}`)
       .then((res) => {
         const resData = res?.data?.data;
-        console.log(resData);
         setCountry( resData?.studentCountrysId)
         setGovernorate( resData?.studentGovernoratesId)
         setCity( resData?.studentCitysId)

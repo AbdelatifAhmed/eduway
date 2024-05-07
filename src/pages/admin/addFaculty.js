@@ -127,7 +127,7 @@ export default function AddFaculty() {
       })
       .then((res) => setFacultyNames(res?.data?.data?.getFacultyDtos))
       .catch((err) => console.log(err));
-  };
+  }
   const getAllBaylw = () => {
     axios
       .get(`api/Bylaw/ByFacultyId/${facultyId}`, {
@@ -188,7 +188,8 @@ export default function AddFaculty() {
       .catch((err) => console.log(err));
   };
   const getAllParents = () => {
-    axios
+    if(bylaw &&  type){
+      axios
       .get(`/api/ScientificDegree/ByBylawId?bylawId=${bylaw}&type=${type}`, {
         headers: {
           Accept: "application/json",
@@ -197,6 +198,7 @@ export default function AddFaculty() {
       })
       .then((res) => setSemesterParentNames(res?.data?.data))
       .catch((err) => console.log(err));
+    }
   };
 
   const [firstTime, setFirstTime] = useState(true);
@@ -220,7 +222,7 @@ export default function AddFaculty() {
     if (!firstTime) {
       getAllParents();
     }
-  }, [bylaw, type]);
+  }, [ type]);
 
   const [shows , setShows] = useState({
    showFaculty : [] ,
@@ -970,7 +972,7 @@ export default function AddFaculty() {
                     aria-label="Default select example"
                     onChange={(e) => setFaculty(e.target.value)}
                   >
-                    <option selected disabled>
+                    <option defaultValue hidden>
                       Faculty
                     </option>
                     {shows.showFaculty}
@@ -1254,7 +1256,7 @@ export default function AddFaculty() {
               aria-label="Floating label select example"
               onChange={(e) => setFaculty(e.target.value)}
             >
-              <option disabled selected>
+              <option hidden defaultValue>
                 Select Faculty
               </option>
               {shows.showFaculty}
@@ -1324,7 +1326,7 @@ export default function AddFaculty() {
               aria-label="Floating label select example"
               onChange={(e) => setFaculty(e.target.value)}
             >
-              <option disabled selected>
+              <option defaultValue hidden>
                 Select Faculty
               </option>
               {shows.showFaculty}
@@ -1395,7 +1397,7 @@ export default function AddFaculty() {
               aria-label="Floating label select example"
               onChange={(e) => setFaculty(e.target.value)}
             >
-              <option disabled selected>
+              <option defaultValue hidden>
                 Select Faculty
               </option>
               {shows.showFaculty}
@@ -1465,7 +1467,7 @@ export default function AddFaculty() {
               aria-label="Floating label select example"
               onChange={(e) => setFaculty(e.target.value)}
             >
-              <option disabled selected>
+              <option hidden defaultValue>
                 Select Faculty
               </option>
               {shows.showFaculty}
@@ -1547,7 +1549,7 @@ export default function AddFaculty() {
               aria-label="Floating label select example"
               onChange={(e) => setFaculty(e.target.value)}
             >
-              <option disabled selected>
+              <option defaultValue hidden>
                 Select Faculty
               </option>
               {shows.showFaculty}
@@ -1615,7 +1617,7 @@ export default function AddFaculty() {
               aria-label="Floating label select example"
               onChange={(e) => setFaculty(e.target.value)}
             >
-              <option disabled selected>
+              <option defaultValue hidden>
                 Select Faculty
               </option>
               {shows.showFaculty}
@@ -1692,7 +1694,7 @@ export default function AddFaculty() {
                       aria-label="Floating label select example"
                       onChange={(e) => setFacultyId(e.target.value)}
                     >
-                      <option disabled selected>
+                      <option defaultValue hidden>
                         Select Faculty
                       </option>
                       {shows.showFaculty}
@@ -1708,7 +1710,7 @@ export default function AddFaculty() {
                       aria-label="Floating label select example"
                       onChange={(e) => setBylaw(e.target.value)}
                     >
-                      <option disabled selected value={null}>
+                      <option defaultValue hidden >
                         Select Bylaw
                       </option>
                       {shows.showBaylws}
@@ -1726,7 +1728,8 @@ export default function AddFaculty() {
                           handelScientificDegreeTypeChange(+e.target.value)
                         }
                       >
-                        <option selected value={1}>
+                        <option defaultValue hidden>Selecty Type</option>
+                        <option  value={1}>
                           Scientific Degree
                         </option>
                         <option value={2}>Band</option>
@@ -1749,7 +1752,7 @@ export default function AddFaculty() {
                       id="scienticBand"
                       value = {band}
                     >
-                      <option disabled selected value={null}>
+                      <option defaultValue hidden>
                         Select band
                       </option>
                       {shows.showBands}
@@ -1768,7 +1771,7 @@ export default function AddFaculty() {
                       id="scienticPhase"
                       value = {phase}
                     >
-                      <option disabled selected>
+                      <option defaultValue hidden>
                         Select Phase
                       </option>
                       {shows.showPhases}
@@ -1787,7 +1790,7 @@ export default function AddFaculty() {
                       id="scienticSemester"
                       value = {semester}
                     >
-                      <option disabled selected>
+                      <option defaultValue hidden>
                         Select Semster
                       </option>
                       {shows.showSemesters}
@@ -1806,7 +1809,7 @@ export default function AddFaculty() {
                       id="scienticExamRole"
                       value = {examRole}
                     >
-                      <option disabled selected>
+                      <option defaultValue hidden>
                         Select Exam Role
                       </option>
                       {shows.showExamRoles}
@@ -1828,7 +1831,7 @@ export default function AddFaculty() {
                         bandDisabled
                       }
                     >
-                      <option disabled selected>
+                      <option defaultValue hidden>
                         Select Semester Parent
                       </option>
                       {shows.showParent}

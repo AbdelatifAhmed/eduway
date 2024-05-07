@@ -3,7 +3,6 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 export default function Basic() {
   const axios = useAxiosPrivate()
   const [data,setData] = useState()
-  console.log(data);
   useEffect(()=>{
     axios.get('api/Staff/BasicData')
     .then(res=>{

@@ -9,6 +9,8 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 export default function Courses(props) {
   const axios = useAxiosPrivate()
   const [courses, setCourses] = useState([]);
+  const [prerequisite, setPrerequisite] = useState([]);
+  
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -104,7 +106,7 @@ export default function Courses(props) {
           <Button variant="danger" onClick={() => handelDelete(course)}>
             Delete
           </Button>
-          <Button variant="secondary" onClick={() => handlePrerequisteShow()}>
+          <Button variant="secondary" onClick={() => openPrerequisite(course?.id)}>
           <FaFilePen/>
           </Button>
 
@@ -133,10 +135,25 @@ export default function Courses(props) {
     </tr>
   );
 
+
+
   const [show, setShow] = useState(false);
 
   const handlePrerequisteClose = () => setShow(false);
   const handlePrerequisteShow = () => setShow(true);
+
+  const openPrerequisite = (id)=>{
+    axios.get(`/api/Course/CoursePrerequisite/${id}`)
+    .then(res=>{
+      console.log(res);
+      setPrerequisite(res?.data);
+    })
+    .catch(err=>{
+      console.error(err);
+    })
+    handlePrerequisteShow()
+
+  }
 
   return (
     <div className="pad">
@@ -144,7 +161,9 @@ export default function Courses(props) {
         <Modal.Header closeButton>
           <Modal.Title>Prerequisite</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+          {prerequisite}
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handlePrerequisteClose}>
             Close
