@@ -3,7 +3,6 @@ import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 export default function Errorpage() {
-  // console.error();
   const navigator = useNavigate();
   const handelBack = () => {
     navigator(-1);

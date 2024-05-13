@@ -7,7 +7,7 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
-export default function AddFaculty() {
+export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , setShouldRefetch} ) {
   const axios = useAxiosPrivate()
   const [addFacultyShow, setAddFacultyShow] = useState(false);
   const [addBylaw, setAddBylaw] = useState(false);
@@ -27,6 +27,9 @@ export default function AddFaculty() {
   const [semesterNames, setSemesterNames] = useState([]);
   const [examRoleNames, setExamRoleNames] = useState([]);
   const [semesterParentNames, setSemesterParentNames] = useState([]);
+
+  //Send the Faculties to the parent Component (Faculty)
+  getFacultiesForMainPage(facultyNames)
 
   //Changable Variables
   const [name, setName] = useState("");
@@ -125,7 +128,9 @@ export default function AddFaculty() {
           // Authorization: "Bearer" + token ,
         },
       })
-      .then((res) => setFacultyNames(res?.data?.data?.getFacultyDtos))
+      .then((res) => {
+        setFacultyNames(res?.data?.data?.getFacultyDtos)
+      })
       .catch((err) => console.log(err));
   }
   const getAllBaylw = () => {
@@ -202,6 +207,16 @@ export default function AddFaculty() {
   };
 
   const [firstTime, setFirstTime] = useState(true);
+
+  
+
+  useEffect(() => {
+    if(shouldRefetch)
+    {
+      getAllFaculty()
+      setShouldRefetch(false)
+    }
+  }, [shouldRefetch]);
 
   useEffect(() => {
     getAllFaculty();
@@ -301,11 +316,6 @@ export default function AddFaculty() {
             description: description,
             userId: "",
             id: 0,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
           }
         )
         .then((response) => {
@@ -315,7 +325,7 @@ export default function AddFaculty() {
               title: "Faculty Added successfully",
             });
           }
-          getAllFaculty();
+          getAllFaculty()
         });
     } catch (err) {
       Toast.fire({

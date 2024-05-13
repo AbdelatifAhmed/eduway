@@ -1,107 +1,141 @@
 import React, { useEffect, useState } from 'react';
-import { Form } from 'react-bootstrap';
-import Select from "react-select";
+import { Button, Form, Modal } from 'react-bootstrap';
 import useAxiosPrivate from './hooks/useAxiosPrivatet';
+import Swal from 'sweetalert2';
 
-export default function Api() {
-  const axios = useAxiosPrivate();
-  const [teacher, setTeacher] = useState([]);
-  const [premissionRoles, setPremissionRoles] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  const [selectedUserName, setSelectedUserName] = useState("");
+export default function Api({getFacultiesForMainPage , shouldRefetch , setShouldRefetch} ) {
+  const axios = useAxiosPrivate()
+  const [addFacultyShow, setAddFacultyShow] = useState(false);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [facultyNames, setFacultyNames] = useState([]);
+
+  const [firstTime, setFirstTime] = useState(true);
+  getFacultiesForMainPage(facultyNames)
+
+  const getAllFaculty = () => {
+    axios
+      .get("/api/Facult/Faculty", {
+        headers: {
+          Accept: "application/json",
+          // Authorization: "Bearer" + token ,
+        },
+      })
+      .then((res) => {
+        setFacultyNames(res?.data?.data?.getFacultyDtos)
+      })
+      .catch((err) => console.log(err));
+  }
 
   useEffect(() => {
-    axios
-      .get("/api/Teacher/GetAllTeacher")
-      .then((res) => setTeacher(res?.data?.data))
-      .catch((err) => console.log(err));
+    if(shouldRefetch)
+    {
+      getAllFaculty()
+      setShouldRefetch(false)
+    }
+  }, [shouldRefetch]);
+  useEffect(() => {
+    getAllFaculty();
+    setFirstTime(false);
   }, []);
-
-  const handelPermissions = async (userId) => {
-    axios.get(`api/Auth/GetUserRoles/${userId}`)
-      .then(res => {
-        setPremissionRoles(res?.data?.data?.roles);
-        setSelectedUserId(res?.data?.data?.userId);
-        setSelectedUserName(res?.data?.data?.userName);
-      })
-      .catch(err => console.log(err));
-  }
-
-  const handleCheckboxChange = (roleId) => {
-    const updatedPermissions = premissionRoles.map(role => {
-      if (role.id === roleId) {
-        return { ...role, isSelected: !role.isSelected };
-      }
-      return role;
+  const handelAddFaculty = async (event) => {
+    event.preventDefault();
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
     });
-    setPremissionRoles(updatedPermissions);
-  }
-
-  const handleSavePermissions = (e) => {
-    e.preventDefault()
-    const payload = {
-      userId: selectedUserId,
-      userName: selectedUserName,
-      roles: premissionRoles.map(role => ({
-        id: role.id,
-        name: role.name,
-        isSelected: role.isSelected
-      }))
-    };
-
-    axios.post('/api/Auth/ChangeUserRoles', payload)
-      .then(res => {
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err);
+    try {
+      axios
+        .post(
+          "/api/Facult",
+          {
+            name: name,
+            description: description,
+            userId: "",
+            id: 0,
+          }
+        )
+        .then((response) => {
+          if (response.status === 201) {
+            Toast.fire({
+              icon: "success",
+              title: "Faculty Added successfully",
+            });
+          }
+          getAllFaculty()
+        });
+    } catch (err) {
+      Toast.fire({
+        icon: "error",
+        title: "Error Occured",
       });
-  }
+    }
+  };
+ 
 
   return (
-    <div>
-      <div style={{ border: "2px solid #121431", borderRadius: "10px" }}>
-        <div
-          style={{
-            background: "#121431",
-            color: "white",
-            padding: "20px",
-            fontSize: "30px",
+    <>
+     <Button
+          variant="outline-light"
+          className="me-2 "
+          onClick={() => {
+            setAddFacultyShow(true);
           }}
         >
-          Give Permissions
-        </div>
-        <Form style={{ padding: "10px" }}>
-          <Form.Group
-            className="mb-3"
-            controlId="exampleForm.ControlInput1"
-          >
-            <Form.Label style={{ fontSize: "20px" }}>
-              Teacher Name
-            </Form.Label>
-            <Select
-              options={teacher}
-              getOptionLabel={(e) => e.staffNameEnglish}
-              getOptionValue={(e) => e.userId}
-              onChange={(e) => handelPermissions(e.userId)}
-            />
-          </Form.Group>
-
-          <div>
-            {premissionRoles?.map((role) => (
-              <div key={role.id}>
-                <span>{role.name}--</span>
-                <input
-                  type="checkbox"
-                  checked={role.isSelected}
-                  onChange={() => handleCheckboxChange(role.id)}
-                />
-              </div>
-            ))}
-          </div>
-          <button onClick={e=>handleSavePermissions(e)}>Save</button>
-        </Form>
-      </div>
-    </div>
+          Faculty
+        </Button>
+        <Modal
+        size="lg"
+        show={addFacultyShow}
+        onHide={() => setAddFacultyShow(false)}
+        aria-labelledby="example-modal-sizes-title-sm"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-sm">
+            Add Faculty
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+              <Form.Label>Faculty Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Faculty"
+                onChange={(e) => setName(e.target.value)}
+                autoFocus
+              />
+            </Form.Group>
+            <Form.Group
+              className="mb-3"
+              controlId="exampleForm.facultyDescription"
+            >
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Descriptioon"
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setAddFacultyShow(false)}>
+            Close
+          </Button>
+          <Button variant="success" onClick={handelAddFaculty}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   )
 }

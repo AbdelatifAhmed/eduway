@@ -42,9 +42,10 @@ import CourseResultView from "./pages/Reports/CourseResultView.js";
 import Notes from "./pages/Courses/Notes.js";
 import Unauthorized from "./Components/unauthorized.js";
 import Basic from "./pages/admin/basic.js";
+import FacultyDetails from "./pages/admin/facultyDetails.js";
 export default function App() {
   return (
-    <div>
+    <>
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Login />} />
@@ -81,7 +82,8 @@ export default function App() {
             </Route>
 
             <Route element={<RequireAuth allowedRoles={["Administration"]} />}>
-              <Route path="faculty" element={<Faculty />} />
+              <Route path="faculty" element={<Faculty />}></Route>
+              <Route path="faculty/:id" element={<FacultyDetails />} />
               <Route path="courses" element={<Courses />} />
               <Route path="courses/course/:courseId" element={<CourseView />} />
               <Route path="add-course" element={<AddCourse />} />
@@ -177,6 +179,6 @@ export default function App() {
         {/* Catch All missing Pages */}
         <Route path="*" element={<Errorpage />} />
       </Routes>
-    </div>
+    </>
   );
 }
