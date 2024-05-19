@@ -57,6 +57,7 @@ ul {
 .nav-link {
   color: var(--primary-color) !important;
   font-size: 20px;
+  background-color: white;
 }
 
 /*************************** Login Page **********************************************************/

@@ -57,19 +57,7 @@ export default function Basic() {
                 <h1>Contact Data</h1>
               </legend>
               <div>
-                City : <span></span>
-              </div>
-
-              <div>
                 Address : <span>{data && data?.staffAddress}</span>
-              </div>
-
-              <div>
-                Mobile : <span></span>
-              </div>
-
-              <div>
-                Home Tel : <span></span>
               </div>
 
               <div>
@@ -80,13 +68,6 @@ export default function Basic() {
                 Email : <span>{data && data?.email}</span>
               </div>
 
-              <div>
-                System Mail : <span></span>
-              </div>
-
-              <div>
-                Mail Box : <span></span>
-              </div>
             </fieldset>
           </div>
           <div className="item">
@@ -94,9 +75,6 @@ export default function Basic() {
               <legend>
                 <h1>Prequalification Data</h1>
               </legend>
-              <div>
-                School : <span></span>
-              </div>
 
               <div>
                 Pre-Qualification : <span>{data && data?.preQualification}</span>
@@ -107,10 +85,6 @@ export default function Basic() {
               </div>
 
               <div>
-                Qualification Turn : <span></span>
-              </div>
-
-              <div>
                 Degree : <span>{data && data?.degree}</span>
               </div>
 
@@ -118,15 +92,8 @@ export default function Basic() {
                 Seat Number : <span>{data && data?.seatNumber}</span>
               </div>
 
-              <div>
-                Coordination Number : <span></span>
-              </div>
-
-              <div>
-                Coordination Date : <span></span>
-              </div>
             </fieldset>
-          </div>
+          </div>>
         </div>
       </div>
   );

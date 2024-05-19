@@ -32,7 +32,6 @@ export default function Faculty() {
   const getFacultiesForMainPage = (array) => {
     setFacultyNames(array);
   }
-
   
 
   const handelDelete = (faculty) => {

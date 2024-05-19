@@ -120,8 +120,8 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
     setEstimateCourse(newInputs);
   };
 
-  const getAllFaculty = () => {
-    axios
+  const getAllFaculty = async() => {
+    await axios
       .get("/api/Facult/Faculty", {
         headers: {
           Accept: "application/json",
@@ -135,7 +135,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
   }
   const getAllBaylw = () => {
     axios
-      .get(`api/Bylaw/ByFacultyId/${facultyId}`, {
+      .get(`api/Bylaw/all/${facultyId}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
@@ -807,17 +807,11 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
     setPhaseDisabled(true);
     setSemesterDisabled(true);
     setExamRoleDisabled(true);
-    setShows({
-      showFaculty : [] ,
-      showBaylws : [] ,
-      showBands : [] ,
-      showSemesters : [] ,
-      showExamRoles : [] ,
-      showPhases : [] ,
-      showParent : [] ,
-     })
+   
   };
 
+  console.log(estimates);
+  console.log(estimateCourse);
   return (
     <div>
       <div
@@ -1008,7 +1002,10 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
               <div className="col">
                 <Form.Group>
                   <FloatingLabel label="Type">
-                    <Form.Select aria-label="Default select example">
+                    <Form.Select aria-label="Default select example"
+                    onChange={e=>setType(e.target.value)}
+                    value={type}
+                    >
                       <option defaultValue hidden>Select Type</option>
                       <option value={1}>Credit Hours</option>
                       <option value={2}>Credit Points</option>
@@ -1052,7 +1049,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                               <Form.Control
                                 type="text"
                                 placeholder="Name"
-                                value={input.input1}
+                                value={input.nameEstimates}
                                 onChange={(e) =>
                                   handleInputChangeForEstimate(
                                     index,
@@ -1066,7 +1063,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                               <Form.Control
                                 type="text"
                                 placeholder="Char"
-                                value={input.input2}
+                                value={input.charEstimates}
                                 onChange={(e) =>
                                   handleInputChangeForEstimate(
                                     index,
@@ -1080,7 +1077,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                               <Form.Control
                                 type="number"
                                 placeholder="Max Percentage"
-                                value={input.input3}
+                                value={input.maxPercentageEstimates}
                                 onChange={(e) =>
                                   handleInputChangeForEstimate(
                                     index,
@@ -1094,7 +1091,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                               <Form.Control
                                 type="number"
                                 placeholder="min Percentage"
-                                value={input.input4}
+                                value={input.minPercentageEstimates}
                                 onChange={(e) =>
                                   handleInputChangeForEstimate(
                                     index,
@@ -1108,7 +1105,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                               <Form.Control
                                 type="number"
                                 placeholder="Max GPA"
-                                value={input.input5}
+                                value={input.maxGpaEstimates}
                                 onChange={(e) =>
                                   handleInputChangeForEstimate(
                                     index,
@@ -1122,7 +1119,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                               <Form.Control
                                 type="number"
                                 placeholder="Min GPA"
-                                value={input.input6}
+                                value={input.minGpaEstimates}
                                 onChange={(e) =>
                                   handleInputChangeForEstimate(
                                     index,
