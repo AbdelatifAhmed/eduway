@@ -10,7 +10,8 @@ export default function useRefreshToken() {
       return { 
         ...prev,
         dataDetails :  response?.data ,
-        accessToken: response?.data?.token };
+        accessToken: response?.data?.token ,
+      };
     });
     return response?.data?.token;
   };

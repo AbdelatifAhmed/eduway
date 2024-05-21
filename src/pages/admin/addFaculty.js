@@ -784,7 +784,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
       setSemesterDisabled(true);
       setExamRoleDisabled(true);
     }
-  };
+  }
 
   const restVariables = () => {
     setName("");
@@ -809,9 +809,6 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
     setExamRoleDisabled(true);
    
   };
-
-  console.log(estimates);
-  console.log(estimateCourse);
   return (
     <div>
       <div

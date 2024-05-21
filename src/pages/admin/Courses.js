@@ -6,6 +6,7 @@ import { Button, Col, FormLabel, FormSelect, Modal, Row } from "react-bootstrap"
 import Swal from "sweetalert2";
 import { FaFilePen } from "react-icons/fa6";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from '../../hooks/useFaculty'
 export default function Courses(props) {
   const axios = useAxiosPrivate()
   const [courses, setCourses] = useState([]);
@@ -16,20 +17,24 @@ export default function Courses(props) {
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
 
+
+  //Global faculty id
+  const {globalFaculty} = useFaculty()
+
   useEffect(() => {
-    getCourses();
-  }, []);
+    getCourses()
+  }, [globalFaculty]);
 
   const getCourses = () => {
-    axios
-      .get("/api/Course", {
+    if(globalFaculty){axios
+      .get(`/api/Course/all/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
         },
       })
       .then((res) => setCourses(res.data.data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err));}
   };
 
   const handelDelete = (course) => {

@@ -12,9 +12,7 @@ export default function Login(props) {
   const [isError, setIsError] = useState(false);
   
   const user_ = useAuth();
-  // Cookie
-  const cookie = new Cookies();
-  //navigate
+    //navigate
   const Navigate = useNavigate();
   // const location = useLocation();
   // const from = location?.state?.from?.pathname ;
@@ -42,7 +40,10 @@ export default function Login(props) {
       setPassword('')  
       dataDetails?.roles[0] === "Student"
         ? Navigate("/user/Basic-info")
-        :  Navigate("/admin/basic")
+        :  dataDetails?.roles[0] === "Administration"
+           ?    
+           Navigate("/selectfaculty")
+           : Navigate("/admin/basic")
     } catch (err) {
       setIsError(true)
       if (!err?.response) {

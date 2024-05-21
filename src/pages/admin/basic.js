@@ -12,7 +12,6 @@ export default function Basic() {
       console.log(err);
     })
   },[])
-
   return (
     <div className="page">
         <div className="basic-info">
@@ -93,7 +92,7 @@ export default function Basic() {
               </div>
 
             </fieldset>
-          </div>>
+          </div>
         </div>
       </div>
   );

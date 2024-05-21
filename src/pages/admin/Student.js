@@ -5,29 +5,29 @@ import { Link } from "react-router-dom";
 import {Button, Col, FormLabel, FormSelect, Row} from "react-bootstrap"
 import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
-
+import useFaculty from "../../hooks/useFaculty";
 export default function Student(props) {
   const axios = useAxiosPrivate()
   const [students, setStudent] = useState([]);
-
+  const {globalFaculty} = useFaculty()
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage ,  setRecordsPerPage] = useState(10);
 
   useEffect(() => {
       getStudents()
-  }, []);
+  }, [globalFaculty]);
 
   const getStudents = () =>{
-    axios
-      .get("/api/Student/GetAllStudents", {
+    if(globalFaculty){axios
+      .get(`/api/Student/GetAllStudents/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer " + token,
         },
       })
       .then((res) => setStudent(res.data.data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err));}
   }
 
   const handelDelete = (std)=>{

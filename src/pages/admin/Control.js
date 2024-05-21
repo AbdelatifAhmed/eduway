@@ -7,9 +7,11 @@ import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 import { IoMdClose } from "react-icons/io";
 import Pagination from "../../Components/Pagination";
+import useFaculty from "../../hooks/useFaculty";
 
 export default function Control() {
   const axios = useAxiosPrivate();
+  const {globalFaculty} = useFaculty()
   const [courses, setCourses] = useState([]);
   const [faculty, setFaculty] = useState([]);
   const [student, setStudent] = useState([]);
@@ -26,7 +28,7 @@ export default function Control() {
   const [courseAssessMethods, setCourseAssessMethods] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedOptionsForTeacherCourse, setSelectedOptionsForTeacherCourse] =
-    useState([]);
+    useState([])
   const [premissionRoles, setPremissionRoles] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [selectedUserName, setSelectedUserName] = useState("");
@@ -111,8 +113,9 @@ export default function Control() {
   }
 
   useEffect(() => {
-    axios
-      .get("/api/Course")
+    if(globalFaculty){
+      axios
+      .get(`/api/Course/all/${globalFaculty}`)
       .then((res) => {
         setCourses(res?.data?.data);
       })
@@ -126,17 +129,17 @@ export default function Control() {
       .catch((err) => console.log(err));
 
     axios
-      .get("/api/Student/GetAllStudents")
+      .get(`/api/Student/GetAllStudents/${globalFaculty}`)
       .then((res) => setStudent(res?.data?.data))
       .catch((err) => console.log(err));
 
     axios
-      .get("/api/Teacher/GetAllTeacher")
+      .get(`/api/Teacher/GetAllTeacher/${globalFaculty}`)
       .then((res) => setTeacher(res?.data?.data))
       .catch((err) => console.log(err));
 
     axios
-      .get("/api/Department/All")
+      .get(`/api/Department/All/${globalFaculty}`)
       .then((res) => setDepartment(res?.data?.data))
       .catch((err) => console.log(err));
 
@@ -144,28 +147,25 @@ export default function Control() {
       .get("/api/Control/GetAllSemester")
       .then((res) => setCurrentSemesters(res?.data?.data))
       .catch((err) => console.log(err));
-  }, []);
+      
+      axios
+      .get(`/api/AssessMethod/All/${globalFaculty}`)
+      .then((res) => setAssessMethods(res?.data?.data))
+      .catch((err) => console.log(err));
+      
+      // if (facultyId) {
+        // .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
+        axios
+        .get(`/api/ScientificDegree/GetAllSemestersfd/${globalFaculty}`)
+        .then((res) => setSemester(res?.data?.data))
+        .catch((err) => console.log(err))
+      }
+        
+  }, [globalFaculty]);
 
   useEffect(() => {
     getCoursesForTeacher();
   }, [teacherId]);
-
-  useEffect(() => {
-    if (facultyId) {
-      axios
-        .get(`/api/AssessMethod/All/${facultyId}`)
-        .then((res) => setAssessMethods(res?.data?.data))
-        .catch((err) => console.log(err));
-    }
-
-    // if (facultyId) {
-    axios
-      // .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
-      .get(`/api/ScientificDegree/GetAllSemesters`)
-      .then((res) => setSemester(res?.data?.data))
-      .catch((err) => console.log(err));
-    // }
-  }, [facultyId]);
 
   useEffect(() => {
     getStudentBySemester();
@@ -579,6 +579,15 @@ export default function Control() {
         }
       });
   };
+
+  const formatDate = (dateRange) => {
+    const [startDate, endDate] = dateRange.split(' - ');
+  
+    const startYear = startDate.split('/')[2];
+    const endYear = endDate.split('/')[2];
+  
+    return `${startYear} / ${endYear}`;
+  };
   return (
     <div className="px-4">
       <Tabs
@@ -600,20 +609,6 @@ export default function Control() {
               Courses Assess Method
             </div>
             <Form style={{ padding: "10px" }}>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label style={{ fontSize: "20px" }}>
-                  Faculty Name
-                </Form.Label>
-                <Form.Select onChange={(e) => setFacultyId(e.target.value)}>
-                  <option hidden defaultValue>
-                    Select a faculty
-                  </option>
-                  {shows.showFaculty}
-                </Form.Select>
-              </Form.Group>
               <Form.Group
                 className="mb-3"
                 controlId="exampleForm.ControlInput1"
@@ -956,7 +951,7 @@ export default function Control() {
             >
               Academic Year :{" "}
               {currentSemesters?.academyYearName
-                ? currentSemesters?.academyYearName
+                ? formatDate(currentSemesters?.academyYearName)
                 : "NO Data "}
             </div>
             <div className="p-3">

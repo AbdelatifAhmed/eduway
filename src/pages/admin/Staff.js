@@ -3,6 +3,7 @@ import { Tab, Tabs } from "react-bootstrap";
 import Pagination from "../../Components/Pagination";
 import StaffData from "./StaffData";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from "../../hooks/useFaculty";
 
 export default function Staff() {
   const axios = useAxiosPrivate()
@@ -15,10 +16,12 @@ export default function Staff() {
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
+  const {globalFaculty} = useFaculty()
 
   useEffect(() => {
-    axios
-      .get("/api/Administration/GetAllAdministration", {
+    if(globalFaculty)
+      {axios
+      .get(`/api/Administration/GetAllAdministration/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer " + token ,
@@ -28,7 +31,7 @@ export default function Staff() {
       .catch((err) => console.log(err));
 
     axios
-      .get("/api/Staff/GetAllStaff", {
+      .get(`/api/Staff/GetAllStaff/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer " + token ,
@@ -38,7 +41,7 @@ export default function Staff() {
       .catch((err) => console.log(err));
 
     axios
-      .get("/api/Teacher/GetAllTeacher", {
+      .get(`/api/Teacher/GetAllTeacher/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer " + token ,
@@ -48,7 +51,7 @@ export default function Staff() {
       .catch((err) => console.log(err));
 
     axios
-      .get("/api/TeacherAssistant/GetAllTeacherAssistant", {
+      .get(`/api/TeacherAssistant/GetAllTeacherAssistant/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer " + token ,
@@ -58,15 +61,15 @@ export default function Staff() {
       .catch((err) => console.log(err));
 
     axios
-      .get("/api/Control/GetAll", {
+      .get(`/api/Control/GetAll/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer " + token ,
         },
       })
       .then((res) => setControlMember(res?.data?.data))
-      .catch((err) => console.log(err));
-  }, []);
+      .catch((err) => console.log(err));}
+  }, [globalFaculty]);
 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;

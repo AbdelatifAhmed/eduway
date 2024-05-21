@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Select from "react-select";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from "../../hooks/useFaculty";
 
 
 export default function AddCourse() {
   const axios = useAxiosPrivate()
+  const {globalFaculty} = useFaculty()
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [description, setDescription] = useState("");
@@ -50,8 +52,8 @@ export default function AddCourse() {
   )) : <option disabled className="text-danger">No Data</option>
 
   useEffect(() => {
-    axios
-      .get("/api/Course", {
+    if(globalFaculty){axios
+      .get(`/api/Course/all/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
@@ -62,7 +64,7 @@ export default function AddCourse() {
 
 
     axios
-      .get("api/Department/All", {
+      .get(`api/Department/All/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
@@ -72,16 +74,16 @@ export default function AddCourse() {
       .catch((err) => console.log(err));
 
     axios
-      .get("api/ScientificDegree/GetAllSemesters", {
+      .get(`api/ScientificDegree/GetAllSemesters/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
         },
       })
       .then((res) => setPhaseDegrees(res.data.data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err));}
 
-  }, []);
+  }, [globalFaculty]);
 
   const isSelected = (event) => {
     setCategory(event);

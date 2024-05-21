@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import Select from "react-select";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from "../../hooks/useFaculty";
 
 export default function CourseView() {
   const axios = useAxiosPrivate()
@@ -20,7 +21,7 @@ export default function CourseView() {
   const [departmentId, setDepartmentId] = useState();
   const [showPrerequisite, setShowPrerequisite] = useState(false);
   const [coursePrerequisites, setCoursePrerequisites] = useState([]);
-  const [courseData, setCourseData] = useState([]);
+  // const [courseData, setCourseData] = useState([]);
   // Multi-Select input
   const [selectedOptions, setSelectedOptions] = useState([]);
 
@@ -50,9 +51,10 @@ export default function CourseView() {
     <option key={index} value={phase.id}>{phase.name}</option>
   )) : <option disabled className="text-danger">No Data</option>
 
+  const {globalFaculty} = useFaculty()
   useEffect(() => {
-    axios
-      .get("/api/Course", {
+    if(globalFaculty){axios
+      .get(`/api/Course/all/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
@@ -63,25 +65,28 @@ export default function CourseView() {
 
 
     axios
-      .get("api/Department/All", {
+      .get(`api/Department/All/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
         },
       })
       .then((res) => setGetDepartment(res.data.data))
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err));
 
     axios
-      .get("api/ScientificDegree/GetAllSemesters", {
+      .get(`api/ScientificDegree/GetAllSemesters/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
         },
       })
       .then((res) => setPhaseDegrees(res.data.data))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err));}
 
+  }, [globalFaculty]);
+
+  useEffect(() => {
       axios
       .get(`api/Course/${courseId}`, {
         headers: {
@@ -105,11 +110,8 @@ export default function CourseView() {
         setShowPrerequisite(data.prerequisite)
       })
       .catch((err) => console.log(err));
-
   }, []);
-
-
-
+  
   const isSelected = (event) => {
     setCategory(event);
     if (event == 1) {

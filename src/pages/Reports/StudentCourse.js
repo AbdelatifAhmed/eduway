@@ -13,19 +13,24 @@ import Pagination from "../../Components/Pagination";
 import { Link, useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from "../../hooks/useFaculty";
 
 export default function StudentCourse() {
   const axios = useAxiosPrivate()
   const [academicYears, setAcademicYears] = useState([]);
+  const {globalFaculty} = useFaculty()
+
   useEffect(() => {
-    axios("/api/AcademyYear/N")
+   if(globalFaculty){ axios(`/api/AcademyYear/N/${globalFaculty}`)
       .then((res) => {
         setAcademicYears(res?.data?.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+    
+    }
+  }, [globalFaculty]);
 
 
   const showAcademicYears =

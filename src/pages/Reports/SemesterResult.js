@@ -12,19 +12,22 @@ import Pagination from "../../Components/Pagination";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from "../../hooks/useFaculty";
 
 export default function SemesterResult() {
   const axios = useAxiosPrivate()
   const [academicYears, setAcademicYears] = useState([]);
+  const {globalFaculty} = useFaculty()
+
   useEffect(() => {
-    axios("/api/AcademyYear/N")
+    if(globalFaculty){axios(`/api/AcademyYear/N/${globalFaculty}`)
       .then((res) => {
         setAcademicYears(res?.data?.data);
       })
       .catch((err) => {
         console.log(err);
-      });
-  }, []);
+      });}
+  }, [globalFaculty]);
 
   const showAcademicYears =
     academicYears && academicYears.length > 0 ? (
@@ -44,7 +47,7 @@ export default function SemesterResult() {
   const [semesterId, setSemesterId] = useState();
   useEffect(() => {
     if (academicYearId) {
-      axios(`/api/Control/SA${academicYearId}`)
+      axios(`/api/Control/SA/${academicYearId}`)
         .then((res) => {
           setSemesters(res?.data?.data);
         })
@@ -70,7 +73,7 @@ export default function SemesterResult() {
   const [students, setStudents] = useState([]);
   useEffect(() => {
     if (semesterId) {
-      axios(`/api/Control/SSR${semesterId},${academicYearId}`)
+      axios(`/api/Control/SSR/${semesterId}/${academicYearId}`)
         .then((res) => {
           setStudents(res?.data?.data);
         })
