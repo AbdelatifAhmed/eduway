@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from "../../hooks/useFaculty";
 
 export default function AddStaffData(props) {
   const axios = useAxiosPrivate()
+  const {globalFaculty} = useFaculty()
   const [nameEG, setNameEg] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [mail, setMail] = useState("");
@@ -68,6 +70,7 @@ export default function AddStaffData(props) {
         .post(
           `/api/${props.link}`,
           {
+            id:0,
             nameArabic: nameAr,
             nameEnglish: nameEG,
             nationalID: nationalId,
@@ -89,7 +92,8 @@ export default function AddStaffData(props) {
             seatNumber: numericSeatNumber,
             qualificationYear: prequalificationYear,
             degree: numericDegree,
-            phoneNumbers
+            phoneNumbers,
+            facultyId:globalFaculty,
           },
           {
             headers: {
@@ -168,6 +172,7 @@ export default function AddStaffData(props) {
                 type="text"
                 className="txt-input"
                 placeholder="National Id"
+                maxLength={14}
                 onChange={(e) => setNationalId(e.target.value)}
               />
             </div>

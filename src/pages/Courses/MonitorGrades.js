@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Accordion, Button, Table } from "react-bootstrap";
+import { Accordion, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
@@ -108,7 +108,7 @@ export default function MonitorGrades() {
       .then((result) => {
         if (result.isConfirmed) {
           axios
-            .post(`/api/Control/RaisingGradesSemester${semester.id}`)
+            .post(`/api/Control/RaisingGradesSemester/${semester.id}`)
             .then((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Monitored!",

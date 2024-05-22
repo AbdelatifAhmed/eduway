@@ -418,12 +418,18 @@ export default function FacultyDetails() {
     ]);
   };
 
-  const handleDeleteChildForEstimates = (index) => {
+  const handleDeleteChildForEstimates = (index,id) => {
     // Remove the child at the specified index from the array
     const newInputs = [...estimates];
     newInputs.splice(index, 1);
     setEstimates(newInputs);
+    handelDeleteEstimates(id)
   };
+
+  const handelDeleteEstimates =(id) => {
+    axios
+    .delete(`/api/bylaw/estimates/${id}`)
+  }
 
   const addChildForEstimateCourse = () => {
     // Add a new set of input elements to the array of inputs
@@ -438,12 +444,18 @@ export default function FacultyDetails() {
     ]);
   };
 
-  const handleDeleteChildForEstimateCourse = (index) => {
+  const handleDeleteChildForEstimateCourse = (index,id) => {
     // Remove the child at the specified index from the array
     const newInputs = [...estimateCourse];
     newInputs.splice(index, 1);
     setEstimateCourse(newInputs);
+    handelDeleteEstimateCourses(id)
   };
+
+  const handelDeleteEstimateCourses =(id) => {
+    axios
+    .delete(`/api/bylaw/estimatesCourse/${id}`)
+  }       
 
   const handleInputChangeForEstimate = (index, fieldName, value) => {
     // Update the input value in the state
@@ -764,13 +776,13 @@ export default function FacultyDetails() {
       .get(`api/scientificDegree/${id}`)
       .then((res) => {
         const data = res?.data?.data;
-        setFaculty(data?.facultyId);
         setName(data?.name);
         setCode(data?.code);
         setId(data?.id);
         setOrder(data?.order);
         setS_bylaw(data?.bylawId);
         setType(data?.type);
+        setSemesterParent(data?.parentId)
         setS_band(data?.bandId);
         setS_phase(data?.phaseId);
         setS_semester(data?.semesterId);
@@ -1158,7 +1170,7 @@ export default function FacultyDetails() {
       axios
         .put("/api/scientificDegree/update", {
           id: ids,
-          facultyId: faculty,
+          facultyId: id,
           name,
           description,
           type,
@@ -1596,6 +1608,15 @@ export default function FacultyDetails() {
     setMaxDegree(null);
     setminDegree(null);
     setOrder(null);
+    setS_band(null)
+    setS_bylaw(null)
+    setS_phase(null)
+    setS_semester(null)
+    setS_examRole(null)
+    setSemesterParent(null)
+    setSuccessPercentageBand(null)
+    setSuccessPercentagePhase(null)
+    setSuccessPercentageSemester(null)
   };
 
   return (
@@ -1793,7 +1814,7 @@ export default function FacultyDetails() {
                                   variant="light"
                                   size="md"
                                   onClick={() =>
-                                    handleDeleteChildForEstimates(index)
+                                    handleDeleteChildForEstimates(index,input?.id)
                                   }
                                 >
                                   <RiDeleteBin7Fill />
@@ -1881,7 +1902,7 @@ export default function FacultyDetails() {
                                   variant="light"
                                   size="md"
                                   onClick={() =>
-                                    handleDeleteChildForEstimateCourse(index)
+                                    handleDeleteChildForEstimateCourse(index , input.id)
                                   }
                                 >
                                   <RiDeleteBin7Fill />
@@ -2116,25 +2137,8 @@ export default function FacultyDetails() {
                 <Col>
                   <Form.Group>
                     <FloatingLabel
-                      controlId="floatingPhaseDegreeFaculty"
-                      label="Faculty"
-                    >
-                      <Form.Select
-                        aria-label="Floating label select example"
-                        value={facultyId}
-                        onChange={(e) => setFacultyId(e.target.value)}
-                      >
-                        <option defaultValue hidden>
-                          Select Faculty
-                        </option>
-                        {shows.showFaculty}
-                      </Form.Select>
-                    </FloatingLabel>
-
-                    <FloatingLabel
                       controlId="floatingPhaseDegreeBylaw"
                       label="bylaw"
-                      className="mt-2"
                     >
                       <Form.Select
                         aria-label="Floating label select example"
@@ -2155,6 +2159,7 @@ export default function FacultyDetails() {
                         className="mt-2"
                       >
                         <Form.Select
+                        value={type}
                           onChange={(e) =>
                             handelScientificDegreeTypeChange(+e.target.value)
                           }

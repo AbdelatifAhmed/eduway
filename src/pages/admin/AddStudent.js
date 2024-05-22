@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from "../../hooks/useFaculty";
 
 export default function AddStudent() {
   const axios = useAxiosPrivate()
+  const globalFaculty = useFaculty()
   const [nameEG, setNameEg] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [studentCode, setStudentCode] = useState("");
@@ -104,12 +106,8 @@ export default function AddStudent() {
             parentCityId: numericPCityId,
             parentStreet: parentStreet,
             phoneNumbers: phoneNumbers,
+            facultyId:globalFaculty,
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
         )
         .then((response) => {
           if (response.status === 201) {

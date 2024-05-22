@@ -83,7 +83,7 @@ export default function FinalGrades() {
 
   useEffect(() => {
     const fetchData = async () => {
-      // if(selectedCourse){
+      if(selectedCourse){
       let data = null;
       try {
         // axios.get(`api/Control/GetStudentSemesterAssessMethodsBySpecificCourseControlMembers${selectedCourse?.id }`)
@@ -91,7 +91,7 @@ export default function FinalGrades() {
           `api/Control/GetStudentSemesterAssessMethodsBySpecificCourseControlMembers/${selectedCourse?.courseId }`
         ).then((res) => {
           data = res?.data?.data;
-        });
+        })
         const processedData = data.studentDtos.map((student) => ({
           ...student,
           isDisabled: true,
@@ -100,7 +100,7 @@ export default function FinalGrades() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-      // }
+      }
     };
     fetchData();
   }, [selectedCourse]);

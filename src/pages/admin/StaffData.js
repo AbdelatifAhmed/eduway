@@ -85,6 +85,17 @@ export default function StaffData(props) {
                       </span>
                     </div>
                   </th>
+                  {/* <th
+                    scope="col"
+                    style={{ background: "#121431", color: "white" }}
+                  >
+                    <div className="th-flex">
+                      <span className="th-name">Operation</span>
+                      <span>
+                        <FaSort />
+                      </span>
+                    </div>
+                  </th> */}
                 </tr>
               </thead>
               <tbody>{props.show}</tbody>

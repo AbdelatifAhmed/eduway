@@ -22,8 +22,6 @@ export default function Navbar(props) {
   }
 
   const {Auth} = useAuth()
-
-  console.log(useAuth());
   useEffect(() => {
     getAllFaculty();
   }, []);

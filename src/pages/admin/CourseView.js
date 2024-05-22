@@ -21,6 +21,8 @@ export default function CourseView() {
   const [departmentId, setDepartmentId] = useState();
   const [showPrerequisite, setShowPrerequisite] = useState(false);
   const [coursePrerequisites, setCoursePrerequisites] = useState([]);
+  const [defaultValues,setDefaultValues] = useState([])
+  console.log('default Value',defaultValues);
   // const [courseData, setCourseData] = useState([]);
   // Multi-Select input
   const [selectedOptions, setSelectedOptions] = useState([]);
@@ -54,12 +56,7 @@ export default function CourseView() {
   const {globalFaculty} = useFaculty()
   useEffect(() => {
     if(globalFaculty){axios
-      .get(`/api/Course/all/${globalFaculty}`, {
-        headers: {
-          Accept: "application/json",
-          // Authorization: "Bearer" + token ,
-        },
-      })
+      .get(`/api/Course/all/${globalFaculty}`)
       .then((res) => setGetCourses(res.data.data))
       .catch((err) => console.log(err));
 
@@ -88,12 +85,7 @@ export default function CourseView() {
 
   useEffect(() => {
       axios
-      .get(`api/Course/${courseId}`, {
-        headers: {
-          Accept: "application/json",
-          // Authorization: "Bearer" + token ,
-        },
-      })
+      .get(`api/Course/${courseId}`)
       .then((res) => {
         const data = res?.data?.data;
         setName(data.name)
@@ -108,10 +100,12 @@ export default function CourseView() {
         setScientificDegreeId(data.scientificDegreeId)
         setDepartmentId(data.departmentId)
         setShowPrerequisite(data.prerequisite)
+        setDefaultValues(data?.coursePrerequisites)
+     
       })
       .catch((err) => console.log(err));
   }, []);
-  
+
   const isSelected = (event) => {
     setCategory(event);
     if (event == 1) {
@@ -148,6 +142,7 @@ export default function CourseView() {
     try {
       await axios
         .post("/api/Course/AddCourse", {
+          facultyId:globalFaculty,
           id: 0,
           name,
           code,

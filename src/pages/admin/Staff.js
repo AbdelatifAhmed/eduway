@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Tab, Tabs } from "react-bootstrap";
+import { Button, Tab, Tabs } from "react-bootstrap";
 import Pagination from "../../Components/Pagination";
 import StaffData from "./StaffData";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 import useFaculty from "../../hooks/useFaculty";
+import Swal from "sweetalert2";
 
 export default function Staff() {
   const axios = useAxiosPrivate()
@@ -18,9 +19,8 @@ export default function Staff() {
   const [recordsPerPage] = useState(10);
   const {globalFaculty} = useFaculty()
 
-  useEffect(() => {
-    if(globalFaculty)
-      {axios
+  const getAllAdministrations = async()=>{
+    await axios
       .get(`/api/Administration/GetAllAdministration/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
@@ -29,8 +29,10 @@ export default function Staff() {
       })
       .then((res) => setAdministration(res?.data?.data))
       .catch((err) => console.log(err));
+  }
 
-    axios
+  const getAllStaff = async()=>{
+    await axios
       .get(`/api/Staff/GetAllStaff/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
@@ -39,8 +41,9 @@ export default function Staff() {
       })
       .then((res) => setStaff(res?.data?.data))
       .catch((err) => console.log(err));
-
-    axios
+  }
+  const getAllTeacher = async()=>{
+    await axios
       .get(`/api/Teacher/GetAllTeacher/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
@@ -49,8 +52,9 @@ export default function Staff() {
       })
       .then((res) => setTeacher(res?.data?.data))
       .catch((err) => console.log(err));
-
-    axios
+  }
+  const getAllTeacherAssistant = async()=>{
+    await axios
       .get(`/api/TeacherAssistant/GetAllTeacherAssistant/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
@@ -59,8 +63,9 @@ export default function Staff() {
       })
       .then((res) => setTeacherAssistant(res?.data?.data))
       .catch((err) => console.log(err));
-
-    axios
+  }
+  const getAllControlMember = async()=>{
+    await axios
       .get(`/api/Control/GetAll/${globalFaculty}`, {
         headers: {
           Accept: "application/json",
@@ -68,7 +73,18 @@ export default function Staff() {
         },
       })
       .then((res) => setControlMember(res?.data?.data))
-      .catch((err) => console.log(err));}
+      .catch((err) => console.log(err));
+  }
+
+  useEffect(() => {
+    if(globalFaculty)
+      {
+        getAllAdministrations()
+        getAllControlMember()
+        getAllStaff()
+        getAllTeacher()
+        getAllTeacherAssistant()
+    }
   }, [globalFaculty]);
 
   const indexOfLastRecord = currentPage * recordsPerPage;
@@ -106,6 +122,10 @@ export default function Staff() {
         <td>{admin.gender}</td>
         <td>{admin.nationality}</td>
         <td>{admin.religion}</td>
+        {/* <td className="d-flex gap-2">
+          <Button variant="danger" onClick={handelDeleteAdmin}>Delete</Button>
+          <Button variant="warning">View</Button>
+        </td> */}
       </tr>
     ))
   ) : (
@@ -122,6 +142,10 @@ export default function Staff() {
         <td>{admin.gender}</td>
         <td>{admin.nationality}</td>
         <td>{admin.religion}</td>
+        {/* <td className="d-flex gap-2">
+          <Button variant="danger" >Delete</Button>
+          <Button variant="warning">View</Button>
+        </td> */}
       </tr>
     ))
   ) : (
@@ -139,6 +163,10 @@ export default function Staff() {
         <td>{teacher.gender}</td>
         <td>{teacher.nationality}</td>
         <td>{teacher.religion}</td>
+        {/* <td className="d-flex gap-2">
+          <Button variant="danger">Delete</Button>
+          <Button variant="warning">View</Button>
+        </td> */}
       </tr>
     ))
   ) : (
@@ -156,6 +184,10 @@ export default function Staff() {
         <td>{teacher.gender}</td>
         <td>{teacher.nationality}</td>
         <td>{teacher.religion}</td>
+        {/* <td className="d-flex gap-2">
+          <Button variant="danger">Delete</Button>
+          <Button variant="warning">View</Button>
+        </td> */}
       </tr>
     ))
   ) : (
@@ -173,6 +205,10 @@ export default function Staff() {
         <td>{teacher.gender}</td>
         <td>{teacher.nationality}</td>
         <td>{teacher.religion}</td>
+        {/* <td className="d-flex gap-2">
+           <Button variant="danger">Delete</Button>
+          <Button variant="warning">View</Button>
+        </td> */}
       </tr>
     ))
   ) : (
@@ -180,6 +216,53 @@ export default function Staff() {
       <td colSpan={6}>No Data</td>
     </tr>
   );
+
+  // const handelDeleteAdmin = (index)=>{
+  //   const swalWithBootstrapButtons = Swal.mixin({
+  //     customClass: {
+  //       confirmButton: "btn btn-success mx-2",
+  //       cancelButton: "btn btn-danger",
+  //     },
+  //     buttonsStyling: false,
+  //   });
+  //   swalWithBootstrapButtons
+  //     .fire({
+  //       title: `Are you sure you want to Delete ${index.name}?`,
+  //       text: "You won't be able to revert this!",
+  //       icon: "question",
+  //       showCancelButton: true,
+  //       confirmButtonText: "Yes, Delete it!",
+  //       cancelButtonText: "No, cancel!",
+  //       reverseButtons: true,
+  //     })
+  //     .then((result) => {
+  //       if (result.isConfirmed) {
+  //         axios
+  //           .delete(`api//${index.id}`)
+  //           .then((res) => {
+  //             swalWithBootstrapButtons.fire({
+  //               title: "Deleted!",
+  //               text: "Your Course has been Deleted.",
+  //               icon: "success",
+  //             });
+              
+  //           })
+  //           .catch((res) => {
+  //             swalWithBootstrapButtons.fire({
+  //               title: "Error!",
+  //               text: res?.data?.message ,
+  //               icon: "error",
+  //             });
+  //           });
+  //       } else if (result.dismiss === Swal.DismissReason.cancel) {
+  //         swalWithBootstrapButtons.fire({
+  //           title: "Cancelled",
+  //           text: "Your Course is safe :)",
+  //           icon: "error",
+  //         });
+  //       }
+  //     });
+  // } 
 
   return (
     <div className="p-3">

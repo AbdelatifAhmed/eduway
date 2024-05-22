@@ -2,7 +2,7 @@ import { FaSort } from "react-icons/fa";
 import Pagination from "../../Components/Pagination";
 import {useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Col, FormLabel, FormSelect, Modal, Row } from "react-bootstrap";
+import { Button, Col, FormLabel, FormSelect, Modal, OverlayTrigger, Popover, Row, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { FaFilePen } from "react-icons/fa6";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
@@ -114,7 +114,6 @@ export default function Courses(props) {
           <Button variant="secondary" onClick={() => openPrerequisite(course?.id)}>
           <FaFilePen/>
           </Button>
-
           <Link
             to={`course/${course.id}`}
             className="btn btn-warning text-dark"
@@ -150,8 +149,7 @@ export default function Courses(props) {
   const openPrerequisite = (id)=>{
     axios.get(`/api/Course/CoursePrerequisite/${id}`)
     .then(res=>{
-      console.log(res);
-      setPrerequisite(res?.data);
+      setPrerequisite(res?.data?.data);
     })
     .catch(err=>{
       console.error(err);
@@ -167,16 +165,41 @@ export default function Courses(props) {
           <Modal.Title>Prerequisite</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {prerequisite}
+          {prerequisite ?
+            // <div>
+            //   <strong>
+            //   {item.courseName}
+            //   </strong>
+            // </div>
+            <Table striped bordered hover variant="primary">
+              <thead>
+                <tr>
+                  <td><strong>course Name</strong></td>
+                  <td><strong>Course Code</strong></td>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  prerequisite?.map((item,i)=>(
+                    <tr key={i}>
+                      <td>{item.courseName}</td>
+                      <td>{item.courseCode}</td>
+                    </tr>
+                  ))
+                }  
+
+              </tbody>
+            </Table>
+           : "No prerequisites"}
         </Modal.Body>
-        <Modal.Footer>
+        {/* <Modal.Footer>
           <Button variant="secondary" onClick={handlePrerequisteClose}>
             Close
           </Button>
           <Button variant="primary" onClick={handlePrerequisteClose}>
             Save Changes
           </Button>
-        </Modal.Footer>
+        </Modal.Footer> */}
       </Modal>
       <header className="d-flex justify-content-between align-items-center" style={{paddingRight:"20px"}}>
         <div>

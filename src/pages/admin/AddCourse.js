@@ -121,6 +121,7 @@ export default function AddCourse() {
     try {
       await axios
         .post("/api/Course/AddCourse", {
+          facultyId:globalFaculty,
           id: 0,
           name,
           code,

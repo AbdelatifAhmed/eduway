@@ -40,9 +40,6 @@ export default function Login(props) {
       setPassword('')  
       dataDetails?.roles[0] === "Student"
         ? Navigate("/user/Basic-info")
-        :  dataDetails?.roles[0] === "Administration"
-           ?    
-           Navigate("/selectfaculty")
            : Navigate("/admin/basic")
     } catch (err) {
       setIsError(true)

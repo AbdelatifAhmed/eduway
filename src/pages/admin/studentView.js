@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from "../../hooks/useFaculty";
 
 export default function StudentView() {
   const axios = useAxiosPrivate()
+  const {globalFaculty} = useFaculty()
   const [nameEG, setNameEg] = useState("");
   const [nameAr, setNameAr] = useState("");
   const [studentCode, setStudentCode] = useState("");
@@ -48,11 +50,10 @@ export default function StudentView() {
         setStudentCode(resData?.studentCode || "");
         setMail(resData?.email || "");
         setNationalId(resData?.nationalID || "");
-        setDate(resData?.dateOfBirth)
+        setDate(resData?.dateOfBirth.split('T')[0])
         setParentPhoneNum(resData?.getPhoneStudentDtos?.phone)
         // Similarly for other state variables
         setGender(resData?.gender || "");
-        setDate(resData?.dateOfBirth || "");
         setReligion(resData?.religion || "");
         setNationality(resData?.nationality || "");
         setPlaceOfBirth(resData?.placeOfBirth || "");
@@ -60,7 +61,7 @@ export default function StudentView() {
         setReleasePlace(resData?.releasePlace || "");
         // Continue setting other state variables
         setPrequalification(resData?.preQualification || "");
-        setPrequalificationYear(resData?.qualificationYear || "");
+        setPrequalificationYear(resData?.qualificationYear.split('T')[0] || "");
         setSeatNumber(resData?.seatNumber || "");
         setDegree(resData?.degree || "");
         setParentName(resData?.parentName || "");
@@ -116,6 +117,7 @@ export default function StudentView() {
         .put(
           "/api/Student/Update",
           {
+            facultyId:globalFaculty,
             id:Studentid?.studentId,
             studentCode,
             nameArabic: nameAr,
@@ -408,6 +410,7 @@ export default function StudentView() {
               placeholder="Phone Number"
               maxLength={11}
               value={parentPhoneNum}
+              required
               onChange={(e) => setParentPhoneNum(e.target.value)}
             />
           </div>
