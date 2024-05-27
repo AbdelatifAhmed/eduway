@@ -53,7 +53,7 @@ export default function StudentResult() {
   };
 
   const showCourses = courseData ? (
-    courseData.courseStudentCourseDetiles
+    courseData?.courseStudentCourseDetiles
       ?.slice((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage)
       .map((course, index) => (
         <tr key={index} style={{ fontWeight: "bold" }}>
@@ -158,7 +158,7 @@ export default function StudentResult() {
       </div>
       <Pagination
         nPages={Math.ceil(
-          (courseData.courseStudentCourseDetiles || []).length / recordsPerPage
+          (courseData?.courseStudentCourseDetiles || []).length / recordsPerPage
         )}
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}

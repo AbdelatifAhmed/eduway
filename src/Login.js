@@ -34,7 +34,7 @@ export default function Login(props) {
       setIsError(false)
       const accessToken = Respond?.data?.token;
       const dataDetails = Respond?.data;
-      user_.setAuth({ userName, password, dataDetails, accessToken });
+      user_.setAuth({ userName, dataDetails, accessToken });
 
       setUserName('')
       setPassword('')  

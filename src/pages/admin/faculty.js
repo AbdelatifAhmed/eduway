@@ -30,7 +30,7 @@ export default function Faculty() {
 // }
 
   const getFacultiesForMainPage = (array) => {
-    setFacultyNames(array);
+    setFacultyNames(array)
   }
   
 

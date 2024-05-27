@@ -91,6 +91,17 @@ export default function Control() {
 
   const handleSavePermissions = (e) => {
     e.preventDefault()
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
     const payload = {
       userId: selectedUserId,
       userName: selectedUserName,
@@ -104,11 +115,16 @@ export default function Control() {
     axios.post('/api/Auth/ChangeUserRoles', payload)
       .then(res => {
         // Handle success
-        console.log(res.data);
+        Toast.fire({
+          icon: "success",
+          title: res?.data?.message,
+        });
       })
       .catch(err => {
-        // Handle error
-        console.log(err);
+        Toast.fire({
+          icon: "error",
+          title: err?.response?.data?.message,
+        });
       });
   }
 
