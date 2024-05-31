@@ -9,11 +9,16 @@ import {
   Nav,
   Row,
   Tab,
+  Tabs,
 } from "react-bootstrap";
 import { RiDeleteBin7Fill } from "react-icons/ri";
 import { useParams } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 import Swal from "sweetalert2";
+import { IoIosArrowDroprightCircle } from "react-icons/io";
+import { IoIosArrowDropright } from "react-icons/io";
+import { IoIosArrowForward } from "react-icons/io";
+
 
 export default function FacultyDetails() {
   const { id } = useParams();
@@ -30,9 +35,6 @@ export default function FacultyDetails() {
   const [examRoles, setExamRoles] = useState([]);
   const [ScientificDegree, setScientificDegree] = useState([]);
   const [facultyData, setFacultyData] = useState([]);
-
-  const [facultyId, setFacultyId] = useState();
-
   //
   const [facultyNames, setFacultyNames] = useState([]);
   const [bylawsNames, setBylawNames] = useState([]);
@@ -41,6 +43,10 @@ export default function FacultyDetails() {
   const [semesterNames, setSemesterNames] = useState([]);
   const [examRoleNames, setExamRoleNames] = useState([]);
   const [semesterParentNames, setSemesterParentNames] = useState([]);
+  const [allPhases,setAllPhases]=useState([])
+  const [allBands,setAllBands]=useState([])
+  const [allSemesters,setAllSemesters]=useState([])
+  const [allExamRoles,setAllExamRoles]=useState([])
 
   // model Pop-Up
   // const [addFacultyShow, setAddFacultyShow] = useState(false);
@@ -53,35 +59,35 @@ export default function FacultyDetails() {
   const [addPhase, setAddPhase] = useState(false);
   const [addPhaseDegree, setAddPhaseDegree] = useState(false);
 
-   //updates
-   const [faculty, setFaculty] = useState();
-   const [type, setType] = useState();
-   const [startDate, setStartDate] = useState();
-   const [endDate, setEndDate] = useState();
-   const [description, setDescription] = useState();
-   const [name, setName] = useState();
-   const [ids, setId] = useState();
-   const [code, setCode] = useState();
-   const [minDegree, setminDegree] = useState();
-   const [maxDegree, setMaxDegree] = useState();
-   const [order, setOrder] = useState();
-   const [successPercentageBand, setSuccessPercentageBand] = useState();
-   const [successPercentageSemester, setSuccessPercentageSemester] = useState();
-   const [successPercentagePhase, setSuccessPercentagePhase] = useState();
-   const [s_bylaw, setS_bylaw] = useState();
-   const [s_band, setS_band] = useState();
-   const [s_phase, setS_phase] = useState();
-   const [s_semester, setS_semester] = useState();
-   const [s_examRole, setS_examRole] = useState();
-   const [semesterParent, setSemesterParent] = useState();
-   //Scientic Degree Choosen Type
-   const [bandDisabled, setBandDisabled] = useState(true);
-   const [phaseDisabled, setPhaseDisabled] = useState(true);
-   const [semesterDisabled, setSemesterDisabled] = useState(true);
-   const [examRoleDisabled, setExamRoleDisabled] = useState(true);
- 
-   const [estimates, setEstimates] = useState([]);
-   const [estimateCourse, setEstimateCourse] = useState([]);
+  //updates
+  const [faculty, setFaculty] = useState();
+  const [type, setType] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [description, setDescription] = useState();
+  const [name, setName] = useState();
+  const [ids, setId] = useState();
+  const [code, setCode] = useState();
+  const [minDegree, setminDegree] = useState();
+  const [maxDegree, setMaxDegree] = useState();
+  const [order, setOrder] = useState();
+  const [successPercentageBand, setSuccessPercentageBand] = useState();
+  const [successPercentageSemester, setSuccessPercentageSemester] = useState();
+  const [successPercentagePhase, setSuccessPercentagePhase] = useState();
+  const [s_bylaw, setS_bylaw] = useState();
+  const [s_band, setS_band] = useState();
+  const [s_phase, setS_phase] = useState();
+  const [s_semester, setS_semester] = useState();
+  const [s_examRole, setS_examRole] = useState();
+  const [semesterParent, setSemesterParent] = useState();
+  //Scientic Degree Choosen Type
+  const [bandDisabled, setBandDisabled] = useState(true);
+  const [phaseDisabled, setPhaseDisabled] = useState(true);
+  const [semesterDisabled, setSemesterDisabled] = useState(true);
+  const [examRoleDisabled, setExamRoleDisabled] = useState(true);
+
+  const [estimates, setEstimates] = useState([]);
+  const [estimateCourse, setEstimateCourse] = useState([]);
 
   const fetchData = async () => {
     await axios
@@ -94,6 +100,10 @@ export default function FacultyDetails() {
   useEffect(() => {
     fetchData();
     getAllFaculty();
+    getAllPhases2()
+    getAllBands2()
+    getAllSemesters2()
+    getAllExamRoles2()
   }, []);
   useEffect(() => {
     const fetchPhases = async () => {
@@ -248,19 +258,12 @@ export default function FacultyDetails() {
   }, [bylaw]);
 
   useEffect(() => {
-     
-      getAllParents();
-    
-  }, [s_bylaw , type])
+    getAllParents();
+  }, [s_bylaw, type]);
 
   const getAllFaculty = async () => {
     await axios
-      .get("/api/Facult/Faculty", {
-        headers: {
-          Accept: "application/json",
-          // Authorization: "Bearer" + token ,
-        },
-      })
+      .get("/api/Facult/Faculty")
       .then((res) => {
         setFacultyNames(res?.data?.data?.getFacultyDtos);
       })
@@ -328,16 +331,51 @@ export default function FacultyDetails() {
   const getAllParents = () => {
     if (s_bylaw && type) {
       axios
-        .get(`/api/ScientificDegree/ByBylawId?bylawId=${s_bylaw}&type=${type}`, {
-          headers: {
-            Accept: "application/json",
-            // Authorization: "Bearer" + token ,
-          },
-        })
+        .get(
+          `/api/ScientificDegree/ByBylawId?bylawId=${s_bylaw}&type=${type}`,
+          {
+            headers: {
+              Accept: "application/json",
+              // Authorization: "Bearer" + token ,
+            },
+          }
+        )
         .then((res) => setSemesterParentNames(res?.data?.data))
         .catch((err) => console.log(err));
     }
   };
+
+  //in Faculty Details 
+
+  const getAllPhases2 = async()=>{
+    await axios.get(`/api/Phase/All/${id}`)
+    .then(res=>{
+      setAllPhases(res?.data?.data)
+    })
+  }
+
+  const getAllBands2 = async()=>{
+    await axios.get(`/api/band/All/${id}`)
+    .then(res=>{
+      setAllBands(res?.data?.data)
+    })
+  }
+
+  const getAllSemesters2 = async()=>{
+    await axios.get(`/api/semester/All/${id}`)
+    .then(res=>{
+      setAllSemesters(res?.data?.data)
+    })
+  }
+
+  const getAllExamRoles2 = async()=>{
+    await axios.get(`/api/examRole/All/${id}`)
+    .then(res=>{
+      setAllExamRoles(res?.data?.data)
+    })
+  }
+
+
 
   const [shows, setShows] = useState({
     showFaculty: [],
@@ -348,8 +386,6 @@ export default function FacultyDetails() {
     showPhases: [],
     showParent: [],
   });
-
- 
 
   const handelScientificDegreeTypeChange = (event) => {
     setType(event);
@@ -402,7 +438,6 @@ export default function FacultyDetails() {
     }
   };
 
-
   const addChildForEstimates = () => {
     // Add a new set of input elements to the array of inputs
     setEstimates([
@@ -418,18 +453,17 @@ export default function FacultyDetails() {
     ]);
   };
 
-  const handleDeleteChildForEstimates = (index,id) => {
+  const handleDeleteChildForEstimates = (index, id) => {
     // Remove the child at the specified index from the array
     const newInputs = [...estimates];
     newInputs.splice(index, 1);
     setEstimates(newInputs);
-    handelDeleteEstimates(id)
+    handelDeleteEstimates(id);
   };
 
-  const handelDeleteEstimates =(id) => {
-    axios
-    .delete(`/api/bylaw/estimates/${id}`)
-  }
+  const handelDeleteEstimates = (id) => {
+    axios.delete(`/api/bylaw/estimates/${id}`);
+  };
 
   const addChildForEstimateCourse = () => {
     // Add a new set of input elements to the array of inputs
@@ -444,18 +478,17 @@ export default function FacultyDetails() {
     ]);
   };
 
-  const handleDeleteChildForEstimateCourse = (index,id) => {
+  const handleDeleteChildForEstimateCourse = (index, id) => {
     // Remove the child at the specified index from the array
     const newInputs = [...estimateCourse];
     newInputs.splice(index, 1);
     setEstimateCourse(newInputs);
-    handelDeleteEstimateCourses(id)
+    handelDeleteEstimateCourses(id);
   };
 
-  const handelDeleteEstimateCourses =(id) => {
-    axios
-    .delete(`/api/bylaw/estimatesCourse/${id}`)
-  }       
+  const handelDeleteEstimateCourses = (id) => {
+    axios.delete(`/api/bylaw/estimatesCourse/${id}`);
+  };
 
   const handleInputChangeForEstimate = (index, fieldName, value) => {
     // Update the input value in the state
@@ -782,15 +815,15 @@ export default function FacultyDetails() {
         setOrder(data?.order);
         setS_bylaw(data?.bylawId);
         setType(data?.type);
-        setSemesterParent(data?.parentId)
+        setSemesterParent(data?.parentId);
         setS_band(data?.bandId);
         setS_phase(data?.phaseId);
         setS_semester(data?.semesterId);
         setS_examRole(data?.examRoleId);
         setDescription(data?.description);
-        setSuccessPercentageBand(data?.successPercentageBand)
-        setSuccessPercentagePhase(data?.successPercentagePhase)
-        setSuccessPercentageSemester(data?.successPercentageSemester)
+        setSuccessPercentageBand(data?.successPercentageBand);
+        setSuccessPercentagePhase(data?.successPercentagePhase);
+        setSuccessPercentageSemester(data?.successPercentageSemester);
       })
       .catch((err) => {
         const Toast = Swal.mixin({
@@ -1183,7 +1216,7 @@ export default function FacultyDetails() {
           parentId: semesterParent,
           successPercentageBand,
           successPercentagePhase,
-          successPercentageSemester
+          successPercentageSemester,
         })
         .then((response) => {
           if (response.status === 200) {
@@ -1608,19 +1641,20 @@ export default function FacultyDetails() {
     setMaxDegree(null);
     setminDegree(null);
     setOrder(null);
-    setS_band(null)
-    setS_bylaw(null)
-    setS_phase(null)
-    setS_semester(null)
-    setS_examRole(null)
-    setSemesterParent(null)
-    setSuccessPercentageBand(null)
-    setSuccessPercentagePhase(null)
-    setSuccessPercentageSemester(null)
+    setS_band(null);
+    setS_bylaw(null);
+    setS_phase(null);
+    setS_semester(null);
+    setS_examRole(null);
+    setSemesterParent(null);
+    setSuccessPercentageBand(null);
+    setSuccessPercentagePhase(null);
+    setSuccessPercentageSemester(null);
   };
 
   return (
     <div className="pad">
+      {/* modals */}
       <div>
         {/* bylaw */}
         <Modal
@@ -1814,7 +1848,10 @@ export default function FacultyDetails() {
                                   variant="light"
                                   size="md"
                                   onClick={() =>
-                                    handleDeleteChildForEstimates(index,input?.id)
+                                    handleDeleteChildForEstimates(
+                                      index,
+                                      input?.id
+                                    )
                                   }
                                 >
                                   <RiDeleteBin7Fill />
@@ -1902,7 +1939,10 @@ export default function FacultyDetails() {
                                   variant="light"
                                   size="md"
                                   onClick={() =>
-                                    handleDeleteChildForEstimateCourse(index , input.id)
+                                    handleDeleteChildForEstimateCourse(
+                                      index,
+                                      input.id
+                                    )
                                   }
                                 >
                                   <RiDeleteBin7Fill />
@@ -2159,7 +2199,7 @@ export default function FacultyDetails() {
                         className="mt-2"
                       >
                         <Form.Select
-                        value={type}
+                          value={type}
                           onChange={(e) =>
                             handelScientificDegreeTypeChange(+e.target.value)
                           }
@@ -2720,27 +2760,20 @@ export default function FacultyDetails() {
           </Modal.Footer>
         </Modal>
       </div>
-
-      <Tab.Container id="left-tabs-example" defaultActiveKey="bylaw">
+      {/* Content */}
+      <Tab.Container id="left-tabs-example" defaultActiveKey="All">
         <Row>
           <Col sm={2}>
             <Nav variant="pills" className="flex-column">
               <Nav.Item>
-                <Nav.Link eventKey="bylaw"> &gt; Bylaw</Nav.Link>
+                <Nav.Link eventKey="All" className="d-flex align-items-center gap-2"> <IoIosArrowDroprightCircle/> Faculty Details</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="depertment">&gt; Departments</Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="assess">&gt; Assess Methods</Nav.Link>
+                <Nav.Link eventKey="Scientfic"className="d-flex align-items-center gap-2"> <IoIosArrowDropright/> Scientific Degree</Nav.Link>
               </Nav.Item>
 
               <Nav.Item>
-                <Nav.Link eventKey="Scientfic">&gt; Scientific Degree</Nav.Link>
-              </Nav.Item>
-
-              <Nav.Item>
-                <Nav.Link eventKey="phase">&#128539; Phases</Nav.Link>
+                <Nav.Link eventKey="phase"className="d-flex align-items-center gap-2"><IoIosArrowForward/> Phases</Nav.Link>
               </Nav.Item>
 
               <Nav.Item>
@@ -2764,8 +2797,16 @@ export default function FacultyDetails() {
                 boxShadow: "0 0 10px rgba(0,0,0,0.115)",
               }}
             >
-              <Tab.Pane eventKey="bylaw">
-                {facultyData?.facultyBylawDtos
+              <Tab.Pane eventKey="All">
+                <Tabs
+                  defaultActiveKey="bylaw"
+                  id="uncontrolled-tab-example"
+                  className="mb-3"
+                  justify
+                >
+              {/* All Bylaws */}
+                  <Tab eventKey="bylaw" title="Bylaws">
+                  {facultyData?.facultyBylawDtos
                   ? facultyData?.facultyBylawDtos?.map((bylaw, i) => (
                       <div
                         key={i}
@@ -2797,10 +2838,11 @@ export default function FacultyDetails() {
                         </span>
                       </div>
                     ))
-                  : ""}
-              </Tab.Pane>
-              <Tab.Pane eventKey="depertment">
-                {facultyData?.facultyDepatmentDtos
+                  : <div style={{textAlign:"center",fontWeight:"bold",color:"red",fontSize:"18px"}}>No Data</div>}
+                  </Tab>
+              {/* All Departments */}
+                  <Tab eventKey="department" title="Departments">
+                  {facultyData?.facultyDepatmentDtos
                   ? facultyData?.facultyDepatmentDtos?.map((dept, i) => (
                       <div
                         key={i}
@@ -2830,11 +2872,11 @@ export default function FacultyDetails() {
                         </span>
                       </div>
                     ))
-                  : "No Data"}
-              </Tab.Pane>
-              <Tab.Pane eventKey="assess">
-                {" "}
-                {facultyData?.facultyAssessMethodDtos
+                  : <div style={{textAlign:"center",fontWeight:"bold",color:"red",fontSize:"18px"}}>No Data</div>}
+                  </Tab>
+              {/* All Access Method */}
+                  <Tab eventKey="access" title="Access Methods" >
+                  {facultyData?.facultyAssessMethodDtos
                   ? facultyData?.facultyAssessMethodDtos?.map((assess, i) => (
                       <div
                         key={i}
@@ -2864,7 +2906,145 @@ export default function FacultyDetails() {
                         </span>
                       </div>
                     ))
-                  : "No Data"}
+                  : <div style={{textAlign:"center",fontWeight:"bold",color:"red",fontSize:"18px"}}>No Data</div>}
+                  </Tab>
+              {/*All Phases  */}
+                  <Tab eventKey="phase" title="Phases">
+                    {allPhases && allPhases.length > 0
+                    ? allPhases?.map((phase, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <span style={{ fontWeight: "bold" }}>
+                          {phase.name}
+                        </span>
+                        <span className="d-flex gap-2">
+                          <Button
+                            variant="danger"
+                            onClick={() => handelDeletePhase(phase)}
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="warning"
+                            onClick={() => handelPhases(phase.id)}
+                          >
+                            Edit
+                          </Button>
+                        </span>
+                      </div>
+                    ))
+                  : <div style={{textAlign:"center",fontWeight:"bold",color:"red",fontSize:"18px"}}>No Data</div>}
+                  </Tab>
+              {/*All Bands  */}
+                  <Tab eventKey="band" title="Bands">
+                    {allBands && allBands.length > 0
+                    ? allBands?.map((item, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <span style={{ fontWeight: "bold" }}>
+                          {item.name}
+                        </span>
+                        <span className="d-flex gap-2">
+                          <Button
+                            variant="danger"
+                            onClick={() => handelDeleteBands(item)}
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="warning"
+                            onClick={() => handelBands(item.id)}
+                          >
+                            Edit
+                          </Button>
+                        </span>
+                      </div>
+                    ))
+                  : <div style={{textAlign:"center",fontWeight:"bold",color:"red",fontSize:"18px"}}>No Data</div>}
+                  </Tab>
+              {/*All Semesters  */}
+                  <Tab eventKey="semester" title="Semesters">
+                    {allSemesters && allSemesters.length > 0
+                    ? allSemesters?.map((item, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <span style={{ fontWeight: "bold" }}>
+                          {item.name}
+                        </span>
+                        <span className="d-flex gap-2">
+                          <Button
+                            variant="danger"
+                            onClick={() => handelDeleteSemesters(item)}
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="warning"
+                            onClick={() => handelSemesters(item.id)}
+                          >
+                            Edit
+                          </Button>
+                        </span>
+                      </div>
+                    ))
+                  : <div style={{textAlign:"center",fontWeight:"bold",color:"red",fontSize:"18px"}}>No Data</div>}
+                  </Tab>
+              {/*All Exam Roles  */}
+                  <Tab eventKey="exam" title="Exam Roles">
+                    {allExamRoles && allExamRoles.length > 0
+                    ? allExamRoles?.map((item, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <span style={{ fontWeight: "bold" }}>
+                          {item.name}
+                        </span>
+                        <span className="d-flex gap-2">
+                          <Button
+                            variant="danger"
+                            onClick={() => handelDeleteExamRole(item)}
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="warning"
+                            onClick={() => handelExamRole(item.id)}
+                          >
+                            Edit
+                          </Button>
+                        </span>
+                      </div>
+                    ))
+                  : <div style={{textAlign:"center",fontWeight:"bold",color:"red",fontSize:"18px"}}>No Data</div>}
+                  </Tab>
+                </Tabs> 
               </Tab.Pane>
               <Tab.Pane eventKey="Scientfic">
                 <Form.Group className="mt-2">
