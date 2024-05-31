@@ -43,6 +43,7 @@ import Notes from "./pages/Courses/Notes.js";
 import Unauthorized from "./Components/unauthorized.js";
 import Basic from "./pages/admin/basic.js";
 import FacultyDetails from "./pages/admin/facultyDetails.js";
+import StaffView from "./pages/admin/StaffView.js";
 export default function App() {
   return (
     <>
@@ -88,6 +89,7 @@ export default function App() {
               <Route path="courses/course/:courseId" element={<CourseView />} />
               <Route path="add-course" element={<AddCourse />} />
               <Route path="staff" element={<Staff />} />
+              <Route path="staff/:staffId" element={<StaffView />} />
               <Route path="add-Staff" element={<AddStaff />} />
               <Route path="add-teacher" element={<AddTeacher />} />
               <Route

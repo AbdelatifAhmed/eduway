@@ -4,10 +4,12 @@ import Swal from "sweetalert2";
 import Select from "react-select";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 import useFaculty from "../../hooks/useFaculty";
+import { ListGroup } from "react-bootstrap";
+import { IoMdClose } from "react-icons/io";
 
 export default function CourseView() {
-  const axios = useAxiosPrivate()
-  const {courseId} = useParams();
+  const axios = useAxiosPrivate();
+  const { courseId } = useParams();
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [description, setDescription] = useState("");
@@ -21,12 +23,10 @@ export default function CourseView() {
   const [departmentId, setDepartmentId] = useState();
   const [showPrerequisite, setShowPrerequisite] = useState(false);
   const [coursePrerequisites, setCoursePrerequisites] = useState([]);
-  const [defaultValues,setDefaultValues] = useState([])
-  console.log('default Value',defaultValues);
-  // const [courseData, setCourseData] = useState([]);
+  const [getCoursePrerequisites, setGetCoursePrerequisites] = useState([]);
+
   // Multi-Select input
   const [selectedOptions, setSelectedOptions] = useState([]);
-
 
   const handelChange = (selevtedValue) => {
     setSelectedOptions(selevtedValue);
@@ -40,68 +40,82 @@ export default function CourseView() {
   const [isDisapledHours, setIsDisapledHours] = useState(true);
   const [isDisapledPoints, setIsDisapledPoints] = useState(true);
 
-
   //GET FOR API
   const [getCourses, setGetCourses] = useState([]);
   const [getDepartment, setGetDepartment] = useState([]);
   const [phaseDegrees, setPhaseDegrees] = useState([]);
-  const showDepartment = getDepartment? getDepartment.map((dept,index)=>(
-    <option key={index} value={dept.departmentId}>{dept.departmentName}</option>
-  )) : <option disabled className="text-danger">No Data</option>
+  const showDepartment = getDepartment ? (
+    getDepartment.map((dept, index) => (
+      <option key={index} value={dept.departmentId}>
+        {dept.departmentName}
+      </option>
+    ))
+  ) : (
+    <option disabled className="text-danger">
+      No Data
+    </option>
+  );
 
-  const showPhaseDegrees = phaseDegrees? phaseDegrees?.map((phase,index)=>(
-    <option key={index} value={phase.id}>{phase.name}</option>
-  )) : <option disabled className="text-danger">No Data</option>
+  const showPhaseDegrees = phaseDegrees ? (
+    phaseDegrees?.map((phase, index) => (
+      <option key={index} value={phase.id}>
+        {phase.name}
+      </option>
+    ))
+  ) : (
+    <option disabled className="text-danger">
+      No Data
+    </option>
+  );
 
-  const {globalFaculty} = useFaculty()
+  const { globalFaculty } = useFaculty();
   useEffect(() => {
-    if(globalFaculty){axios
-      .get(`/api/Course/all/${globalFaculty}`)
-      .then((res) => setGetCourses(res.data.data))
-      .catch((err) => console.log(err));
+    if (globalFaculty) {
+      axios
+        .get(`/api/Course/all/${globalFaculty}`)
+        .then((res) => setGetCourses(res.data.data))
+        .catch((err) => console.log(err));
 
+      axios
+        .get(`api/Department/All/${globalFaculty}`, {
+          headers: {
+            Accept: "application/json",
+            // Authorization: "Bearer" + token ,
+          },
+        })
+        .then((res) => setGetDepartment(res.data.data))
+        .catch((err) => console.log(err));
 
-    axios
-      .get(`api/Department/All/${globalFaculty}`, {
-        headers: {
-          Accept: "application/json",
-          // Authorization: "Bearer" + token ,
-        },
-      })
-      .then((res) => setGetDepartment(res.data.data))
-      .catch((err) => console.log(err));
-
-    axios
-      .get(`api/ScientificDegree/GetAllSemesters/${globalFaculty}`, {
-        headers: {
-          Accept: "application/json",
-          // Authorization: "Bearer" + token ,
-        },
-      })
-      .then((res) => setPhaseDegrees(res.data.data))
-      .catch((err) => console.log(err));}
-
+      axios
+        .get(`api/ScientificDegree/GetAllSemesters/${globalFaculty}`, {
+          headers: {
+            Accept: "application/json",
+            // Authorization: "Bearer" + token ,
+          },
+        })
+        .then((res) => setPhaseDegrees(res.data.data))
+        .catch((err) => console.log(err));
+    }
   }, [globalFaculty]);
 
   useEffect(() => {
-      axios
+    axios
       .get(`api/Course/${courseId}`)
       .then((res) => {
         const data = res?.data?.data;
-        setName(data.name)
-        setCode(data.code)
-        setDescription(data.description)
-        setType(data.type)
-        setCategory(data.category)
-        setMaxDegree(data.maxDegree)
-        setMinDegree(data.minDegree)
-        setNumberOfCreditHours(data.numberOfCreditHours)
-        setNumberOfPoints(data.numberOfPoints)
-        setScientificDegreeId(data.scientificDegreeId)
-        setDepartmentId(data.departmentId)
-        setShowPrerequisite(data.prerequisite)
-        setDefaultValues(data?.coursePrerequisites)
-     
+        setName(data.name);
+        setCode(data.code);
+        setDescription(data.description);
+        setType(data.type);
+        setCategory(data.category);
+        setMaxDegree(data.maxDegree);
+        setMinDegree(data.minDegree);
+        setNumberOfCreditHours(data.numberOfCreditHours);
+        setNumberOfPoints(data.numberOfPoints);
+        setScientificDegreeId(data.scientificDegreeId);
+        setDepartmentId(data.departmentId);
+        setShowPrerequisite(data.prerequisite);
+        setGetCoursePrerequisites(data?.coursePrerequisites);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -126,7 +140,7 @@ export default function CourseView() {
     navigator("/admin/courses");
   };
 
-  const handelAddCourse = async (event) => {
+  const handelUpdateCourse = async (event) => {
     event.preventDefault();
     const Toast = Swal.mixin({
       toast: true,
@@ -141,9 +155,9 @@ export default function CourseView() {
     });
     try {
       await axios
-        .post("/api/Course/AddCourse", {
-          facultyId:globalFaculty,
-          id: 0,
+        .put("/api/Course/update", {
+          facultyId: globalFaculty,
+          id: courseId,
           name,
           code,
           description,
@@ -153,13 +167,13 @@ export default function CourseView() {
           minDegree,
           numberOfPoints,
           numberOfCreditHours,
-          prerequisite: showPrerequisite,
+          prerequisite: showPrerequisite ,
           scientificDegreeId,
           departmentId,
           coursePrerequisites,
         })
         .then((response) => {
-          if (response.status === 201) {
+          if (response.status === 200) {
             Toast.fire({
               icon: "success",
               title: response?.data?.message,
@@ -173,8 +187,80 @@ export default function CourseView() {
       });
     }
   };
+
+  const showPrerequisiteCourses = getCoursePrerequisites && getCoursePrerequisites.length > 0 ? (
+    getCoursePrerequisites.map((element, index) => (
+      <ListGroup.Item
+        key={index}
+        variant="primary"
+        className="d-flex justify-content-between"
+      >
+        <span>{element.coursePrerequisiteName}</span>
+        <span
+          style={{ cursor: "pointer", color: "red" }}
+          onClick={() => handelDeletePrerequisiteCourse(element)}
+        >
+          <IoMdClose />
+        </span>
+      </ListGroup.Item>
+    ))
+  ) : (
+    <>
+    <ListGroup.Item variant="danger">
+      <strong>This course have no prerequisite</strong>
+    </ListGroup.Item>
+    </>
+  );
+
+  const handelDeletePrerequisiteCourse = (course) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success mx-2",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: `Are you sure you want to Delete ${course.coursePrerequisiteName}?`,
+        text: "You won't be able to revert this!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`api/course/coursePrerequisites/${course.coursePrerequisiteId}`)
+            .then((res) => {
+              swalWithBootstrapButtons.fire({
+                title: "Deleted!",
+                text: res?.data?.message,
+                icon: "success",
+              })
+            })
+            .catch((res) => {
+              swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: res?.data?.message,
+                icon: "error",
+              });
+            });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            icon: "error",
+          });
+        }
+      });
+  };
   return (
-    <form onSubmit={handelAddCourse}>
+    <form onSubmit={handelUpdateCourse}>
       <div
         style={{ marginLeft: "20px" }}
         className="d-flex  justify-content-between"
@@ -204,7 +290,11 @@ export default function CourseView() {
             />
           </div>
           <div className="col">
-            <select className="list" value={type} onChange={(e) => setType(+e.target.value)}>
+            <select
+              className="list"
+              value={type}
+              onChange={(e) => setType(+e.target.value)}
+            >
               <option hidden defaultValue>
                 Type
               </option>
@@ -265,14 +355,26 @@ export default function CourseView() {
         {/* End of row */}
         <div className="row pt-3">
           <div className="col">
-            <select value={departmentId}  onChange={(e) => setDepartmentId(+e.target.value)} className="list">
-              <option defaultValue hidden>Choose a Department</option>
+            <select
+              value={departmentId}
+              onChange={(e) => setDepartmentId(+e.target.value)}
+              className="list"
+            >
+              <option defaultValue hidden>
+                Choose a Department
+              </option>
               {showDepartment}
             </select>
           </div>
           <div className="col">
-            <select  value={scientificDegreeId} onChange={(e) => setScientificDegreeId(+e.target.value)} className="list">
-              <option defaultValue hidden>Choose a Phase Degree</option>
+            <select
+              value={scientificDegreeId}
+              onChange={(e) => setScientificDegreeId(+e.target.value)}
+              className="list"
+            >
+              <option defaultValue hidden>
+                Choose a Phase Degree
+              </option>
               {showPhaseDegrees}
             </select>
           </div>
@@ -289,7 +391,7 @@ export default function CourseView() {
               readOnly={isDisapledHours}
               style={
                 isDisapledHours
-                  ? { background: "#ddd", outline:"none" }
+                  ? { background: "#ddd", outline: "none" }
                   : { background: "#fff" }
               }
               id="hours"
@@ -305,8 +407,8 @@ export default function CourseView() {
               readOnly={isDisapledPoints}
               style={
                 isDisapledPoints
-                  ? { background: "#ddd" , outline:"none"}
-                  : { background: "#fff" , }
+                  ? { background: "#ddd", outline: "none" }
+                  : { background: "#fff" }
               }
               id="points"
             />
@@ -336,14 +438,20 @@ export default function CourseView() {
 
           <div className="col pt-3">
             {showPrerequisite && (
-              <Select
-                options={getCourses}
-                getOptionLabel={(e) => e.name}
-                getOptionValue={(e) => e.id}
-                value={selectedOptions}
-                onChange={handelChange}
-                isMulti
-              />
+              <>
+                <Select
+                  options={getCourses}
+                  getOptionLabel={(e) => e.name}
+                  getOptionValue={(e) => e.id}
+                  value={selectedOptions}
+                  onChange={handelChange}
+                  isMulti
+                />
+                <div className="mt-4">
+                  <h3>Prerequisites Courses</h3>
+                <ListGroup>{showPrerequisiteCourses}</ListGroup>
+                </div>
+              </>
             )}
           </div>
         </div>

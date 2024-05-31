@@ -51,7 +51,7 @@ export default function StudentView() {
         setMail(resData?.email || "");
         setNationalId(resData?.nationalID || "");
         setDate(resData?.dateOfBirth.split('T')[0])
-        setParentPhoneNum(resData?.getPhoneStudentDtos?.phone)
+        setParentPhoneNum(resData?.getPhoneStudentDtos[0].phoneNumber)
         // Similarly for other state variables
         setGender(resData?.gender || "");
         setReligion(resData?.religion || "");
@@ -76,6 +76,37 @@ export default function StudentView() {
       console.log(err);
     })
   }, []);
+
+  const resetForm = () => {
+    setNameEg("");
+    setNameAr("");
+    setStudentCode("");
+    setMail("");
+    setNationalId("");
+    setGender("");
+    setDate("");
+    setReligion("");
+    setNationality("");
+    setPlaceOfBirth("");
+    setReleasePlace("");
+    setCity(null);
+    setGovernorate("");
+    setCountry(null);
+    setStreet("");
+    setPostalCode("");
+    setPrequalification("");
+    setPrequalificationYear("");
+    setSeatNumber("");
+    setDegree("");
+    setParentName("");
+    setParentJop("");
+    setParentCountryId("");
+    setParentGovernorateId("");
+    setParentCityId("");
+    setParentStreet("");
+    setParentPhoneNum("");
+  };
+
 
   const navigator = useNavigate();
   const goBack = () => {
@@ -177,9 +208,9 @@ export default function StudentView() {
         <h1 className="d-inline">Update Student </h1>
         <div className="d-flex  gap-2 p-2">
           <button className="btn btn-info btn-md " style={{ color: "white" }}>
-            Save
+            Update
           </button>
-          <button type="reset" className="btn btn-warning btn-md">
+          <button type="reset" onClick={resetForm} className="btn btn-warning btn-md">
             Reset
           </button>
           <button onClick={goBack} className="btn btn-dark btn-md">

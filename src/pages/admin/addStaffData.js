@@ -351,6 +351,7 @@ export default function AddStaffData(props) {
                 type="text"
                 className="txt-input"
                 placeholder="Phone number"
+                maxLength={11}
                 onChange={(e) => setPhoneNum(e.target.value)}
               />
             </div>

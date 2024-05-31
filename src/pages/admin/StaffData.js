@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom'
 export default function StaffData(props) {
   return (
     <div>
-         <div className="table-content">
-            <header>
+      <header>
               <Link
                 to={ `/admin/${props.link}`}
                 className="btn btn-info btn-lg"
@@ -15,7 +14,7 @@ export default function StaffData(props) {
                 + Add New 
               </Link>
             </header>
-
+         <div className="table-content">
             <table className="table table-striped mt-2">
               <thead>
                 <tr>
@@ -85,7 +84,7 @@ export default function StaffData(props) {
                       </span>
                     </div>
                   </th>
-                  {/* <th
+                  <th
                     scope="col"
                     style={{ background: "#121431", color: "white" }}
                   >
@@ -95,7 +94,7 @@ export default function StaffData(props) {
                         <FaSort />
                       </span>
                     </div>
-                  </th> */}
+                  </th>
                 </tr>
               </thead>
               <tbody>{props.show}</tbody>

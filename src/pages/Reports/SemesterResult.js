@@ -113,7 +113,10 @@ export default function SemesterResult() {
               <FloatingLabel label="Select Academic Year">
                 <FormSelect
                   value={academicYearId}
-                  onChange={(e) => setAcademicYearId(e.target.value)}
+                  onChange={(e) => {setAcademicYearId(e.target.value)
+                    setSemesters([])
+                    setSemesterId('')
+                  }}
                 >
                   <option defaultValue hidden>
                     Select Academic Year
@@ -145,8 +148,8 @@ export default function SemesterResult() {
       <section className="mt-3">
         <div className="result">
         <div className="para mb-2">
-          <div className="item-2">Academic Year : <span>{students.academyYearName}</span></div>
-          <div className="item-2">Semester Name : <span>{students.semesterName}</span></div>
+          <div className="item-2">Academic Year : <span>{students?.academyYearName}</span></div>
+          <div className="item-2">Semester Name : <span>{students?.semesterName}</span></div>
         </div>
           <div className="table-container" style={{ overflow: "scroll" }}>
             <table>

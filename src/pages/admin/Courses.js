@@ -1,40 +1,50 @@
 import { FaSort } from "react-icons/fa";
 import Pagination from "../../Components/Pagination";
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Col, FormLabel, FormSelect, Modal, OverlayTrigger, Popover, Row, Table } from "react-bootstrap";
+import {
+  Button,
+  Col,
+  FormLabel,
+  FormSelect,
+  Modal,
+  OverlayTrigger,
+  Popover,
+  Row,
+  Table,
+} from "react-bootstrap";
 import Swal from "sweetalert2";
 import { FaFilePen } from "react-icons/fa6";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
-import useFaculty from '../../hooks/useFaculty'
+import useFaculty from "../../hooks/useFaculty";
 export default function Courses(props) {
-  const axios = useAxiosPrivate()
+  const axios = useAxiosPrivate();
   const [courses, setCourses] = useState([]);
   const [prerequisite, setPrerequisite] = useState([]);
-  
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
 
-
   //Global faculty id
-  const {globalFaculty} = useFaculty()
+  const { globalFaculty } = useFaculty();
 
   useEffect(() => {
-    getCourses()
+    getCourses();
   }, [globalFaculty]);
 
   const getCourses = () => {
-    if(globalFaculty){axios
-      .get(`/api/Course/all/${globalFaculty}`, {
-        headers: {
-          Accept: "application/json",
-          // Authorization: "Bearer" + token ,
-        },
-      })
-      .then((res) => setCourses(res.data.data))
-      .catch((err) => console.log(err));}
+    if (globalFaculty) {
+      axios
+        .get(`/api/Course/all/${globalFaculty}`, {
+          headers: {
+            Accept: "application/json",
+            // Authorization: "Bearer" + token ,
+          },
+        })
+        .then((res) => setCourses(res.data.data))
+        .catch((err) => console.log(err));
+    }
   };
 
   const handelDelete = (course) => {
@@ -70,7 +80,7 @@ export default function Courses(props) {
             .catch((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Error!",
-                text: res?.data?.message ,
+                text: res?.data?.message,
                 icon: "error",
               });
             });
@@ -111,8 +121,11 @@ export default function Courses(props) {
           <Button variant="danger" onClick={() => handelDelete(course)}>
             Delete
           </Button>
-          <Button variant="secondary" onClick={() => openPrerequisite(course?.id)}>
-          <FaFilePen/>
+          <Button
+            variant="secondary"
+            onClick={() => openPrerequisite(course?.id)}
+          >
+            <FaFilePen />
           </Button>
           <Link
             to={`course/${course.id}`}
@@ -139,33 +152,31 @@ export default function Courses(props) {
     </tr>
   );
 
-
-
   const [show, setShow] = useState(false);
 
   const handlePrerequisteClose = () => setShow(false);
   const handlePrerequisteShow = () => setShow(true);
 
-  const openPrerequisite = (id)=>{
-    axios.get(`/api/Course/CoursePrerequisite/${id}`)
-    .then(res=>{
-      setPrerequisite(res?.data?.data);
-    })
-    .catch(err=>{
-      console.error(err);
-    })
-    handlePrerequisteShow()
-
-  }
+  const openPrerequisite = (id) => {
+    axios
+      .get(`/api/Course/CoursePrerequisite/${id}`)
+      .then((res) => {
+        setPrerequisite(res?.data?.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    handlePrerequisteShow();
+  };
 
   return (
     <div className="pad">
-       <Modal show={show} onHide={handlePrerequisteClose}>
+      <Modal show={show} onHide={handlePrerequisteClose}>
         <Modal.Header closeButton>
           <Modal.Title>Prerequisite</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {prerequisite ?
+          {prerequisite ? (
             // <div>
             //   <strong>
             //   {item.courseName}
@@ -174,23 +185,26 @@ export default function Courses(props) {
             <Table striped bordered hover variant="primary">
               <thead>
                 <tr>
-                  <td><strong>course Name</strong></td>
-                  <td><strong>Course Code</strong></td>
+                  <td>
+                    <strong>course Name</strong>
+                  </td>
+                  <td>
+                    <strong>Course Code</strong>
+                  </td>
                 </tr>
               </thead>
               <tbody>
-                {
-                  prerequisite?.map((item,i)=>(
-                    <tr key={i}>
-                      <td>{item.courseName}</td>
-                      <td>{item.courseCode}</td>
-                    </tr>
-                  ))
-                }  
-
+                {prerequisite?.map((item, i) => (
+                  <tr key={i}>
+                    <td>{item.courseName}</td>
+                    <td>{item.courseCode}</td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
-           : "No prerequisites"}
+          ) : (
+            "No prerequisites"
+          )}
         </Modal.Body>
         {/* <Modal.Footer>
           <Button variant="secondary" onClick={handlePrerequisteClose}>
@@ -201,7 +215,10 @@ export default function Courses(props) {
           </Button>
         </Modal.Footer> */}
       </Modal>
-      <header className="d-flex justify-content-between align-items-center" style={{paddingRight:"20px"}}>
+      <header
+        className="d-flex justify-content-between align-items-center"
+        style={{ paddingRight: "20px" }}
+      >
         <div>
           <Link
             to="/admin/add-course"
