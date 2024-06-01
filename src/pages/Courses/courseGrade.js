@@ -173,7 +173,6 @@ export default function AddCourseGrades() {
     <td colSpan={4} style={{fontSize:"20p" , textAlign:"center",color:"red" , fontWeight:"bold"}}>No Data</td>
   </tr>
 
-
   const sendEditedDataToServer = async () => {
     const Toast = Swal.mixin({
       toast: true,
@@ -192,6 +191,8 @@ export default function AddCourseGrades() {
         return student.assesstMethodDtos.map((method) => {
           return {
             studentSemesterAssessMethodId: method.studentSemesterAssessMethodId,
+            courseId: selectedCourse.courseId,
+            assessmentMethodId: method.assessmentMethodId,
             degree: +method.assessDegree || 0, // Default to 0 if assessDegree is null or undefined
           };
         });
@@ -211,6 +212,7 @@ export default function AddCourseGrades() {
       });
     }
   };
+
   return (
     <>
       <div className="pad">

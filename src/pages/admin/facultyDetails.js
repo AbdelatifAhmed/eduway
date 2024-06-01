@@ -2802,7 +2802,7 @@ export default function FacultyDetails() {
                   defaultActiveKey="bylaw"
                   id="uncontrolled-tab-example"
                   className="mb-3"
-                  justify
+                  fill
                 >
               {/* All Bylaws */}
                   <Tab eventKey="bylaw" title="Bylaws">

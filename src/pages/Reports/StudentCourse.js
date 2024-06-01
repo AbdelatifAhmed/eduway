@@ -142,7 +142,10 @@ export default function StudentCourse() {
               <FloatingLabel label="Select Academic Year">
                 <FormSelect
                   value={academicYearId}
-                  onChange={(e) => setAcademicYearId(e.target.value)}
+                  onChange={(e) => {setAcademicYearId(e.target.value)
+                    setSemesters([])
+                    setSemesterId('')
+                  }}
                 >
                   <option defaultValue hidden>
                     Select Academic Year

@@ -150,7 +150,7 @@ export default function Control() {
       .catch((err) => console.log(err));
 
     axios
-      .get(`/api/Teacher/GetAllTeacher/${globalFaculty}`)
+      .get(`/api/staff/FA/${globalFaculty}`)
       .then((res) => setTeacher(res?.data?.data))
       .catch((err) => console.log(err));
 
@@ -931,7 +931,7 @@ export default function Control() {
             </Form.Label>
             <Select
               options={teacher}
-              getOptionLabel={(e) => e.staffNameEnglish}
+              getOptionLabel={(e) => e.name}
               getOptionValue={(e) => e.userId}
               onChange={(e) => handelPermissions(e.userId)}
             />
