@@ -7,8 +7,12 @@ import { RiDeleteBin7Fill } from "react-icons/ri";
 import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
-export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , setShouldRefetch} ) {
-  const axios = useAxiosPrivate()
+export default function AddFaculty({
+  getFacultiesForMainPage,
+  shouldRefetch,
+  setShouldRefetch,
+}) {
+  const axios = useAxiosPrivate();
   const [addFacultyShow, setAddFacultyShow] = useState(false);
   const [addBylaw, setAddBylaw] = useState(false);
   const [addSemester, setAddSemester] = useState(false);
@@ -18,6 +22,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
   const [addBands, setAddBands] = useState(false);
   const [addPhase, setAddPhase] = useState(false);
   const [addPhaseDegree, setAddPhaseDegree] = useState(false);
+  const [addAcademicYear, setAddAcademicYear] = useState(false);
 
   //Faculty Names After GET
   const [facultyNames, setFacultyNames] = useState([]);
@@ -29,7 +34,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
   const [semesterParentNames, setSemesterParentNames] = useState([]);
 
   //Send the Faculties to the parent Component (Faculty)
-  getFacultiesForMainPage(facultyNames)
+  getFacultiesForMainPage(facultyNames);
 
   //Changable Variables
   const [name, setName] = useState("");
@@ -53,6 +58,8 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
   const [successPercentageBand, setSuccessPercentageBand] = useState();
   const [successPercentageSemester, setSuccessPercentageSemester] = useState();
   const [successPercentagePhase, setSuccessPercentagePhase] = useState();
+  const [isCurrentSemester,setIsCurrentSemester] = useState(false)
+  const [isControl,setIsControl] = useState(false)
   //Add bylaws Inputs
   const [estimates, setEstimates] = useState([]);
   const [estimateCourse, setEstimateCourse] = useState([]);
@@ -120,7 +127,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
     setEstimateCourse(newInputs);
   };
 
-  const getAllFaculty = async() => {
+  const getAllFaculty = async () => {
     await axios
       .get("/api/Facult/Faculty", {
         headers: {
@@ -129,10 +136,10 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
         },
       })
       .then((res) => {
-        setFacultyNames(res?.data?.data?.getFacultyDtos)
+        setFacultyNames(res?.data?.data?.getFacultyDtos);
       })
       .catch((err) => console.log(err));
-  }
+  };
   const getAllBaylw = () => {
     axios
       .get(`api/Bylaw/all/${facultyId}`, {
@@ -193,28 +200,25 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
       .catch((err) => console.log(err));
   };
   const getAllParents = () => {
-    if(bylaw &&  type){
+    if (bylaw && type) {
       axios
-      .get(`/api/ScientificDegree/ByBylawId?bylawId=${bylaw}&type=${type}`, {
-        headers: {
-          Accept: "application/json",
-          // Authorization: "Bearer" + token ,
-        },
-      })
-      .then((res) => setSemesterParentNames(res?.data?.data))
-      .catch((err) => console.log(err));
+        .get(`/api/ScientificDegree/ByBylawId?bylawId=${bylaw}&type=${type}`, {
+          headers: {
+            Accept: "application/json",
+            // Authorization: "Bearer" + token ,
+          },
+        })
+        .then((res) => setSemesterParentNames(res?.data?.data))
+        .catch((err) => console.log(err));
     }
   };
 
   const [firstTime, setFirstTime] = useState(true);
 
-  
-
   useEffect(() => {
-    if(shouldRefetch)
-    {
-      getAllFaculty()
-      setShouldRefetch(false)
+    if (shouldRefetch) {
+      getAllFaculty();
+      setShouldRefetch(false);
     }
   }, [shouldRefetch]);
 
@@ -237,62 +241,87 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
     if (!firstTime) {
       getAllParents();
     }
-  }, [ type]);
+  }, [type]);
 
-  const [shows , setShows] = useState({
-   showFaculty : [] ,
-   showBaylws : [] ,
-   showBands : [] ,
-   showSemesters : [] ,
-   showExamRoles : [] ,
-   showPhases : [] ,
-   showParent : [] ,
-  })
+  const [shows, setShows] = useState({
+    showFaculty: [],
+    showBaylws: [],
+    showBands: [],
+    showSemesters: [],
+    showExamRoles: [],
+    showPhases: [],
+    showParent: [],
+  });
 
-   shows.showFaculty = facultyNames ?  facultyNames?.map((index) => (
-    <option key={index.facultId} value={index?.facultId}>
-      {index?.facultName}
-    </option>
-  )) : <option>No Options</option>
+  shows.showFaculty = facultyNames ? (
+    facultyNames?.map((index) => (
+      <option key={index.facultId} value={index?.facultId}>
+        {index?.facultName}
+      </option>
+    ))
+  ) : (
+    <option>No Options</option>
+  );
 
-  shows.showBaylws = bylawsNames ?  bylawsNames?.map((index) => (
-    <option key={index.id} value={index?.id}>
-      {index?.name}
-    </option>
-  )) : <option>No Options</option>
+  shows.showBaylws = bylawsNames ? (
+    bylawsNames?.map((index) => (
+      <option key={index.id} value={index?.id}>
+        {index?.name}
+      </option>
+    ))
+  ) : (
+    <option>No Options</option>
+  );
 
-  shows.showBands = bandNames ? bandNames?.map((index) => (
-    <option key={index.id} value={index?.id}>
-      {index?.name}
-    </option>
-    )) : <option>No Options</option>
+  shows.showBands = bandNames ? (
+    bandNames?.map((index) => (
+      <option key={index.id} value={index?.id}>
+        {index?.name}
+      </option>
+    ))
+  ) : (
+    <option>No Options</option>
+  );
 
+  shows.showSemesters = semesterNames ? (
+    semesterNames?.map((index) => (
+      <option key={index.id} value={index?.id}>
+        {index?.name}
+      </option>
+    ))
+  ) : (
+    <option>No Options</option>
+  );
 
-   shows.showSemesters = semesterNames ? semesterNames?.map((index) => (
-    <option key={index.id} value={index?.id}>
-      {index?.name}
-    </option>
-  )) : <option>No Options</option>
+  shows.showExamRoles = examRoleNames ? (
+    examRoleNames?.map((index) => (
+      <option key={index.id} value={index?.id}>
+        {index?.name}
+      </option>
+    ))
+  ) : (
+    <option>No Options</option>
+  );
 
+  shows.showPhases = phaseNames ? (
+    phaseNames?.map((index) => (
+      <option key={index.id} value={index?.id}>
+        {index?.name}
+      </option>
+    ))
+  ) : (
+    <option>No Options</option>
+  );
 
-   shows.showExamRoles = examRoleNames ? examRoleNames?.map((index) => (
-    <option key={index.id} value={index?.id}>
-      {index?.name}
-    </option>
-    )) : <option>No Options</option>
-
-  shows.showPhases = phaseNames ? phaseNames?.map((index) => (
-    <option key={index.id} value={index?.id}>
-      {index?.name}
-    </option>
-    )) : <option>No Options</option>
-
-  shows.showParent = semesterParentNames ? semesterParentNames?.map((index) => (
-    <option key={index.id} value={index?.id}>
-      {index?.name}
-    </option>
-    )) : <option>No Options</option>
-
+  shows.showParent = semesterParentNames ? (
+    semesterParentNames?.map((index) => (
+      <option key={index.id} value={index?.id}>
+        {index?.name}
+      </option>
+    ))
+  ) : (
+    <option>No Options</option>
+  );
 
   const handelAddFaculty = async (event) => {
     event.preventDefault();
@@ -309,15 +338,12 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
     });
     try {
       axios
-        .post(
-          "/api/Facult",
-          {
-            name: name,
-            description: description,
-            userId: "",
-            id: 0,
-          }
-        )
+        .post("/api/Facult", {
+          name: name,
+          description: description,
+          userId: "",
+          id: 0,
+        })
         .then((response) => {
           if (response.status === 201) {
             Toast.fire({
@@ -325,7 +351,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
               title: "Faculty Added successfully",
             });
           }
-          getAllFaculty()
+          getAllFaculty();
         });
     } catch (err) {
       Toast.fire({
@@ -565,6 +591,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
             minDegree: minDegree,
             maxDegree: maxDegree,
             id: 0,
+            isControlStatus:isControl,
           },
           {
             headers: {
@@ -680,7 +707,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
   const handelPhaseDegree = async (event) => {
     event.preventDefault();
 
-    const typeId = parseInt(type,10)
+    const typeId = parseInt(type, 10);
     const Toast = Swal.mixin({
       toast: true,
       position: "top-end",
@@ -700,7 +727,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
             id: 0,
             name,
             order,
-            type:typeId,
+            type: typeId,
             description,
             bylawId: bylaw,
             bandId: band,
@@ -753,9 +780,9 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
       document.getElementById("scienticBand").value = null;
       document.getElementById("scienticSemester").value = null;
       document.getElementById("scienticExamRole").value = null;
-      setBand(null)
-      setSemester(null)
-      setExamRole(null)
+      setBand(null);
+      setSemester(null);
+      setExamRole(null);
     } else if (event == 4) {
       setBandDisabled(true);
       setPhaseDisabled(true);
@@ -764,9 +791,9 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
       document.getElementById("scienticBand").value = null;
       document.getElementById("scienticPhase").value = null;
       document.getElementById("scienticExamRole").value = null;
-      setBand(null)
-      setPhase(null)
-      setExamRole(null)
+      setBand(null);
+      setPhase(null);
+      setExamRole(null);
     } else if (event == 5) {
       setBandDisabled(true);
       setPhaseDisabled(true);
@@ -775,16 +802,59 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
       document.getElementById("scienticBand").value = null;
       document.getElementById("scienticSemester").value = null;
       document.getElementById("scienticPhase").value = null;
-      setBand(null)
-      setSemester(null)
-      setPhase(null)
+      setBand(null);
+      setSemester(null);
+      setPhase(null);
     } else {
       setBandDisabled(true);
       setPhaseDisabled(true);
       setSemesterDisabled(true);
       setExamRoleDisabled(true);
     }
-  }
+  };
+
+  const handelAcademicYear = async (event) => {
+    event.preventDefault();
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
+    try {
+      await axios
+        .post(
+          "/api/academyyear/add",
+          {
+            facultyId: faculty,
+            start:startDate,
+            description,
+            end:endDate,
+            academyYearOrder:order,
+            isCurrent:isCurrentSemester,
+            id: 0,
+          }
+        )
+        .then((response) => {
+          if (response.status === 201) {
+            Toast.fire({
+              icon: "success",
+              title: response?.data?.message,
+            });
+          }
+        });
+    } catch (err) {
+      Toast.fire({
+        icon: "error",
+        title: err?.response?.data?.message,
+      });
+    }
+  };
 
   const restVariables = () => {
     setName("");
@@ -807,7 +877,6 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
     setPhaseDisabled(true);
     setSemesterDisabled(true);
     setExamRoleDisabled(true);
-   
   };
   return (
     <div>
@@ -904,6 +973,15 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
         >
           Phase Degree
         </Button>
+        <Button
+          variant="outline-light"
+          onClick={() => {
+            setAddAcademicYear(true);
+            restVariables();
+          }}
+        >
+          Academic Year
+        </Button>
       </div>
 
       <Modal
@@ -999,11 +1077,14 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
               <div className="col">
                 <Form.Group>
                   <FloatingLabel label="Type">
-                    <Form.Select aria-label="Default select example"
-                    onChange={e=>setType(e.target.value)}
-                    value={type}
+                    <Form.Select
+                      aria-label="Default select example"
+                      onChange={(e) => setType(e.target.value)}
+                      value={type}
                     >
-                      <option defaultValue hidden>Select Type</option>
+                      <option defaultValue hidden>
+                        Select Type
+                      </option>
                       <option value={1}>Credit Hours</option>
                       <option value={2}>Credit Points</option>
                     </Form.Select>
@@ -1524,6 +1605,15 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
               onChange={(e) => setminDegree(e.target.value)}
             />
           </FloatingLabel>
+          <Form.Group className="mt-2">
+          <Form.Check // prettier-ignore
+            type="switch"
+            id="custom-switch"
+            label="Control"
+            checked={isControl}
+            onChange={()=>setIsControl(!isControl)}
+          />
+          </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -1714,7 +1804,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                       aria-label="Floating label select example"
                       onChange={(e) => setBylaw(e.target.value)}
                     >
-                      <option defaultValue hidden >
+                      <option defaultValue hidden>
                         Select Bylaw
                       </option>
                       {shows.showBaylws}
@@ -1732,10 +1822,10 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                           handelScientificDegreeTypeChange(+e.target.value)
                         }
                       >
-                        <option defaultValue hidden>Selecty Type</option>
-                        <option  value={1}>
-                          Scientific Degree
+                        <option defaultValue hidden>
+                          Selecty Type
                         </option>
+                        <option value={1}>Scientific Degree</option>
                         <option value={2}>Band</option>
                         <option value={3}>Phase</option>
                         <option value={4}>Semester</option>
@@ -1754,7 +1844,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                       onChange={(e) => setBand(e.target.value)}
                       disabled={bandDisabled}
                       id="scienticBand"
-                      value = {band}
+                      value={band}
                     >
                       <option defaultValue hidden>
                         Select band
@@ -1773,7 +1863,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                       onChange={(e) => setPhase(e.target.value)}
                       disabled={phaseDisabled}
                       id="scienticPhase"
-                      value = {phase}
+                      value={phase}
                     >
                       <option defaultValue hidden>
                         Select Phase
@@ -1792,7 +1882,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                       onChange={(e) => setSemester(e.target.value)}
                       disabled={semesterDisabled}
                       id="scienticSemester"
-                      value = {semester}
+                      value={semester}
                     >
                       <option defaultValue hidden>
                         Select Semster
@@ -1811,7 +1901,7 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
                       onChange={(e) => setExamRole(e.target.value)}
                       disabled={examRoleDisabled}
                       id="scienticExamRole"
-                      value = {examRole}
+                      value={examRole}
                     >
                       <option defaultValue hidden>
                         Select Exam Role
@@ -1928,7 +2018,94 @@ export default function AddFaculty( { getFacultiesForMainPage , shouldRefetch , 
           <Button variant="secondary" onClick={() => setAddPhaseDegree(false)}>
             Close
           </Button>
-          <Button variant="success" onClick={ handelPhaseDegree}>
+          <Button variant="success" onClick={handelPhaseDegree}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        size="lg"
+        show={addAcademicYear}
+        onHide={() => setAddAcademicYear(false)}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-lg">
+            Academic Year
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FloatingLabel controlId="floatingPhaseFaculty" label="Faculty">
+            <Form.Select
+              aria-label="Floating label select example"
+              onChange={(e) => setFaculty(e.target.value)}
+            >
+              <option defaultValue hidden>
+                Select Faculty
+              </option>
+              {shows.showFaculty}
+            </Form.Select>
+          </FloatingLabel>
+
+          <FloatingLabel
+            controlId="floatingAssessDescription"
+            label="Description"
+            className="mt-2"
+          >
+            <Form.Control
+              as="textarea"
+              placeholder="Leave a comment here"
+              style={{ height: "100px" }}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </FloatingLabel>
+          <FloatingLabel
+            controlId="floatingAssessMethodMaxDegree"
+            label="Start Date"
+            className="mt-2"
+          >
+            <Form.Control
+              type="Date"
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </FloatingLabel>
+          <FloatingLabel
+            controlId="floatingAssessMethodMinDegree"
+            label="End Date"
+            className="mt-2"
+          >
+            <Form.Control
+              type="date"
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </FloatingLabel>
+          <FloatingLabel
+            controlId="floatingPhaseOrder"
+            label="Academic Year Order"
+            className="mt-2"
+          >
+            <Form.Control
+              type="Text"
+              placeholder="Order"
+              onChange={(e) => setOrder(e.target.value)}
+            />
+          </FloatingLabel>
+
+          <Form.Group className="mt-2">
+          <Form.Check // prettier-ignore
+            type="switch"
+            id="custom-switch"
+            label="Current Semester"
+            onClick={()=>setIsCurrentSemester(!isCurrentSemester)}
+          />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setAddAcademicYear(false)}>
+            Close
+          </Button>
+          <Button variant="success" onClick={handelAcademicYear}>
             Save Changes
           </Button>
         </Modal.Footer>

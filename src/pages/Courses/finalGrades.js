@@ -209,6 +209,8 @@ export default function FinalGrades() {
         return student.assesstMethodDtos.map((method) => {
           return {
             studentSemesterAssessMethodId: method.studentSemesterAssessMethodId,
+            courseId: selectedCourse.courseId,
+            assessmentMethodId: method.assessmentMethodId,
             degree: +method.assessDegree || 0, // Default to 0 if assessDegree is null or undefined
           };
         });
@@ -298,7 +300,7 @@ export default function FinalGrades() {
                   <FormSelect
                     onChange={(e) => setCurrentSemesterId(e.target.value)}
                   >
-                    <option disabled selected>
+                    <option hidden defaultValue>
                       Select a Semester
                     </option>
                     {showCurrentSemesters}

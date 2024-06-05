@@ -7,6 +7,7 @@ export default function SidebarAdmin(props) {
   const signout = async () => {
     await logout();
   };
+
   const { Auth } = useAuth();
   const roles = Auth?.dataDetails?.roles || [];
 
@@ -37,15 +38,17 @@ export default function SidebarAdmin(props) {
     ]
   };
 
-  // Set to store unique routes
+  // Set to store unique routes based on their 'to' property
   const uniqueRoutes = new Set();
 
   // Add routes for each role the user has
   roles.forEach(role => {
     if (roleRoutes[role]) {
-      roleRoutes[role].forEach(route => uniqueRoutes.add(route));
+      roleRoutes[role].forEach(route => uniqueRoutes.add(JSON.stringify(route)));
     }
   });
+
+  const routeArray = Array.from(uniqueRoutes).map(route => JSON.parse(route));
 
   return (
     <div className={props.changeActive ? "sidebar" : "sidebar active"}>
@@ -61,7 +64,7 @@ export default function SidebarAdmin(props) {
             <span>Basic</span>
           </NavLink>
         </li>
-        {Array.from(uniqueRoutes).map((route, index) => (
+        {routeArray.map((route, index) => (
           <li key={index}>
             <NavLink to={route.to}>
               <i className={`fa-solid ${route.icon} fa-fw`}></i>

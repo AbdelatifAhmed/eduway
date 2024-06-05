@@ -37,7 +37,7 @@ export default function Basic() {
                 Religion :<span className="">{data && data?.religion}</span>
               </div>
               <div>
-                Date of birth : <span className="">{data && data?.dateOfBirth}</span>
+                Date of birth : <span className="">{data && data?.dateOfBirth.split('T')[0]}</span>
               </div>
               <div>
                 National ID \ passport No : <span className="">{data && data?.nationalID}</span>
@@ -80,7 +80,7 @@ export default function Basic() {
               </div>
 
               <div>
-                Qualification Year : <span>{data && data?.qualificationYear}</span>
+                Qualification Year : <span>{data && data?.qualificationYear.split('T')[0]}</span>
               </div>
 
               <div>

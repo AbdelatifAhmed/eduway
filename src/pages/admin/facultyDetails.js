@@ -47,6 +47,7 @@ export default function FacultyDetails() {
   const [allBands,setAllBands]=useState([])
   const [allSemesters,setAllSemesters]=useState([])
   const [allExamRoles,setAllExamRoles]=useState([])
+  const [allAcademicYears,setAllAcademicYears]=useState([])
 
   // model Pop-Up
   // const [addFacultyShow, setAddFacultyShow] = useState(false);
@@ -58,6 +59,7 @@ export default function FacultyDetails() {
   const [addBands, setAddBands] = useState(false);
   const [addPhase, setAddPhase] = useState(false);
   const [addPhaseDegree, setAddPhaseDegree] = useState(false);
+  const [addAcademicYear, setAddAcademicYear] = useState(false);
 
   //updates
   const [faculty, setFaculty] = useState();
@@ -71,6 +73,8 @@ export default function FacultyDetails() {
   const [minDegree, setminDegree] = useState();
   const [maxDegree, setMaxDegree] = useState();
   const [order, setOrder] = useState();
+  const [isCurrentSemester,setIsCurrentSemester] = useState(false)
+  const [isControl,setIsControl] = useState(false)
   const [successPercentageBand, setSuccessPercentageBand] = useState();
   const [successPercentageSemester, setSuccessPercentageSemester] = useState();
   const [successPercentagePhase, setSuccessPercentagePhase] = useState();
@@ -104,156 +108,166 @@ export default function FacultyDetails() {
     getAllBands2()
     getAllSemesters2()
     getAllExamRoles2()
+    getAllAcademicYears()
   }, []);
-  useEffect(() => {
-    const fetchPhases = async () => {
-      if (ScientificDegreeId) {
-        await axios
-          .get(
-            `/api/ScientificDegree/GetDetails?Id=${ScientificDegreeId}&type=3`
-          )
-          .then((res) => {
-            setPhases(res?.data?.data?.getDetailsDtos);
-          })
-          .catch((err) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "error",
-              title: err?.response?.data?.message,
-            });
+
+
+  const fetchPhases = async () => {
+    if (ScientificDegreeId) {
+      await axios
+        .get(
+          `/api/ScientificDegree/GetDetails?Id=${ScientificDegreeId}&type=3`
+        )
+        .then((res) => {
+          setPhases(res?.data?.data?.getDetailsDtos);
+        })
+        .catch((err) => {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
           });
-      }
-    };
+          Toast.fire({
+            icon: "error",
+            title: err?.response?.data?.message,
+          });
+        });
+    }
+  };
+  useEffect(() => {
     fetchPhases();
   }, [ScientificDegreeId]);
 
-  useEffect(() => {
-    const fetchBands = async () => {
-      if (phaseId) {
-        await axios
-          .get(`/api/ScientificDegree/GetDetails?Id=${phaseId}&type=2`)
-          .then((res) => {
-            setBands(res?.data?.data?.getDetailsDtos);
-          })
-          .catch((err) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "error",
-              title: err?.response?.data?.message,
-            });
+
+  const fetchBands = async () => {
+    if (phaseId) {
+      await axios
+        .get(`/api/ScientificDegree/GetDetails?Id=${phaseId}&type=2`)
+        .then((res) => {
+          setBands(res?.data?.data?.getDetailsDtos);
+        })
+        .catch((err) => {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
           });
-      }
-    };
+          Toast.fire({
+            icon: "error",
+            title: err?.response?.data?.message,
+          });
+        });
+    }
+  };
+
+  useEffect(() => {
     fetchBands();
   }, [phaseId]);
 
-  useEffect(() => {
-    const fetchSemesters = async () => {
-      if (bandId) {
-        await axios
-          .get(`/api/ScientificDegree/GetDetails?Id=${bandId}&type=4`)
-          .then((res) => {
-            setSemesters(res?.data?.data?.getDetailsDtos);
-          })
-          .catch((err) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "error",
-              title: err?.response?.data?.message,
-            });
+  const fetchSemesters = async () => {
+    if (bandId) {
+      await axios
+        .get(`/api/ScientificDegree/GetDetails?Id=${bandId}&type=4`)
+        .then((res) => {
+          setSemesters(res?.data?.data?.getDetailsDtos);
+        })
+        .catch((err) => {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
           });
-      }
-    };
+          Toast.fire({
+            icon: "error",
+            title: err?.response?.data?.message,
+          });
+        });
+    }
+  };
+
+  useEffect(() => {
+    
     fetchSemesters();
   }, [bandId]);
 
-  useEffect(() => {
-    const fetchExamRoles = async () => {
-      if (semesterId) {
-        await axios
-          .get(`/api/ScientificDegree/GetDetails?Id=${semesterId}&type=5`)
-          .then((res) => {
-            setExamRoles(res?.data?.data?.getDetailsDtos);
-          })
-          .catch((err) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "error",
-              title: err?.response?.data?.message,
-            });
+  const fetchExamRoles = async () => {
+    if (semesterId) {
+      await axios
+        .get(`/api/ScientificDegree/GetDetails?Id=${semesterId}&type=5`)
+        .then((res) => {
+          setExamRoles(res?.data?.data?.getDetailsDtos);
+        })
+        .catch((err) => {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
           });
-      }
-    };
+          Toast.fire({
+            icon: "error",
+            title: err?.response?.data?.message,
+          });
+        });
+    }
+  };
+
+  useEffect(() => {
+    
     fetchExamRoles();
   }, [semesterId]);
 
-  useEffect(() => {
-    const fetchScientificDegree = async () => {
-      if (bylaw) {
-        await axios
-          .get(`/api/ScientificDegree/ScientificDegrees?Id=${bylaw}`)
-          .then((res) => {
-            setScientificDegree(res?.data?.data?.getDetailsDtos);
-          })
-          .catch((err) => {
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-            Toast.fire({
-              icon: "error",
-              title: err?.response?.data?.message,
-            });
+  const fetchScientificDegree = async () => {
+    if (bylaw) {
+      await axios
+        .get(`/api/ScientificDegree/ScientificDegrees?Id=${bylaw}`)
+        .then((res) => {
+          setScientificDegree(res?.data?.data?.getDetailsDtos);
+        })
+        .catch((err) => {
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
           });
-      }
-    };
+          Toast.fire({
+            icon: "error",
+            title: err?.response?.data?.message,
+          });
+        });
+    }
+  };
+
+  useEffect(() => {
     fetchScientificDegree();
   }, [bylaw]);
 
@@ -269,8 +283,8 @@ export default function FacultyDetails() {
       })
       .catch((err) => console.log(err));
   };
-  const getAllBaylw = () => {
-    axios
+  const getAllBaylw = async() => {
+   await axios
       .get(`api/Bylaw/all/${id}`, {
         headers: {
           Accept: "application/json",
@@ -281,8 +295,8 @@ export default function FacultyDetails() {
       .catch((err) => console.log(err));
   };
 
-  const getAllBands = () => {
-    axios
+  const getAllBands = async() => {
+    await axios
       .get(`/api/Band/all/${id}`, {
         headers: {
           Accept: "application/json",
@@ -293,8 +307,8 @@ export default function FacultyDetails() {
       .catch((err) => console.log(err));
   };
 
-  const getAllPhases = () => {
-    axios
+  const getAllPhases = async() => {
+    await axios
       .get(`/api/phase/all/${id}`, {
         headers: {
           Accept: "application/json",
@@ -305,8 +319,8 @@ export default function FacultyDetails() {
       .catch((err) => console.log(err));
   };
 
-  const getAllSemesters = () => {
-    axios
+  const getAllSemesters = async() => {
+    await axios
       .get(`/api/semester/all/${id}`, {
         headers: {
           Accept: "application/json",
@@ -317,8 +331,8 @@ export default function FacultyDetails() {
       .catch((err) => console.log(err));
   };
 
-  const getAllExamRoles = () => {
-    axios
+  const getAllExamRoles = async() => {
+   await axios
       .get(`/api/examRole/all/${id}`, {
         headers: {
           Accept: "application/json",
@@ -328,9 +342,9 @@ export default function FacultyDetails() {
       .then((res) => setExamRoleNames(res?.data?.data))
       .catch((err) => console.log(err));
   };
-  const getAllParents = () => {
+  const getAllParents = async() => {
     if (s_bylaw && type) {
-      axios
+      await axios
         .get(
           `/api/ScientificDegree/ByBylawId?bylawId=${s_bylaw}&type=${type}`,
           {
@@ -372,6 +386,13 @@ export default function FacultyDetails() {
     await axios.get(`/api/examRole/All/${id}`)
     .then(res=>{
       setAllExamRoles(res?.data?.data)
+    })
+  }
+
+  const getAllAcademicYears = async()=>{
+    await axios.get(`/api/academyyear/All/${id}`)
+    .then(res=>{
+      setAllAcademicYears(res?.data?.data)
     })
   }
 
@@ -647,7 +668,6 @@ export default function FacultyDetails() {
       .get(`api/assessMethod/${id}`)
       .then((res) => {
         const data = res?.data?.data;
-
         setFaculty(data?.facultyId);
         setName(data?.name);
         setCode(data?.code);
@@ -655,6 +675,7 @@ export default function FacultyDetails() {
         setMaxDegree(data?.maxDegree);
         setminDegree(data?.minDegree);
         setId(data?.id);
+        setIsControl(data?.isControlStatus)
       })
       .catch((err) => {
         const Toast = Swal.mixin({
@@ -824,6 +845,38 @@ export default function FacultyDetails() {
         setSuccessPercentageBand(data?.successPercentageBand);
         setSuccessPercentagePhase(data?.successPercentagePhase);
         setSuccessPercentageSemester(data?.successPercentageSemester);
+      })
+      .catch((err) => {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        Toast.fire({
+          icon: "error",
+          title: err?.response?.data?.message,
+        });
+      });
+  };
+  const handelAcademicYears = async (id) => {
+    setAddAcademicYear(true)
+    await axios
+      .get(`api/academyyear/Get/${id}`)
+      .then((res) => {
+        const data = res?.data?.data;
+        setFaculty(data?.facultyId)
+       setDescription(data?.description)
+       setStartDate(data?.start.split('T')[0])
+       setEndDate(data?.end.split('T')[0])
+       setOrder(data?.academyYearOrder)
+       setIsCurrentSemester(data?.isCurrent)
+       setId(data?.id)
       })
       .catch((err) => {
         const Toast = Swal.mixin({
@@ -1035,7 +1088,7 @@ export default function FacultyDetails() {
               title: response?.data?.message,
             });
           }
-          // getAllBaylw();
+          fetchPhases();
         })
         .catch((err) => {
           Toast.fire({
@@ -1080,7 +1133,7 @@ export default function FacultyDetails() {
               title: response?.data?.message,
             });
           }
-          // getAllBaylw();
+          // fetchBands();
         })
         .catch((err) => {
           Toast.fire({
@@ -1241,6 +1294,53 @@ export default function FacultyDetails() {
       });
     }
   };
+  const handelUpdateAcademic = async (event) => {
+    event.preventDefault();
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
+    try {
+      axios
+        .put("/api/academyyear/update", {
+          id: ids,
+          facultyId: faculty,
+          academyYearOrder:order,
+          start:startDate,
+          end:endDate,
+          description,
+          isCurrent: isCurrentSemester,
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            Toast.fire({
+              icon: "success",
+              title: response?.data?.message,
+            });
+          }
+          // getAllBaylw();
+        })
+        .catch((err) => {
+          Toast.fire({
+            icon: "error",
+            title: err?.response?.data?.message,
+          });
+        });
+    } catch (err) {
+      console.log(err);
+      Toast.fire({
+        icon: "error",
+        title: err?.response?.data?.message,
+      });
+    }
+  };
 
   //Delete data
   const handelDeleteBylaw = (bylaw) => {
@@ -1265,18 +1365,18 @@ export default function FacultyDetails() {
         if (result.isConfirmed) {
           axios
             .delete(`api/bylaw/${bylaw.id}`)
-            .then(() => {
+            .then((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Deleted!",
-                text: "Your Student has been Deleted.",
+                text: res?.data?.message,
                 icon: "success",
               });
               fetchData();
             })
-            .catch(() => {
+            .catch((err) => {
               swalWithBootstrapButtons.fire({
                 title: "Error!",
-                text: "This Student Is Registed in Semester",
+                text: err?.response?.data?.message,
                 icon: "eroor",
               });
             });
@@ -1415,7 +1515,7 @@ export default function FacultyDetails() {
                 text: res?.data?.message,
                 icon: "success",
               });
-              fetchData();
+              fetchPhases();
             })
             .catch((err) => {
               swalWithBootstrapButtons.fire({
@@ -1463,7 +1563,7 @@ export default function FacultyDetails() {
                 text: res?.data?.message,
                 icon: "success",
               });
-              fetchData();
+              fetchBands();
             })
             .catch((err) => {
               swalWithBootstrapButtons.fire({
@@ -1511,7 +1611,7 @@ export default function FacultyDetails() {
                 text: res?.data?.message,
                 icon: "success",
               });
-              fetchData();
+              fetchSemesters();
             })
             .catch((err) => {
               swalWithBootstrapButtons.fire({
@@ -1559,7 +1659,7 @@ export default function FacultyDetails() {
                 text: res?.data?.message,
                 icon: "success",
               });
-              fetchData();
+              fetchExamRoles();
             })
             .catch((err) => {
               swalWithBootstrapButtons.fire({
@@ -1607,7 +1707,55 @@ export default function FacultyDetails() {
                 text: res?.data?.message,
                 icon: "success",
               });
-              fetchData();
+              fetchScientificDegree();
+            })
+            .catch((err) => {
+              swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: err?.response?.data?.message,
+                icon: "eroor",
+              });
+            });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            icon: "error",
+          });
+        }
+      });
+  };
+  const handelDeleteAcademicYears = (e) => {
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success mx-2",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: `Are you sure you want to Delete ${`${e?.start?.split('-')[0]} / ${e?.end.split('-')[0]}`} Academic Year?`,
+        text: "You won't be able to revert this!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .delete(`api/academyYear/delete/${e.id}`)
+            .then((res) => {
+              swalWithBootstrapButtons.fire({
+                title: "Deleted!",
+                text: res?.data?.message,
+                icon: "success",
+              });
+              getAllAcademicYears();
             })
             .catch((err) => {
               swalWithBootstrapButtons.fire({
@@ -1650,6 +1798,8 @@ export default function FacultyDetails() {
     setSuccessPercentageBand(null);
     setSuccessPercentagePhase(null);
     setSuccessPercentageSemester(null);
+    setIsControl(false)
+    setIsCurrentSemester(false)
   };
 
   return (
@@ -2141,6 +2291,15 @@ export default function FacultyDetails() {
                 value={minDegree}
               />
             </FloatingLabel>
+            <Form.Group className="mt-2">
+          <Form.Check 
+            type="switch"
+            id="custom-switch"
+            label="Control"
+            checked={isControl}
+            onChange={()=>setIsControl(!isControl)}
+          />
+          </Form.Group>
           </Modal.Body>
           <Modal.Footer>
             <Button
@@ -2759,6 +2918,101 @@ export default function FacultyDetails() {
             </Button>
           </Modal.Footer>
         </Modal>
+
+        <Modal
+        size="lg"
+        show={addAcademicYear}
+        onHide={() => setAddAcademicYear(false)}
+        aria-labelledby="example-modal-sizes-title-lg"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="example-modal-sizes-title-lg">
+            Academic Year
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <FloatingLabel controlId="floatingPhaseFaculty" label="Faculty">
+            <Form.Select
+              aria-label="Floating label select example"
+              value={faculty}
+              onChange={(e) => setFaculty(e.target.value)}
+            >
+              <option defaultValue hidden>
+                Select Faculty
+              </option>
+              {shows.showFaculty}
+            </Form.Select>
+          </FloatingLabel>
+
+          <FloatingLabel
+            controlId="floatingAssessDescription"
+            label="Description"
+            className="mt-2"
+          >
+            <Form.Control
+              as="textarea"
+              placeholder="Leave a comment here"
+              style={{ height: "100px" }}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </FloatingLabel>
+          <FloatingLabel
+            controlId="floatingAssessMethodMaxDegree"
+            label="Start Date"
+            className="mt-2"
+          >
+            <Form.Control
+              type="Date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+          </FloatingLabel>
+          <FloatingLabel
+            controlId="floatingAssessMethodMinDegree"
+            label="End Date"
+            className="mt-2"
+          >
+            <Form.Control
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
+          </FloatingLabel>
+          <FloatingLabel
+            controlId="floatingPhaseOrder"
+            label="Academic Year Order"
+            className="mt-2"
+          >
+            <Form.Control
+              type="Text"
+              placeholder="Order"
+              value={order}
+              onChange={(e) => setOrder(e.target.value)}
+            />
+          </FloatingLabel>
+
+          <Form.Group className="mt-2">
+          <Form.Check // prettier-ignore
+            type="switch"
+            id="custom-switch"
+            label="Current Semester"
+            checked={isCurrentSemester}
+            onClick={()=>setIsCurrentSemester(!isCurrentSemester)}
+          />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => {setAddAcademicYear(false)
+            resetVars();
+          }}>
+            Close
+          </Button>
+          <Button variant="success" onClick={handelUpdateAcademic}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
       </div>
       {/* Content */}
       <Tab.Container id="left-tabs-example" defaultActiveKey="All">
@@ -2766,10 +3020,10 @@ export default function FacultyDetails() {
           <Col sm={2}>
             <Nav variant="pills" className="flex-column">
               <Nav.Item>
-                <Nav.Link eventKey="All" className="d-flex align-items-center gap-2"> <IoIosArrowDroprightCircle/> Faculty Details</Nav.Link>
+                <Nav.Link eventKey="All" className="d-flex align-items-center gap-2"> <IoIosArrowForward/> Faculty Details</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="Scientfic"className="d-flex align-items-center gap-2"> <IoIosArrowDropright/> Scientific Degree</Nav.Link>
+                <Nav.Link eventKey="Scientfic"className="d-flex align-items-center gap-2"> <IoIosArrowForward/> Scientific Degree</Nav.Link>
               </Nav.Item>
 
               <Nav.Item>
@@ -2777,14 +3031,14 @@ export default function FacultyDetails() {
               </Nav.Item>
 
               <Nav.Item>
-                <Nav.Link eventKey="band">&#128539; Bands</Nav.Link>
+                <Nav.Link eventKey="band" className="d-flex align-items-center gap-2"><IoIosArrowForward/> Bands</Nav.Link>
               </Nav.Item>
 
               <Nav.Item>
-                <Nav.Link eventKey="semester">&#128539; Semesters</Nav.Link>
+                <Nav.Link eventKey="semester" className="d-flex align-items-center gap-2"><IoIosArrowForward/> Semesters</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="exam">&#128539; Exam Roles</Nav.Link>
+                <Nav.Link eventKey="exam" className="d-flex align-items-center gap-2"><IoIosArrowForward/> Exam Roles</Nav.Link>
               </Nav.Item>
             </Nav>
           </Col>
@@ -3036,6 +3290,39 @@ export default function FacultyDetails() {
                           <Button
                             variant="warning"
                             onClick={() => handelExamRole(item.id)}
+                          >
+                            Edit
+                          </Button>
+                        </span>
+                      </div>
+                    ))
+                  : <div style={{textAlign:"center",fontWeight:"bold",color:"red",fontSize:"18px"}}>No Data</div>}
+                  </Tab>
+                  <Tab eventKey="academic" title="Academic Years">
+                    {allAcademicYears && allAcademicYears.length > 0
+                    ? allAcademicYears?.map((item, i) => (
+                      <div
+                        key={i}
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        <span style={{ fontWeight: "bold" }}>
+                          {`${item?.start?.split('-')[0]} / ${item?.end.split('-')[0]}`}
+                        </span>
+                        <span className="d-flex gap-2">
+                          <Button
+                            variant="danger"
+                            onClick={() => handelDeleteAcademicYears(item)}
+                          >
+                            Delete
+                          </Button>
+                          <Button
+                            variant="warning"
+                            onClick={() => handelAcademicYears(item.id)}
                           >
                             Edit
                           </Button>

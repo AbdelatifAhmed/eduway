@@ -1,10 +1,13 @@
 import axios from "../Api/axios";
 import useAuth from "./useAuth";
+import useFaculty from "./useFaculty";
 
 const useLogout = () => {
     const { Auth,setAuth } = useAuth();
+    const {setGlobalFaculty} = useFaculty()
     const logout = async () => {
         setAuth({});
+        setGlobalFaculty({})
         try {
             await axios.post('api/Auth/Logout', {
                 withCredentials: true,

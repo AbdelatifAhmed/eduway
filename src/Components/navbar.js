@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivatet";
 import useFaculty from "../hooks/useFaculty";
 import useAuth from "../hooks/useAuth";
+import { jwtDecode } from "jwt-decode";
 
 export default function Navbar(props) {
   const toggle = () => {
@@ -13,26 +14,30 @@ export default function Navbar(props) {
   const axios = useAxiosPrivate();
   const [facultyNames, setFacultyNames] = useState([]);
   const { setGlobalFaculty } = useFaculty();
-  
+  const { Auth } = useAuth();
+  const decoded = jwtDecode(Auth?.accessToken)
   const getAllFaculty = async () => {
     if (Auth?.dataDetails?.roles?.includes("Administration")) {
-      await axios
-        .get("/api/Facult/Faculty")
-        .then((res) => {
-          setFacultyNames(res?.data?.data?.getFacultyDtos);
-        })
-        .catch((err) => console.log(err));
+      try {
+        const res = await axios.get("/api/Facult/Faculty");
+        setFacultyNames(res?.data?.data?.getFacultyDtos || []);
+        if (res.status === 204 || (res.data?.data?.getFacultyDtos && res.data?.data?.getFacultyDtos.length === 0)) {
+          const staffRes = await axios.get("/api/staff/F");
+          setGlobalFaculty(staffRes?.data?.data?.factulyId);
+        }
+      } catch (err) {
+        console.log(err);
+      }
     } else {
-      await axios
-        .get("/api/staff/F")
-        .then((res) => {
-          setGlobalFaculty(res?.data?.data?.factulyId);
-        })
-        .catch((err) => console.log(err));
+      try {
+        const staffRes = await axios.get("/api/staff/F");
+        setGlobalFaculty(staffRes?.data?.data?.factulyId);
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
 
-  const { Auth } = useAuth();
   useEffect(() => {
     getAllFaculty();
   }, []);
@@ -44,34 +49,32 @@ export default function Navbar(props) {
           <i className="fa-solid fa-bars"></i>
         </span>
 
-        {Auth?.dataDetails?.roles?.includes("Administration") ? (
+        {Auth?.dataDetails?.roles?.includes("Administration") && facultyNames.length > 1 ? (
           <span>
-          <Form.Select
-            aria-label="Default select example"
-            onChange={(e) => setGlobalFaculty(e.target.value)}
-          >
-            <option defaultValue hidden>
-              Select Faculty
-            </option>
-            {facultyNames && facultyNames.length > 0 && 
-              facultyNames.map((f, i) => (
+            <Form.Select
+              aria-label="Default select example"
+              onChange={(e) => setGlobalFaculty(e.target.value)}
+            >
+              <option defaultValue hidden>
+                Select Faculty
+              </option>
+              {facultyNames.map((f, i) => (
                 <option key={i} value={f.facultId}>
                   {f.facultName}
                 </option>
-              ))
-            }
-          </Form.Select>
+              ))}
+            </Form.Select>
           </span>
         ) : (
           ""
         )}
       </div>
       <div className="user">
-        <i className="fa-solid fa-circle-question fa-fw"></i>
-        <i className="fa-solid fa-gear fa-fw"></i>
-        <i className="fa-regular fa-bell fa-fw"></i>
+        <p id="name">{decoded.name}</p>
         <img src={avatar} alt="Avatar" />
-        <p id="name">"Abdo Ahmed"</p>
+        <i className="fa-solid fa-gear fa-fw"></i>
+        <i className="fa-solid fa-circle-question fa-fw"></i>
+        <i className="fa-regular fa-bell fa-fw"></i>
       </div>
     </div>
   );

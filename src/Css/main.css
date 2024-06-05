@@ -504,6 +504,12 @@ ul {
   border-radius: 50%;
 }
 
+.topbar .user p {
+  margin: 0 !important;
+  font-size: 20px;
+  text-transform: capitalize;
+}
+
 .main .basic-info {
   padding: 30px;
   width: 100%;
@@ -512,29 +518,35 @@ ul {
   gap: 20px;
 }
 
-.main .basic-info .item {
+ .main .basic-info .item {
   flex: calc(50% - 20px);
+  text-transform: capitalize;
 }
+
 
 .main .basic-info .item fieldset {
+  border: 1px solid ;
   border-radius: 20px;
   padding: 20px;
+  background-color: var(--main-color);
 }
 
+
+
 .main .basic-info .item fieldset legend h1 {
-  color: var(--main-color);
+  color: var(--white);
 }
 
 .main .basic-info .item fieldset div {
   font-size: 20px;
-  color: var(--main-color);
+  color: var(--white);
   margin-bottom: 10px;
 }
 
 .main .basic-info .item fieldset p {
-  /* display: inline; */
+  display: inline;
   width: 100%;
-}
+} */
 
 /* ========================== media query ============== */
 @media (max-width: 991px) {

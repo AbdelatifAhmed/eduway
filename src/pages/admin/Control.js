@@ -33,6 +33,7 @@ export default function Control() {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [selectedUserName, setSelectedUserName] = useState("");
   const [teacher, setTeacher] = useState([]);
+  const [staffPermission, SetStaffPermission] = useState([]);
   const [teacherCourses, setTeacherCourses] = useState([]);
   const [teacherId, setTeacherId] = useState();
   const [coursesName, setCoursesName] = useState();
@@ -151,6 +152,11 @@ export default function Control() {
 
     axios
       .get(`/api/staff/FA/${globalFaculty}`)
+      .then((res) => SetStaffPermission(res?.data?.data))
+      .catch((err) => console.log(err));
+
+    axios
+     .get(`/api/Teacher/GetAllTeacher/${globalFaculty}`)
       .then((res) => setTeacher(res?.data?.data))
       .catch((err) => console.log(err));
 
@@ -930,7 +936,7 @@ export default function Control() {
               Teacher Name
             </Form.Label>
             <Select
-              options={teacher}
+              options={staffPermission}
               getOptionLabel={(e) => e.name}
               getOptionValue={(e) => e.userId}
               onChange={(e) => handelPermissions(e.userId)}
