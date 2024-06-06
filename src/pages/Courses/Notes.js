@@ -32,6 +32,7 @@ export default function Notes() {
   const openCoursesDisplay = () => setDisplayCourses(true);
   const closeCoursesDisplay = () => setDisplayCourses(false);
   const handelChoosenCourse = (choosenCourse) => {
+    setNotesData(null)
     setSelectedCourse(choosenCourse);
     closeCoursesDisplay();
   };
@@ -61,6 +62,17 @@ export default function Notes() {
   const [notesData, setNotesData] = useState();
 
   useEffect(() => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
     const fetchData = async () => {
       if (selectedCourse) {
         try {
@@ -71,7 +83,10 @@ export default function Notes() {
             }
           );
         } catch (error) {
-          console.error("Error fetching data:", error);
+          Toast.fire({
+            icon: "error",
+            title: error?.response?.data?.message,
+          });
         }
       }
     };
@@ -147,7 +162,11 @@ export default function Notes() {
           </textarea>
         </tr>
       ))
-    : "";
+    : <tr>
+      <td colSpan={4} className="text-danger text-center fw-bold">
+        No data 
+      </td>
+    </tr>;
 
   return (
     <>

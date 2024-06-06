@@ -546,7 +546,7 @@ ul {
 .main .basic-info .item fieldset p {
   display: inline;
   width: 100%;
-} */
+} 
 
 /* ========================== media query ============== */
 @media (max-width: 991px) {

@@ -50,6 +50,7 @@ export default function FinalGrades() {
   const openCoursesDisplay = () => setDisplayCourses(true);
   const closeCoursesDisplay = () => setDisplayCourses(false);
   const handelChoosenCourse = (choosenCourse) => {
+    setStudentData([])
     setSelectedCourse(choosenCourse);
     closeCoursesDisplay();
   };
@@ -149,7 +150,7 @@ export default function FinalGrades() {
     </th>
   ));
 
-  const tableRows = currentRecords.map((student, index) => (
+  const tableRows =studentData && studentData.length > 0  ? currentRecords.map((student, index) => (
     <tr key={student.studentCode}>
       <td>{index + 1}</td>
       <td>{student.studentName}</td>
@@ -177,7 +178,11 @@ export default function FinalGrades() {
         </Button>
       </td>
     </tr>
-  ));
+  )) : <tr>
+    <td  className="text-center text-danger">
+      No data
+    </td>
+    </tr>
 
   const showCurrentSemesters = currentSemesters?.semesterName ? (
     currentSemesters?.semesterName.map((element) => (

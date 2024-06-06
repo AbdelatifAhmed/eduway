@@ -35,6 +35,7 @@ export default function AddCourseGrades() {
   const openCoursesDisplay = () => setDisplayCourses(true);
   const closeCoursesDisplay = () => setDisplayCourses(false);
   const handelChoosenCourse = (choosenCourse) => {
+    setStudentData([])
     setSelectedCourse(choosenCourse);
     closeCoursesDisplay();
   };
