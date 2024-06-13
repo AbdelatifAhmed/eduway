@@ -44,6 +44,8 @@ import Unauthorized from "./Components/unauthorized.js";
 import Basic from "./pages/admin/basic.js";
 import FacultyDetails from "./pages/admin/facultyDetails.js";
 import StaffView from "./pages/admin/StaffView.js";
+import GraduationReport from "./pages/Reports/GraduationReport.js";
+import StudentForamt from "./pages/admin/StudentForamt.js";
 export default function App() {
   return (
     <>
@@ -102,6 +104,7 @@ export default function App() {
               />
               <Route path="add-control-member" element={<AddControlMember />} />
               <Route path="control" element={<Control />} />
+              <Route path="student-format" element={<StudentForamt/>}/>
             </Route>
 
             <Route
@@ -161,6 +164,7 @@ export default function App() {
                 path="course-result/course/:semesterId/:academicYearId/:courseId"
                 element={<CourseResultView />}
               />
+              <Route path="Graduation-result" element={<GraduationReport />} />
             </Route>
 
             <Route

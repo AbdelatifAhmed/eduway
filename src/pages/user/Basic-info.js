@@ -1,8 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "../../Components/sidebar";
 import Navbar from "../../Components/navbar";
+import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 export default function BasicInfo() {
   const [changeActive, setChangeActive] = useState(true);
+  const axios =useAxiosPrivate()
+  const [studentData, setStudentData] = useState([])
+
+  const getStudentData = ()=>{
+    axios
+    .get(`/api/student/basicdata`)
+    .then(res=>{
+      setStudentData(res?.data?.data)
+    }).catch(err=>console.error(err))
+  }
+  useEffect(()=>{
+    getStudentData()
+  },[])
   return (
     <div className="page">
       <Sidebar changeActive={changeActive} />
@@ -17,34 +31,34 @@ export default function BasicInfo() {
                 <h1>Personal Data</h1>
               </legend>
               <div>
-                Arabic Name : <span className=""></span>
+                Arabic Name : <span className="">{studentData?.nameArabic}</span>
               </div>
               <div>
-                English Name : <span className=""></span>
+                English Name : <span className="">{studentData?.nameEnglish}</span>
               </div>
               <div>
-                Gender : <span className=""></span>
+                Gender : <span className="">{studentData?.gender}</span>
+              </div>
+              {/* <div>
+                Student id : <span className="">{studentData?.}</span>
+              </div> */}
+              <div>
+                Nationality : <span className="">{studentData?.nationality}</span>
               </div>
               <div>
-                Student id : <span className=""></span>
+                Religion <span className="">{studentData?.religion}</span>:
               </div>
               <div>
-                Nationality : <span className=""></span>
+                Date of birth : <span className="">{studentData?.dateOfBirth?.split('T')[0]}</span>
               </div>
               <div>
-                Religion <span className=""></span>:
+                National ID : <span className="">{studentData?.nationalID}</span>
               </div>
               <div>
-                Date of birth : <span className=""></span>
+                Release Date : <span className="">{}</span>
               </div>
               <div>
-                National ID \ passport No : <span className=""></span>
-              </div>
-              <div>
-                Release Date : <span className=""></span>
-              </div>
-              <div>
-                Place of birth : <span className=""></span>
+                Place of birth : <span className="">{studentData?.placeOfBirth}</span>
               </div>
             </fieldset>
           </div>
@@ -54,44 +68,20 @@ export default function BasicInfo() {
                 <h1>Family Member Data</h1>
               </legend>
               <div>
-                Gurdian Name : <span className=""></span>
+                Gurdian Name : <span className="">{studentData?.parentName}</span>
               </div>
 
               <div>
-                Address : <span className=""></span>
+                Address : <span className="">{studentData?.parentAddress}</span>
               </div>
 
               <div>
-                Jop : <span className=""></span>
-              </div>
+                Jop : <span className="">{studentData?.parentJob}</span>
+              </div>  
 
               <div>
-                Mobile : <span className=""></span>
-              </div>
-
-              <div>
-                Home Tel : <span className=""></span>
-              </div>
-
-              <div>
-                City : <span className=""></span>
-              </div>
-
-              <div>
-                Email : <span className=""></span>
-              </div>
-
-              <div>
-                Fax : <span className=""></span>
-              </div>
-
-              <div>
-                National ID \ passport No : <span className=""></span>
-              </div>
-
-              <div>
-                Place of birth : <span className=""></span>
-              </div>
+                Postal Code : <span className="">{studentData?.postalCodeOfParent}</span>
+              </div>  
             </fieldset>
           </div>
           <div className="item">
@@ -99,37 +89,22 @@ export default function BasicInfo() {
               <legend>
                 <h1>Contact Data</h1>
               </legend>
+
               <div>
-                City : <span></span>
+                Address : <span>{studentData?.studentAddress}</span>
               </div>
 
               <div>
-                Address : <span></span>
+                {studentData ?  studentData?.getPhoneStudentDtos?.map(item=>(
+                  <div key={item.phoneId}>
+                    Mobile : <span>{item?.studentPhoneNumber}</span>
+                  </div>
+                )) : <div>Mobile:</div>}
+              </div>
+              <div>
+                Email : <span>{studentData?.email}</span>
               </div>
 
-              <div>
-                Mobile : <span></span>
-              </div>
-
-              <div>
-                Home Tel : <span></span>
-              </div>
-
-              <div>
-                Fax : <span></span>
-              </div>
-
-              <div>
-                Email : <span></span>
-              </div>
-
-              <div>
-                System Mail : <span></span>
-              </div>
-
-              <div>
-                Mail Box : <span></span>
-              </div>
             </fieldset>
           </div>
           <div className="item">
@@ -137,37 +112,25 @@ export default function BasicInfo() {
               <legend>
                 <h1>Prequalification Data</h1>
               </legend>
+           
+
               <div>
-                School : <span></span>
+                Pre-Qualification : <span>{studentData?.preQualification}</span>
               </div>
 
               <div>
-                Pre-Qualification : <span></span>
+                Qualification Year : <span>{studentData?.qualificationYear?.split('T')[0]}</span>
+              </div>
+
+
+              <div>
+                Degrees : <span>{studentData?.degree}</span>
               </div>
 
               <div>
-                Qualification Year : <span></span>
+                Seat Number : <span>{studentData?.seatNumber}</span>
               </div>
 
-              <div>
-                Qualification Turn : <span></span>
-              </div>
-
-              <div>
-                Degrees : <span></span>
-              </div>
-
-              <div>
-                Seat Number : <span></span>
-              </div>
-
-              <div>
-                Coordination Number : <span></span>
-              </div>
-
-              <div>
-                Coordination Date : <span></span>
-              </div>
             </fieldset>
           </div>
         </div>

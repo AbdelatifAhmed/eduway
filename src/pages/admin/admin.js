@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import SidebarAdmin from "../../Components/sidebar-admin";
-import Navbar from "../../Components/navbar";
+import MyNavbar from "../../Components/navbar";
 import { Outlet } from "react-router-dom";
 export default function Admin() {
   const [changeActive, setChangeActive] = useState(true);
@@ -9,11 +9,11 @@ export default function Admin() {
   return (
     <>
       <div className="page">
-        <SidebarAdmin changeActive={changeActive} />
+        <SidebarAdmin changeActive={changeActive}  setChangeActive={setChangeActive}/>
         {/* <!-- Main content --> */}
         <div className={changeActive ? "main" : "main active"}>
           {/* <!-- Top Bar (Naigation bar) --> */}
-          <Navbar
+          <MyNavbar
             changeActive={changeActive}
             setChangeActive={setChangeActive}
           />

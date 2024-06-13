@@ -29,7 +29,6 @@ export default function Login(props) {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         },
-      
       );
       setIsError(false)
       const accessToken = Respond?.data?.token;

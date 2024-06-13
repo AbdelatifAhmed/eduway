@@ -85,7 +85,7 @@ export default function Student(props) {
   const currentRecords = students && students?.slice(indexOfFirstRecord, indexOfLastRecord);
   const nPages = students && Math.ceil(students.length / recordsPerPage);
 
-  const showStudents = students ? currentRecords.map((student) => (
+  const showStudents = students && students.length > 0 ? currentRecords.map((student) => (
     <tr key={student.studentId}>
       <td>{student.studentNameArbic}</td>
       <td>{student.studentNameEnglish}</td>
@@ -101,6 +101,7 @@ export default function Student(props) {
   )): <tr>
     <td colSpan={6} style={{textAlign:"center" , fontSize:"20px", fontWeight:"bold" , color:"red"}}>No Data</td>
   </tr>
+  
   return (
     <div className="pad">
       <header className="d-flex justify-content-between align-items-center" style={{paddingRight:"20px"}}>

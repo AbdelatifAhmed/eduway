@@ -107,8 +107,7 @@ export default function Faculty() {
             <Card.Body>
               <Card.Title>{f.facultName}</Card.Title>
               <Card.Text className="opacity-75">
-                Some quick example text to build on the card title and make up
-                the bulk of the card's content.
+                {f.facultDescription}
               </Card.Text>
             </Card.Body>
             <Card.Footer className="d-flex justify-content-between">

@@ -17,96 +17,77 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 export default function AddCourseGrades() {
   const axios = useAxiosPrivate();
   const [courses, setCourses] = useState([]);
-
   const [selectedCourse, setSelectedCourse] = useState();
   const [studentData, setStudentData] = useState([]);
-  //pagination
+  const [editedData, setEditedData] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
+  const [displayCourses, setDisplayCourses] = useState(false);
 
   useEffect(() => {
     axios
       .get(`/api/Staff/Css`)
       .then((res) => setCourses(res?.data?.data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [axios]);
 
-  const [displayCourses, setDisplayCourses] = useState(false);
   const openCoursesDisplay = () => setDisplayCourses(true);
   const closeCoursesDisplay = () => setDisplayCourses(false);
+
   const handelChoosenCourse = (choosenCourse) => {
-    setStudentData([])
+    setStudentData([]);
     setSelectedCourse(choosenCourse);
     closeCoursesDisplay();
   };
 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords =
-    studentData && studentData.slice(indexOfFirstRecord, indexOfLastRecord);
-  const nPages = studentData && Math.ceil(studentData.length / recordsPerPage);
+  const currentRecords = studentData.slice(indexOfFirstRecord, indexOfLastRecord);
+  const nPages = Math.ceil(studentData.length / recordsPerPage);
 
-  const showCourses = courses ? (
-    courses?.courseDoctorDtos?.map((course, index) => (
-      <tr courses="border-bottom border-warning" key={index}>
-        <td style={{ fontWeight: "bold" }}>{index + 1}</td>
-        <td style={{ fontWeight: "bold" }}>{course.courseName}</td>
-        <td>
-          <Button variant="warning" onClick={() => handelChoosenCourse(course)}>
-            Select
-          </Button>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={4} className="text-danger border-bottom border-danger">
-        No Courses
-      </td>
-    </tr>
-  );
   useEffect(() => {
     const fetchData = async () => {
-      if(selectedCourse){
-      let data = null;
-      try {
-        axios
-          .get(
+      if (selectedCourse) {
+        try {
+          const res = await axios.get(
             `api/Course/GetStudentSemesterAssessMethodsBySpecificCourse/${selectedCourse?.courseId}`
-          )
-          // await axios(
-          //   "api/Course/GetStudentSemesterAssessMethodsBySpecificCourse/5")
-          .then((res) => {
-            data = res?.data?.data;
-            const processedData = data.studentDtos.map((student) => ({
-              ...student,
-              isDisabled: true,
-            }));
-            setStudentData(processedData);
-          })
-          .catch((err) => {
-            console.log(err);
-          })
-
-        
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+          );
+          const data = res?.data?.data;
+          const processedData = data.studentDtos.map((student) => ({
+            ...student,
+            isDisabled: true,
+          }));
+          setStudentData(processedData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
       }
     };
     fetchData();
-  }, [selectedCourse]);
-  const handleAssessmentDegreeChange = (
-    studentIndex,
-    assessIndex,
-    newValue
-  ) => {
+  }, [selectedCourse, axios]);
+
+  const handleAssessmentDegreeChange = (studentIndex, assessIndex, newValue) => {
     setStudentData((prevStudentData) => {
       const updatedStudentData = [...prevStudentData];
       if (updatedStudentData[studentIndex]?.assesstMethodDtos[assessIndex]) {
-        updatedStudentData[studentIndex].assesstMethodDtos[
-          assessIndex
-        ].assessDegree = newValue;
+        updatedStudentData[studentIndex].assesstMethodDtos[assessIndex].assessDegree = newValue;
+
+        // Track changes
+        const studentId = updatedStudentData[studentIndex].studentCode;
+        const methodId = updatedStudentData[studentIndex].assesstMethodDtos[assessIndex].studentSemesterAssessMethodId;
+
+        setEditedData((prevEditedData) => ({
+          ...prevEditedData,
+          [studentId]: {
+            ...prevEditedData[studentId],
+            [methodId]: {
+              studentSemesterAssessMethodId: methodId,
+              courseId: selectedCourse.courseId,
+              assessmentMethodId: updatedStudentData[studentIndex].assesstMethodDtos[assessIndex].assessmentMethodId,
+              degree: +newValue,
+            },
+          },
+        }));
       }
       return updatedStudentData;
     });
@@ -115,8 +96,7 @@ export default function AddCourseGrades() {
   const toggleEdit = (index) => {
     setStudentData((prevStudentData) => {
       const updatedStudentData = [...prevStudentData];
-      updatedStudentData[index].isDisabled =
-        !updatedStudentData[index].isDisabled;
+      updatedStudentData[index].isDisabled = !updatedStudentData[index].isDisabled;
       return updatedStudentData;
     });
   };
@@ -139,40 +119,44 @@ export default function AddCourseGrades() {
     </th>
   ));
 
-  const tableRows = studentData && studentData.length > 0 ?
+  const tableRows = studentData.length > 0 ? (
     currentRecords.map((student, index) => (
-    <tr key={student.studentCode}>
-      <td>{index + 1}</td>
-      <td>{student.studentName}</td>
-      <td>{student.studentCode}</td>
-      {uniqueAssessNamesArray.map((assessName, assessIndex) => {
-        const method = student.assesstMethodDtos.find(
-          (method) => method.assessName === assessName
-        );
-        return (
-          <td key={`${student.studentCode}-${assessName}`}>
-            <input
-              type="number"
-              defaultValue={method ? method.assessDegree : ""}
-              disabled={student.isDisabled}
-              onChange={(e) =>
-                handleAssessmentDegreeChange(index, assessIndex, e.target.value)
-              }
-              style={{border:"none",outline:"none"}}
-            />
-          </td>
-        );
-      })}
-      <td>
-        <Button size="sm" variant="dark" onClick={() => toggleEdit(index)}>
-          {student.isDisabled ? <MdModeEditOutline /> : <IoClose />}
-        </Button>
+      <tr key={student.studentCode}>
+        <td>{index + 1}</td>
+        <td>{student.studentName}</td>
+        <td>{student.studentCode}</td>
+        {uniqueAssessNamesArray.map((assessName, assessIndex) => {
+          const method = student.assesstMethodDtos.find(
+            (method) => method.assessName === assessName
+          );
+          return (
+            <td key={`${student.studentCode}-${assessName}`}>
+              <input
+                type="number"
+                defaultValue={method ? method.assessDegree : ""}
+                disabled={student.isDisabled}
+                onChange={(e) =>
+                  handleAssessmentDegreeChange(index, assessIndex, e.target.value)
+                }
+                style={{ border: "none", outline: "none" }}
+              />
+            </td>
+          );
+        })}
+        <td>
+          <Button size="sm" variant="dark" onClick={() => toggleEdit(index)}>
+            {student.isDisabled ? <MdModeEditOutline /> : <IoClose />}
+          </Button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={4} style={{ fontSize: "20px", textAlign: "center", color: "red", fontWeight: "bold" }}>
+        No Data
       </td>
     </tr>
-  )) : 
-  <tr>
-    <td colSpan={4} style={{fontSize:"20p" , textAlign:"center",color:"red" , fontWeight:"bold"}}>No Data</td>
-  </tr>
+  );
 
   const sendEditedDataToServer = async () => {
     const Toast = Swal.mixin({
@@ -188,31 +172,53 @@ export default function AddCourseGrades() {
     });
 
     try {
-      const editedData = studentData.flatMap((student) => {
-        return student.assesstMethodDtos.map((method) => {
-          return {
-            studentSemesterAssessMethodId: method.studentSemesterAssessMethodId,
-            courseId: selectedCourse.courseId,
-            assessmentMethodId: method.assessmentMethodId,
-            degree: +method.assessDegree || 0, // Default to 0 if assessDegree is null or undefined
-          };
+      const flattenedEditedData = Object.values(editedData).flatMap((student) =>
+        Object.values(student)
+      );
+
+      if (flattenedEditedData.length === 0) {
+        Toast.fire({
+          icon: "info",
+          title: "No changes to save",
         });
-      });
-      await axios.put("api/Course/EditDegree", editedData).then((response) => {
-        if (response.status === 200) {
-          Toast.fire({
-            icon: "success",
-            title: response?.data.message,
-          });
-        }
-      });
+        return;
+      }
+
+      const response = await axios.put("api/Course/EditDegree", flattenedEditedData);
+      if (response.status === 200) {
+        Toast.fire({
+          icon: "success",
+          title: response?.data.message,
+        });
+        setEditedData({}); // Clear editedData after successful save
+      }
     } catch (error) {
       Toast.fire({
         icon: "error",
-        title: "Error Occured",
+        title: "Error Occurred",
       });
     }
   };
+
+  const showCourses = courses ? (
+    courses?.courseDoctorDtos?.map((course, index) => (
+      <tr className="border-bottom border-warning" key={index}>
+        <td style={{ fontWeight: "bold" }}>{index + 1}</td>
+        <td style={{ fontWeight: "bold" }}>{course.courseName}</td>
+        <td>
+          <Button variant="warning" onClick={() => handelChoosenCourse(course)}>
+            Select
+          </Button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={4} className="text-danger border-bottom border-danger">
+        No Courses
+      </td>
+    </tr>
+  );
 
   return (
     <>
@@ -230,9 +236,7 @@ export default function AddCourseGrades() {
                   <FormLabel style={{ fontSize: "25px" }}>Display</FormLabel>
                 </Col>
                 <Col>
-                  <FormSelect
-                    onChange={(e) => setRecordsPerPage(e.target.value)}
-                  >
+                  <FormSelect onChange={(e) => setRecordsPerPage(e.target.value)}>
                     <option value={10}>10</option>
                     <option value={20}>20</option>
                     <option value={30}>30</option>
@@ -249,18 +253,15 @@ export default function AddCourseGrades() {
             </div>
           </div>
           <hr />
-            <div
-              style={{
-                textAlign: "center",
-                fontSize: "30px",
-                fontWeight: "bold",
-              }}
-            >
-              {selectedCourse
-                ? `Course Name : ${selectedCourse?.courseName}`
-                : "Choose a Course"}
-            </div>
-           
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: "30px",
+              fontWeight: "bold",
+            }}
+          >
+            {selectedCourse ? `Course Name : ${selectedCourse?.courseName}` : "Choose a Course"}
+          </div>
           <Offcanvas
             show={displayCourses}
             onHide={closeCoursesDisplay}
@@ -288,55 +289,36 @@ export default function AddCourseGrades() {
           </Offcanvas>
         </header>
         <div className="table-content">
-          <table className="table table-striped  table-bordered border border-dark">
+          <Table className="table table-striped table-bordered border border-dark">
             <thead>
               <tr>
-                <th
-                  scope="col"
-                  style={{ background: "#121431", color: "white" }}
-                >
+                <th scope="col" style={{ background: "#121431", color: "white" }}>
                   <div className="th-flex">
                     <span className="th-name"></span>
                   </div>
                 </th>
-                <th
-                  scope="col"
-                  style={{ background: "#121431", color: "white" }}
-                >
-                  <div className="th-flex">
-                    <span className="th-name">Student Code</span>
-                    <span>{/* <FaSort /> */}</span>
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  style={{ background: "#121431", color: "white" }}
-                >
+                <th scope="col" style={{ background: "#121431", color: "white" }}>
                   <div className="th-flex">
                     <span className="th-name">Student Name</span>
-                    <span>{/* <FaSort /> */}</span>
                   </div>
                 </th>
-
+                <th scope="col" style={{ background: "#121431", color: "white" }}>
+                  <div className="th-flex">
+                    <span className="th-name">Student Code</span>
+                  </div>
+                </th>
                 {tableHeaders}
-                <th
-                  scope="col"
-                  style={{ background: "#121431", color: "white" }}
-                >
+                <th scope="col" style={{ background: "#121431", color: "white" }}>
                   <div className="th-flex">
                     <span className="th-name">Edit</span>
                   </div>
                 </th>
               </tr>
             </thead>
-            <tbody className="">{tableRows}</tbody>
-          </table>
+            <tbody>{tableRows}</tbody>
+          </Table>
         </div>
-        <Pagination
-          nPages={nPages}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
+        <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
       </div>
     </>
   );

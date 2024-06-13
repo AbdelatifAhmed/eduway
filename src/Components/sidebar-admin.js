@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import useLogout from "../hooks/useLogout";
 import useAuth from "../hooks/useAuth";
+import { useState } from "react";
 
 export default function SidebarAdmin(props) {
   const logout = useLogout();
@@ -49,12 +50,22 @@ export default function SidebarAdmin(props) {
   });
 
   const routeArray = Array.from(uniqueRoutes).map(route => JSON.parse(route));
+    const toggle = () => {
+      props.setChangeActive(!props.changeActive);
+    };
 
   return (
     <div className={props.changeActive ? "sidebar" : "sidebar active"}>
       <div className={props.changeActive ? "logo-info" : "logo-info active"}>
         <h3 className="mt-0">
-          Edu<span>Way</span>
+          <div>Edu<span>Way</span></div>
+          <div className="inside-back-btn">
+          <div className="" onClick={toggle} style={{color:"white",fontSize:"30px"}}>
+              <i
+                className={`fa-solid fa-circle-chevron-left`}
+              ></i>
+            </div>
+          </div>
         </h3>
       </div>
       <ul className="list">

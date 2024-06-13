@@ -406,11 +406,6 @@ export default function AddFaculty({
             estimates: estimatesData,
             estimatesCourses: estimateCourseData,
             id: 0,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
           }
         )
         .then((response) => {
@@ -426,7 +421,7 @@ export default function AddFaculty({
       console.log(err);
       Toast.fire({
         icon: "error",
-        title: "Error Occured",
+        title: err?.response?.data?.message,
       });
     }
   };
@@ -1079,7 +1074,7 @@ export default function AddFaculty({
                   <FloatingLabel label="Type">
                     <Form.Select
                       aria-label="Default select example"
-                      onChange={(e) => setType(e.target.value)}
+                      onChange={(e) => setType(+e.target.value)}
                       value={type}
                     >
                       <option defaultValue hidden>

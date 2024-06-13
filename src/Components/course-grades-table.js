@@ -1,22 +1,38 @@
 import React from "react";
 
-export default function CourseGradesTable() {
+export default function CourseGradesTable({ studentName, data }) {
   return (
     <div className="course-grades-table">
       <div className="student-info">
         <div className="std-item">
-          Name :<span id=""></span>
+          Name :<span id="">{studentName}</span>
         </div>
         <div className="std-item">
-          Level :<span id=""></span>
+          Level :<span id="">{data?.bandName}</span>
         </div>
         <div className="std-item">
-          Status :<span id=""></span>
+          Status :
+          <span
+            id=""
+            style={
+              data?.semesterStatus === "Succeed"
+                ? { color: "green" }
+                : data?.semesterStatus === "Waiting"
+                ? { color: "orange" }
+                : { color: "red" }
+            }
+          >
+            {data?.semesterStatus}
+          </span>
+        </div>
+        <div className="std-item">
+          Academic Year :<span id="">{data?.academyYearName}</span>
         </div>
       </div>
+
       <div className="grades-info">
         <table>
-          <thead>
+          <thead >
             <tr>
               <td>
                 {" "}
@@ -26,82 +42,50 @@ export default function CourseGradesTable() {
                 <span>Course Name</span>
               </td>
               <td>
+                <span>Point/Hours</span>
+              </td>
+              <td>
                 <span>Degree</span>
               </td>
               <td>
-                <span>grade</span>
+                <span>Grade</span>
               </td>
               <td>
-                <span>Cridet hours</span>
+                <span>Status</span>
               </td>
-              <td style={{ width: "5%" }}>2020/2023</td>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>a</td>
-              <td>b</td>
-              <td>c</td>
-              <td>d</td>
-              <td>f</td>
-            </tr>
-            <tr>
-              <td>s</td>
-              <td>w</td>
-              <td>a</td>
-              <td>s</td>
-              <td>w</td>
-              <td></td> {/* necessary empty td in the end of  tr*/}
-            </tr>
-            <tr>
-              <td>a</td>
-              <td>g</td>
-              <td>j</td>
-              <td>j</td>
-              <td>k</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>a</td>
-              <td>g</td>
-              <td>j</td>
-              <td>j</td>
-              <td>k</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>a</td>
-              <td>g</td>
-              <td>j</td>
-              <td>j</td>
-              <td>k</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>a</td>
-              <td>g</td>
-              <td>j</td>
-              <td>j</td>
-              <td>k</td>
-              <td></td>
-            </tr>
+           {
+            data?.studentResultDeltielsSemester?.map((item,index)=>(
+              <tr>
+                <td>{item?.courseCode}</td>
+                <td>{item?.courseName}</td>
+                <td>{item?.numberOfPoint}</td>
+                <td>{item?.courseDegree}</td>
+                <td>{item?.courseChar}</td>
+                <td style={item?.courseStatus==='Succeed' ? {color:'green'} : {color:"red"}}>{item?.courseStatus}</td>
+              </tr>
+            ))
+           }
           </tbody>
         </table>
       </div>
       <footer>
         <div className="item">
-          Attempted Hours: <span></span>
+          Semester Percentage: <span>{`${data?.semesterPercentage*100}%`}</span>
         </div>
         <div className="item">
-          Total Earned Hours: <span></span>
+        Semester Char: <span>{data?.semesterChar}</span>
         </div>
         <div className="item">
-          Semester GPA: <span></span>
+        Cumulative Percentage: <span>{`${data?.cumulativePercentage*100}%`}</span>
         </div>
         <div className="item">
-          GPA: <span></span>
+        Cumulative Char: <span>{data?.cumulativeChar}</span>
         </div>
       </footer>
+      <hr/>
     </div>
   );
 }

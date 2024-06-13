@@ -1,4 +1,4 @@
-import {  useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Pagination from "../../Components/Pagination";
 import {
   Button,
@@ -16,54 +16,51 @@ import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 
 export default function FinalGrades() {
-  const axios = useAxiosPrivate()
+  const axios = useAxiosPrivate();
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState();
   const [studentData, setStudentData] = useState([]);
   const [currentSemesterId, setCurrentSemesterId] = useState();
   const [currentSemesters, setCurrentSemesters] = useState([]);
-
-
-  //pagination
+  const [editedData, setEditedData] = useState({});
+  const [displayCourses, setDisplayCourses] = useState(false);
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
 
   useEffect(() => {
-
-      axios
+    axios
       .get("/api/Control/GetAllSemester")
       .then((res) => setCurrentSemesters(res?.data?.data))
       .catch((err) => console.log(err));
-      
-  }, []);
-  
-  useEffect(()=>{
-    if(currentSemesterId) {
-      axios
-    .get(`/api/Control/GetAllCourse/${currentSemesterId}`)
-    .then((res) => setCourses(res?.data?.data))
-    .catch((err) => console.log(err));
-    }
-  },[currentSemesterId])
+  }, [axios]);
 
-  const [displayCourses, setDisplayCourses] = useState(false);
+  useEffect(() => {
+    if (currentSemesterId) {
+      axios
+        .get(`/api/Control/GetAllCourse/${currentSemesterId}`)
+        .then((res) => setCourses(res?.data?.data))
+        .catch((err) => console.log(err));
+    }
+  }, [currentSemesterId, axios]);
+
   const openCoursesDisplay = () => setDisplayCourses(true);
   const closeCoursesDisplay = () => setDisplayCourses(false);
+
   const handelChoosenCourse = (choosenCourse) => {
-    setStudentData([])
+    setStudentData([]);
     setSelectedCourse(choosenCourse);
     closeCoursesDisplay();
   };
 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords =
-    studentData && studentData.slice(indexOfFirstRecord, indexOfLastRecord);
-  const nPages = studentData && Math.ceil(studentData.length / recordsPerPage);
+  const currentRecords = studentData.slice(indexOfFirstRecord, indexOfLastRecord);
+  const nPages = Math.ceil(studentData.length / recordsPerPage);
 
   const showCourses = currentSemesterId && courses ? (
     courses.map((course, index) => (
-      <tr courses="border-bottom border-warning" key={index}>
+      <tr className="border-bottom border-warning" key={index}>
         <td style={{ fontWeight: "bold" }}>{index + 1}</td>
         <td style={{ fontWeight: "bold" }}>{course.courseCode}</td>
         <td style={{ fontWeight: "bold" }}>{course.courseName}</td>
@@ -84,39 +81,47 @@ export default function FinalGrades() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if(selectedCourse){
-      let data = null;
-      try {
-        // axios.get(`api/Control/GetStudentSemesterAssessMethodsBySpecificCourseControlMembers${selectedCourse?.id }`)
-        await axios(
-          `api/Control/GetStudentSemesterAssessMethodsBySpecificCourseControlMembers/${selectedCourse?.courseId }`
-        ).then((res) => {
-          data = res?.data?.data;
-        })
-        const processedData = data.studentDtos.map((student) => ({
-          ...student,
-          isDisabled: true,
-        }));
-        setStudentData(processedData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      if (selectedCourse) {
+        try {
+          const res = await axios.get(
+            `api/Control/GetStudentSemesterAssessMethodsBySpecificCourseControlMembers/${selectedCourse?.courseId}`
+          );
+          const data = res?.data?.data;
+          const processedData = data.studentDtos.map((student) => ({
+            ...student,
+            isDisabled: true,
+          }));
+          setStudentData(processedData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
       }
     };
     fetchData();
-  }, [selectedCourse]);
+  }, [selectedCourse, axios]);
 
-  const handleAssessmentDegreeChange = (
-    studentIndex,
-    assessIndex,
-    newValue
-  ) => {
+  const handleAssessmentDegreeChange = (studentIndex, assessIndex, newValue) => {
     setStudentData((prevStudentData) => {
       const updatedStudentData = [...prevStudentData];
       if (updatedStudentData[studentIndex]?.assesstMethodDtos[assessIndex]) {
-        updatedStudentData[studentIndex].assesstMethodDtos[
-          assessIndex
-        ].assessDegree = newValue;
+        updatedStudentData[studentIndex].assesstMethodDtos[assessIndex].assessDegree = newValue;
+
+        // Track changes
+        const studentId = updatedStudentData[studentIndex].studentCode;
+        const methodId = updatedStudentData[studentIndex].assesstMethodDtos[assessIndex].studentSemesterAssessMethodId;
+
+        setEditedData((prevEditedData) => ({
+          ...prevEditedData,
+          [studentId]: {
+            ...prevEditedData[studentId],
+            [methodId]: {
+              studentSemesterAssessMethodId: methodId,
+              courseId: selectedCourse.courseId,
+              assessmentMethodId: updatedStudentData[studentIndex].assesstMethodDtos[assessIndex].assessmentMethodId,
+              degree: +newValue,
+            },
+          },
+        }));
       }
       return updatedStudentData;
     });
@@ -125,8 +130,7 @@ export default function FinalGrades() {
   const toggleEdit = (index) => {
     setStudentData((prevStudentData) => {
       const updatedStudentData = [...prevStudentData];
-      updatedStudentData[index].isDisabled =
-        !updatedStudentData[index].isDisabled;
+      updatedStudentData[index].isDisabled = !updatedStudentData[index].isDisabled;
       return updatedStudentData;
     });
   };
@@ -145,48 +149,52 @@ export default function FinalGrades() {
     >
       <div className="th-flex">
         <span className="th-name">{assessName}</span>
-        <span>{/* <FaSort /> */}</span>
       </div>
     </th>
   ));
 
-  const tableRows =studentData && studentData.length > 0  ? currentRecords.map((student, index) => (
-    <tr key={student.studentCode}>
-      <td>{index + 1}</td>
-      <td>{student.studentName}</td>
-      <td>{student.studentCode}</td>
-      {uniqueAssessNamesArray.map((assessName, assessIndex) => {
-        const method = student.assesstMethodDtos.find(
-          (method) => method.assessName === assessName
-        );
-        return (
-          <td key={`${student.studentCode}-${assessName}`}>
-            <input
-              type="number"
-              defaultValue={method ? method.assessDegree : ""}
-              disabled={student.isDisabled}
-              onChange={(e) =>
-                handleAssessmentDegreeChange(index, assessIndex, e.target.value)
-              }
-            />
-          </td>
-        );
-      })}
-      <td>
-        <Button size="sm" variant="dark" onClick={() => toggleEdit(index)}>
-          {student.isDisabled ? <MdModeEditOutline /> : <IoClose />}
-        </Button>
+  const tableRows = studentData.length > 0 ? (
+    currentRecords.map((student, index) => (
+      <tr key={student.studentCode}>
+        <td>{index + 1}</td>
+        <td>{student.studentName}</td>
+        <td>{student.studentCode}</td>
+        {uniqueAssessNamesArray.map((assessName, assessIndex) => {
+          const method = student.assesstMethodDtos.find(
+            (method) => method.assessName === assessName
+          );
+          return (
+            <td key={`${student.studentCode}-${assessName}`}>
+              <input
+                type="number"
+                defaultValue={method ? method.assessDegree : ""}
+                disabled={student.isDisabled}
+                onChange={(e) =>
+                  handleAssessmentDegreeChange(index, assessIndex, e.target.value)
+                }
+                style={{ border: "none", outline: "none" }}
+              />
+            </td>
+          );
+        })}
+        <td>
+          <Button size="sm" variant="dark" onClick={() => toggleEdit(index)}>
+            {student.isDisabled ? <MdModeEditOutline /> : <IoClose />}
+          </Button>
+        </td>
+      </tr>
+    ))
+  ) : (
+    <tr>
+      <td colSpan={4} style={{ fontSize: "20px", textAlign: "center", color: "red", fontWeight: "bold" }}>
+        No Data
       </td>
     </tr>
-  )) : <tr>
-    <td  className="text-center text-danger">
-      No data
-    </td>
-    </tr>
+  );
 
-  const showCurrentSemesters = currentSemesters?.semesterName ? (
+  const showCurrentSemesters = currentSemesters && currentSemesters?.semesterName.length > 0 ? (
     currentSemesters?.semesterName.map((element) => (
-      <option value={element.id}>{element.name}</option>
+      <option key={element.id} value={element.id}>{element.name}</option>
     ))
   ) : (
     <tr disabled className="text-danger">
@@ -210,38 +218,41 @@ export default function FinalGrades() {
     });
 
     try {
-      const editedData = studentData.flatMap((student) => {
-        return student.assesstMethodDtos.map((method) => {
-          return {
-            studentSemesterAssessMethodId: method.studentSemesterAssessMethodId,
-            courseId: selectedCourse.courseId,
-            assessmentMethodId: method.assessmentMethodId,
-            degree: +method.assessDegree || 0, // Default to 0 if assessDegree is null or undefined
-          };
+      const flattenedEditedData = Object.values(editedData).flatMap((student) =>
+        Object.values(student)
+      );
+
+      if (flattenedEditedData.length === 0) {
+        Toast.fire({
+          icon: "info",
+          title: "No changes to save",
         });
-      });
-      await axios.put("api/Course/EditDegree", editedData).then((response) => {
-        if (response.status === 200) {
-          Toast.fire({
-            icon: "success",
-            title: response?.data.message,
-          });
-        }
-      });
+        return;
+      }
+
+      const response = await axios.put("api/Course/EditDegree", flattenedEditedData);
+      if (response.status === 200) {
+        Toast.fire({
+          icon: "success",
+          title: response?.data.message,
+        });
+        setEditedData({}); // Clear editedData after successful save
+      }
     } catch (error) {
       Toast.fire({
         icon: "error",
-        title: "Error Occured",
+        title: "Error Occurred",
       });
     }
   };
+
   return (
     <>
       <div className="pad">
         <header style={{ paddingRight: "15px" }}>
           <div className="d-flex justify-content-between ">
             <div>
-              <Button variant="success"  onClick={sendEditedDataToServer}>
+              <Button variant="success" onClick={sendEditedDataToServer}>
                 Save
               </Button>
             </div>
@@ -264,13 +275,16 @@ export default function FinalGrades() {
               </Row>
             </div>
             <div>
-              <Button variant="dark" onClick={openCoursesDisplay} className="button1">
+              <Button
+                variant="dark"
+                onClick={openCoursesDisplay}
+                className="button1"
+              >
                 Select Course
               </Button>
             </div>
           </div>
           <hr />
-
           <div
             style={{
               textAlign: "center",
@@ -279,7 +293,7 @@ export default function FinalGrades() {
             }}
           >
             {selectedCourse?.courseName
-              ? `Course : ${selectedCourse?.courseName}`
+              ? `Course: ${selectedCourse?.courseName}`
               : "Choose a Course"}
           </div>
           <Offcanvas
@@ -295,22 +309,15 @@ export default function FinalGrades() {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-            <FormGroup
-                  className="mb-3"
-                  controlId="exampleForm.ControlInput1"
-                >
-                  <FormLabel style={{ fontSize: "20px" }}>
-                    Semester Name
-                  </FormLabel>
-                  <FormSelect
-                    onChange={(e) => setCurrentSemesterId(e.target.value)}
-                  >
-                    <option hidden defaultValue>
-                      Select a Semester
-                    </option>
-                    {showCurrentSemesters}
-                  </FormSelect>
-                </FormGroup>
+              <FormGroup className="mb-3" controlId="exampleForm.ControlInput1">
+                <FormLabel style={{ fontSize: "20px" }}>Semester Name</FormLabel>
+                <FormSelect onChange={(e) => setCurrentSemesterId(e.target.value)}>
+                  <option hidden defaultValue>
+                    Select a Semester
+                  </option>
+                  {showCurrentSemesters}
+                </FormSelect>
+              </FormGroup>
               <Table hover>
                 <thead>
                   <tr className="border-bottom border-warning">
@@ -326,55 +333,36 @@ export default function FinalGrades() {
           </Offcanvas>
         </header>
         <div className="table-content">
-          <table className="table table-striped  table-bordered border border-dark">
+          <Table className="table table-striped table-bordered border border-dark">
             <thead>
               <tr>
-                <th
-                  scope="col"
-                  style={{ background: "#121431", color: "white" }}
-                >
+                <th scope="col" style={{ background: "#121431", color: "white" }}>
                   <div className="th-flex">
                     <span className="th-name"></span>
                   </div>
                 </th>
-                <th
-                  scope="col"
-                  style={{ background: "#121431", color: "white" }}
-                >
-                  <div className="th-flex">
-                    <span className="th-name">Student Code</span>
-                    <span>{/* <FaSort /> */}</span>
-                  </div>
-                </th>
-                <th
-                  scope="col"
-                  style={{ background: "#121431", color: "white" }}
-                >
+                <th scope="col" style={{ background: "#121431", color: "white" }}>
                   <div className="th-flex">
                     <span className="th-name">Student Name</span>
-                    <span>{/* <FaSort /> */}</span>
                   </div>
                 </th>
-
+                <th scope="col" style={{ background: "#121431", color: "white" }}>
+                  <div className="th-flex">
+                    <span className="th-name">Student Code</span>
+                  </div>
+                </th>
                 {tableHeaders}
-                <th
-                  scope="col"
-                  style={{ background: "#121431", color: "white" }}
-                >
+                <th scope="col" style={{ background: "#121431", color: "white" }}>
                   <div className="th-flex">
                     <span className="th-name">Edit</span>
                   </div>
                 </th>
               </tr>
             </thead>
-            <tbody className="">{tableRows}</tbody>
-          </table>
+            <tbody>{tableRows}</tbody>
+          </Table>
         </div>
-        <Pagination
-          nPages={nPages}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-        />
+        <Pagination nPages={nPages} currentPage={currentPage} setCurrentPage={setCurrentPage} />
       </div>
     </>
   );

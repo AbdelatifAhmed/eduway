@@ -57,7 +57,7 @@ ul {
 .nav-link {
   color: var(--primary-color) !important;
   font-size: 20px;
-  background-color: white;
+  background-color: transparent;
 }
 
 /*************************** Login Page **********************************************************/
@@ -454,6 +454,14 @@ ul {
   cursor: pointer;
 }
 
+.toggle i {
+  transition: transform 0.3s linear;
+}
+
+.rotated {
+  transform: rotate(-180deg);
+}
+
 .search {
   position: relative;
   width: 400px;
@@ -510,6 +518,10 @@ ul {
   text-transform: capitalize;
 }
 
+.inside-back-btn {
+  display: none;
+}
+
 .main .basic-info {
   padding: 30px;
   width: 100%;
@@ -518,20 +530,17 @@ ul {
   gap: 20px;
 }
 
- .main .basic-info .item {
+.main .basic-info .item {
   flex: calc(50% - 20px);
   text-transform: capitalize;
 }
 
-
 .main .basic-info .item fieldset {
-  border: 1px solid ;
+  border: 1px solid;
   border-radius: 20px;
   padding: 20px;
   background-color: var(--main-color);
 }
-
-
 
 .main .basic-info .item fieldset legend h1 {
   color: var(--white);
@@ -546,7 +555,7 @@ ul {
 .main .basic-info .item fieldset p {
   display: inline;
   width: 100%;
-} 
+}
 
 /* ========================== media query ============== */
 @media (max-width: 991px) {
@@ -605,6 +614,10 @@ ul {
   .basic-info .item {
     flex: calc(50% - 20px);
   }
+
+  i.rotated {
+    transform: rotate(180deg);
+  }
 }
 
 @media (max-width: 768px) {
@@ -629,8 +642,19 @@ ul {
     left: 0;
   }
 
-  .toggle {
-    z-index: 1000;
+  .sidebar.active .inside-back-btn {
+    display: block;
+  }
+
+  .sidebar.active .logo-info.active h3 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .main.active .sticky-top {
+    position: relative;
+    z-index: 0;
   }
 
   .main.active .toggle {
@@ -802,7 +826,7 @@ ul {
 /********************************** Course Grades*************************************************/
 
 .course-grades-table {
-  padding: 20px;
+  padding: 10px 20px 20px;
 }
 
 .course-grades-table .student-info {
@@ -815,16 +839,19 @@ ul {
 .course-grades-table .student-info .std-item {
   font-size: 20px;
   font-weight: bold;
-  width: calc(100% / 3);
+  width: calc(100% / 4);
+  white-space: nowrap;
 }
 
 .course-grades-table .grades-info {
   /* border: 1px solid var(--primary-color); */
+  overflow: scroll;
 }
 
 .course-grades-table .grades-info table {
   width: 100%;
   border-collapse: collapse;
+  white-space: nowrap;
 }
 
 .course-grades-table .grades-info table thead {
@@ -860,6 +887,26 @@ ul {
 .course-grades-table footer .item {
   width: calc(100% / 4);
   font-weight: bold;
+}
+
+@media (max-width: 991px) {
+  .course-grades-table .student-info .std-item,
+  .course-grades-table footer .item {
+    width: calc(100% / 2);
+  }
+  
+}
+
+@media (max-width: 768px) {
+  .course-grades-table .student-info .std-item{
+    width: calc(100% );
+  }
+}
+
+@media (max-width: 480px) {
+  .course-grades-table footer .item {
+    width: calc(100% );
+  }
 }
 
 /* ***********************Admin****************************** */
