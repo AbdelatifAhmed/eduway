@@ -46,6 +46,10 @@ import FacultyDetails from "./pages/admin/facultyDetails.js";
 import StaffView from "./pages/admin/StaffView.js";
 import GraduationReport from "./pages/Reports/GraduationReport.js";
 import StudentForamt from "./pages/admin/StudentForamt.js";
+import AdminScheduler from "./Components/AdminScheduler.jsx";
+import StudentScheduler from "./Components/StudentTimeTable.jsx";
+import StudentSection from "./pages/Courses/StudentSection.js";
+import Timetable from "./Components/TimeTable.jsx";
 export default function App() {
   return (
     <>
@@ -55,6 +59,8 @@ export default function App() {
         <Route path="/unauthorized" element={<Unauthorized />} />
         <Route path="/test2" element={<Test2 />} />
         <Route path="/test" element={<Test />} />
+        <Route path="/std-scheduler" element={<StudentScheduler />} />
+
         {/* Protected Routes */}
 
         <Route element={<PersistLogin />}>
@@ -105,6 +111,8 @@ export default function App() {
               <Route path="add-control-member" element={<AddControlMember />} />
               <Route path="control" element={<Control />} />
               <Route path="student-format" element={<StudentForamt/>}/>
+              <Route path="admin-scheduler" element={<AdminScheduler />} />
+
             </Route>
 
             <Route
@@ -125,13 +133,40 @@ export default function App() {
                 <RequireAuth
                   allowedRoles={[
                     "Teacher",
-                    "TeacherAssistant",
                   ]}
                 />
               }
             >
               <Route path="course-grades" element={<AddCourseGrades />} />
+              <Route path="notes" element={<Notes />} />
             </Route>
+
+            <Route
+              element={
+                <RequireAuth
+                  allowedRoles={[
+                    "TeacherAssistant",
+                  ]}
+                />
+              }
+            >
+              <Route path="student-section" element={<StudentSection />} />
+            </Route>
+
+            <Route
+              element={
+                <RequireAuth
+                  allowedRoles={[
+                    "TeacherAssistant",
+                    "Teacher"
+                  ]}
+                />
+              }
+            >
+              <Route path="timeTable" element={<Timetable />} />
+            </Route>
+
+
 
             <Route
               element={
@@ -165,20 +200,6 @@ export default function App() {
                 element={<CourseResultView />}
               />
               <Route path="Graduation-result" element={<GraduationReport />} />
-            </Route>
-
-            <Route
-              element={
-                <RequireAuth
-                  allowedRoles={[
-                    "Administration",
-                    "Teacher",
-                    "TeacherAssistant",
-                  ]}
-                />
-              }
-            >
-              <Route path="notes" element={<Notes />} />
             </Route>
           </Route>
         </Route>

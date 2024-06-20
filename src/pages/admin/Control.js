@@ -11,7 +11,7 @@ import useFaculty from "../../hooks/useFaculty";
 
 export default function Control() {
   const axios = useAxiosPrivate();
-  const {globalFaculty} = useFaculty()
+  const { globalFaculty } = useFaculty();
   const [courses, setCourses] = useState([]);
   const [faculty, setFaculty] = useState([]);
   const [student, setStudent] = useState([]);
@@ -28,16 +28,21 @@ export default function Control() {
   const [courseAssessMethods, setCourseAssessMethods] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedOptionsForTeacherCourse, setSelectedOptionsForTeacherCourse] =
-    useState([])
+    useState([]);
   const [premissionRoles, setPremissionRoles] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [selectedUserName, setSelectedUserName] = useState("");
   const [teacher, setTeacher] = useState([]);
+  const [teacherAssistant, setTeacherAssistant] = useState([]);
+  const [teacherAssistantCourses, setTeacherAssistantCourses] = useState([]);
   const [staffPermission, SetStaffPermission] = useState([]);
   const [teacherCourses, setTeacherCourses] = useState([]);
   const [teacherId, setTeacherId] = useState();
   const [coursesName, setCoursesName] = useState();
   const [studentBySemester, setStudentBySemester] = useState([]);
+
+  console.log(teacherAssistant);
+  console.log(teacherAssistantCourses);
 
   const resetVariables = () => {
     setCoursesId(null);
@@ -70,28 +75,38 @@ export default function Control() {
     setTeacherCourses(output);
   };
 
+  const handelChangeForSemesterCourseAssistant = (selevtedValue) => {
+    setSelectedOptionsForTeacherCourse(selevtedValue);
+    const output = selevtedValue.map((item) => ({
+      staffId: teacherId,
+      courseId: item.courseId,
+    }));
+    setTeacherCourses(output);
+  };
+
   const handelPermissions = async (userId) => {
-    axios.get(`api/Auth/GetUserRoles/${userId}`)
-      .then(res => {
+    axios
+      .get(`api/Auth/GetUserRoles/${userId}`)
+      .then((res) => {
         setPremissionRoles(res?.data?.data?.roles);
         setSelectedUserId(res?.data?.data?.userId);
         setSelectedUserName(res?.data?.data?.userName);
       })
-      .catch(err => console.log(err));
-  }
+      .catch((err) => console.log(err));
+  };
 
   const handleCheckboxChange = (roleId) => {
-    const updatedPermissions = premissionRoles.map(role => {
+    const updatedPermissions = premissionRoles.map((role) => {
       if (role.id === roleId) {
         return { ...role, isSelected: !role.isSelected };
       }
       return role;
     });
     setPremissionRoles(updatedPermissions);
-  }
+  };
 
   const handleSavePermissions = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     const Toast = Swal.mixin({
       toast: true,
       position: "top-end",
@@ -106,83 +121,91 @@ export default function Control() {
     const payload = {
       userId: selectedUserId,
       userName: selectedUserName,
-      roles: premissionRoles.map(role => ({
+      roles: premissionRoles.map((role) => ({
         id: role.id,
         name: role.name,
-        isSelected: role.isSelected
-      }))
+        isSelected: role.isSelected,
+      })),
     };
 
-    axios.post('/api/Auth/ChangeUserRoles', payload)
-      .then(res => {
+    axios
+      .post("/api/Auth/ChangeUserRoles", payload)
+      .then((res) => {
         // Handle success
         Toast.fire({
           icon: "success",
           title: res?.data?.message,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         Toast.fire({
           icon: "error",
           title: err?.response?.data?.message,
         });
       });
-  }
+  };
 
   useEffect(() => {
-    if(globalFaculty){
+    if (globalFaculty) {
       axios
-      .get(`/api/Course/all/${globalFaculty}`)
-      .then((res) => {
-        setCourses(res?.data?.data);
-      })
-      .catch((err) => console.log(err));
+        .get(`/api/Course/all/${globalFaculty}`)
+        .then((res) => {
+          setCourses(res?.data?.data);
+        })
+        .catch((err) => console.log(err));
 
-    axios
-      .get("/api/Facult/Faculty")
-      .then((res) => {
-        setFaculty(res?.data?.data?.getFacultyDtos);
-      })
-      .catch((err) => console.log(err));
-
-    axios
-      .get(`/api/Student/GetAllStudents/${globalFaculty}`)
-      .then((res) => setStudent(res?.data?.data))
-      .catch((err) => console.log(err));
-
-    axios
-      .get(`/api/staff/FA/${globalFaculty}`)
-      .then((res) => SetStaffPermission(res?.data?.data))
-      .catch((err) => console.log(err));
-
-    axios
-     .get(`/api/Teacher/GetAllTeacher/${globalFaculty}`)
-      .then((res) => setTeacher(res?.data?.data))
-      .catch((err) => console.log(err));
-
-    axios
-      .get(`/api/Department/All/${globalFaculty}`)
-      .then((res) => setDepartment(res?.data?.data))
-      .catch((err) => console.log(err));
-
-    axios
-      .get("/api/Control/GetAllSemester")
-      .then((res) => setCurrentSemesters(res?.data?.data))
-      .catch((err) => console.log(err));
-      
       axios
-      .get(`/api/AssessMethod/All/${globalFaculty}`)
-      .then((res) => setAssessMethods(res?.data?.data))
-      .catch((err) => console.log(err));
-      
-      // if (facultyId) {
-        // .get(`/api/ScientificDegree/GetSemestersByFaclutyId/${facultyId}`)
-        axios
+        .get("/api/Facult/Faculty")
+        .then((res) => {
+          setFaculty(res?.data?.data?.getFacultyDtos);
+        })
+        .catch((err) => console.log(err));
+
+      axios
+        .get(`/api/Student/GetAllStudents/${globalFaculty}`)
+        .then((res) => setStudent(res?.data?.data))
+        .catch((err) => console.log(err));
+
+      axios
+        .get(`/api/staff/FA/${globalFaculty}`)
+        .then((res) => SetStaffPermission(res?.data?.data))
+        .catch((err) => console.log(err));
+
+      axios
+        .get(`/api/Teacher/GetAllTeacher/${globalFaculty}`)
+        .then((res) => setTeacher(res?.data?.data))
+        .catch((err) => console.log(err));
+
+      axios
+        .get(`/api/Department/All/${globalFaculty}`)
+        .then((res) => setDepartment(res?.data?.data))
+        .catch((err) => console.log(err));
+
+      axios
+        .get("/api/Control/GetAllSemester")
+        .then((res) => setCurrentSemesters(res?.data?.data))
+        .catch((err) => console.log(err));
+
+      axios
+        .get(`/api/AssessMethod/All/${globalFaculty}`)
+        .then((res) => setAssessMethods(res?.data?.data))
+        .catch((err) => console.log(err));
+
+      axios
         .get(`/api/ScientificDegree/GetAllSemestersfd/${globalFaculty}`)
         .then((res) => setSemester(res?.data?.data))
-        .catch((err) => console.log(err))
-      }
-        
+        .catch((err) => console.log(err));
+
+      axios
+        .get(`/api/TeacherAssistant/GetAllTeacherAssistant/${globalFaculty}`)
+        .then((res) => setTeacherAssistant(res?.data?.data))
+        .catch((err) => console.log(err));
+
+      axios
+        .get(`/api/course/CM/${globalFaculty}`)
+        .then((res) => setTeacherAssistantCourses(res?.data?.data))
+        .catch((err) => console.log(err));
+    }
   }, [globalFaculty]);
 
   useEffect(() => {
@@ -209,8 +232,10 @@ export default function Control() {
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   const currentRecords =
-  studentBySemester && studentBySemester.slice(indexOfFirstRecord, indexOfLastRecord);
-  const nPages = studentBySemester && Math.ceil(studentBySemester.length / recordsPerPage);
+    studentBySemester &&
+    studentBySemester.slice(indexOfFirstRecord, indexOfLastRecord);
+  const nPages =
+    studentBySemester && Math.ceil(studentBySemester.length / recordsPerPage);
 
   const handelStudentDelete = (student) => {
     const swalWithBootstrapButtons = Swal.mixin({
@@ -330,6 +355,8 @@ export default function Control() {
     showCurrentSemesters: [],
     showCurrentSemestersForStudentSemester: [],
     showDepartments: [],
+    showTeachersAssistant: [], 
+    showTeachersAssistantCourses: []
   });
 
   shows.showFaculty = faculty ? (
@@ -346,6 +373,17 @@ export default function Control() {
 
   shows.showTeachers = teacher ? (
     teacher.map((element) => (
+      <option key={element.staffId} value={element.staffId}>
+        {element.staffNameEnglish}
+      </option>
+    ))
+  ) : (
+    <option disabled className="text-danger ">
+      No Teacher Exists
+    </option>
+  );
+  shows.showTeachersAssistant = teacherAssistant ? (
+    teacherAssistant.map((element) => (
       <option key={element.staffId} value={element.staffId}>
         {element.staffNameEnglish}
       </option>
@@ -379,8 +417,10 @@ export default function Control() {
   );
 
   shows.showStudents = student ? (
-    student.map((element,index) => (
-      <option key={index} value={element.studentId}>{element.studentNameEnglish}</option>
+    student.map((element, index) => (
+      <option key={index} value={element.studentId}>
+        {element.studentNameEnglish}
+      </option>
     ))
   ) : (
     <option disabled className="text-danger">
@@ -388,16 +428,33 @@ export default function Control() {
     </option>
   );
   shows.showCourses = courses ? (
-    courses.map((element,index) => <option key={index} value={element.id}>{element.name}</option>)
+    courses.map((element, index) => (
+      <option key={index} value={element.id}>
+        {element.name}
+      </option>
+    ))
   ) : (
     <option disabled className="text-danger">
       No Courses Exists
     </option>
   );
+  // shows.showTeachersAssistantCourses = teacherAssistantCourses ? (
+  //   teacherAssistantCourses.map((element, index) => (
+  //     <option key={index} value={element.id}>
+  //       {element.name}
+  //     </option>
+  //   ))
+  // ) : (
+  //   <option disabled className="text-danger">
+  //     No Courses Exists
+  //   </option>
+  // );
 
   shows.showSemesters = semester ? (
-    semester.map((element,index) => (
-      <option key={index} value={element.id}>{element.name}</option>
+    semester.map((element, index) => (
+      <option key={index} value={element.id}>
+        {element.name}
+      </option>
     ))
   ) : (
     <option disabled className="text-danger">
@@ -406,8 +463,10 @@ export default function Control() {
   );
 
   shows.showDepartments = department ? (
-    department.map((element,index) => (
-      <option key={index} value={element.departmentId}>{element.departmentName}</option>
+    department.map((element, index) => (
+      <option key={index} value={element.departmentId}>
+        {element.departmentName}
+      </option>
     ))
   ) : (
     <option disabled className="text-danger">
@@ -416,7 +475,7 @@ export default function Control() {
   );
 
   shows.showCurrentSemesters = currentSemesters?.semesterName ? (
-    currentSemesters?.semesterName.map((element,index) => (
+    currentSemesters?.semesterName.map((element, index) => (
       <tr key={index} value={element.id} style={{ width: "100%" }}>
         <td
           style={{ fontSize: "20px", width: "100%" }}
@@ -446,11 +505,18 @@ export default function Control() {
   );
   shows.showCurrentSemestersForStudentSemester =
     currentSemesters?.semesterName ? (
-      currentSemesters?.semesterName.map((element,index) => (
-        <option key={index} value={element.id}>{element.name}</option>
+      currentSemesters?.semesterName.map((element, index) => (
+        <option key={index} value={element.id}>
+          {element.name}
+        </option>
       ))
     ) : (
-      <option disabled style={{textAlign:"center" , color:"red" , padding:"5px"}}>No data</option>
+      <option
+        disabled
+        style={{ textAlign: "center", color: "red", padding: "5px" }}
+      >
+        No data
+      </option>
     );
 
   const handelSubmitForAccessMethod = (event) => {
@@ -603,11 +669,11 @@ export default function Control() {
   };
 
   const formatDate = (dateRange) => {
-    const [startDate, endDate] = dateRange.split(' - ');
-  
-    const startYear = startDate.split('/')[2];
-    const endYear = endDate.split('/')[2];
-  
+    const [startDate, endDate] = dateRange.split(" - ");
+
+    const startYear = startDate.split("/")[2];
+    const endYear = endDate.split("/")[2];
+
     return `${startYear} / ${endYear}`;
   };
   return (
@@ -708,54 +774,59 @@ export default function Control() {
               </Form.Group>
               {currentSemesterId ? (
                 <>
-                <Table>
-                  <thead>
-                    <tr style={{ fontSize: "20px", fontWeight: "bold" }}>
-                      <th></th>
-                      <th>Student Code</th>
-                      <th>Student Name</th>
-                      <th>Delete</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {studentBySemester && studentBySemester.length > 0 ? (
-                      currentRecords?.map((item, counter) => (
-                        <tr key={counter} style={{ fontSize: "17px" }} id={`item-${counter}`}>
-                          <td>{counter + 1}</td>
-                          <td>{item.studentCode}</td>
-                          <td>{item.studentName}</td>
-                          <td>
-                            <Button
-                              variant="danger"
-                              onClick={() => handelStudentDelete(item)}
-                            >
-                              Delete
-                            </Button>
+                  <Table>
+                    <thead>
+                      <tr style={{ fontSize: "20px", fontWeight: "bold" }}>
+                        <th></th>
+                        <th>Student Code</th>
+                        <th>Student Name</th>
+                        <th>Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {studentBySemester && studentBySemester.length > 0 ? (
+                        currentRecords?.map((item, counter) => (
+                          <tr
+                            key={counter}
+                            style={{ fontSize: "17px" }}
+                            id={`item-${counter}`}
+                          >
+                            <td>{counter + 1}</td>
+                            <td>{item.studentCode}</td>
+                            <td>{item.studentName}</td>
+                            <td>
+                              <Button
+                                variant="danger"
+                                onClick={() => handelStudentDelete(item)}
+                              >
+                                Delete
+                              </Button>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan={4}
+                            style={{
+                              textAlign: "center",
+                              fontSize: "20px",
+                              fontWeight: "bold",
+                              color: "red",
+                            }}
+                          >
+                            No Data
                           </td>
                         </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan={4}
-                          style={{
-                            textAlign: "center",
-                            fontSize: "20px",
-                            fontWeight: "bold",
-                            color: "red",
-                          }}
-                        >
-                          No Data
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </Table>
-                 <Pagination
-                 nPages={nPages}
-                 currentPage={currentPage}
-                 setCurrentPage={setCurrentPage}
-               /></>
+                      )}
+                    </tbody>
+                  </Table>
+                  <Pagination
+                    nPages={nPages}
+                    currentPage={currentPage}
+                    setCurrentPage={setCurrentPage}
+                  />
+                </>
               ) : (
                 <h2 style={{ textAlign: "center" }}>Select Semester</h2>
               )}
@@ -775,58 +846,118 @@ export default function Control() {
             >
               Teacher Courses
             </div>
-            <Form style={{ padding: "10px" }}>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label style={{ fontSize: "20px" }}>
-                  Teacher Name
-                </Form.Label>
-                <Form.Select onChange={(e) => setTeacherId(e.target.value)}>
-                  <option defaultValue hidden>
-                    Select a Teacher
-                  </option>
-                  {shows.showTeachers}
-                </Form.Select>
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label style={{ fontSize: "20px" }}>
-                  Course Name
-                </Form.Label>
-                <Select
-                  options={courses}
-                  getOptionLabel={(e) => e.name}
-                  getOptionValue={(e) => e.id}
-                  value={selectedOptionsForTeacherCourse}
-                  onChange={handelChangeForSemesterCourse}
-                  isMulti
-                />
-              </Form.Group>
-
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label style={{ fontSize: "20px" }}>
-                  The teacher's current courses
-                </Form.Label>
-                <ListGroup>{shows.showCoursesName}</ListGroup>
-              </Form.Group>
-              <Row>
-                <Col className="">
-                  <Button
-                    variant="success"
-                    onClick={handelSubmitForTeacherCourse}
+            <div className="p-1">
+            <Tabs defaultActiveKey="teacher" id="fill-tab-example" justify variant="underline">
+              <Tab eventKey={"teacher"} title="Teacher">
+                <Form style={{ padding: "10px" }}>
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlInput1"
                   >
-                    Save Change
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
+                    <Form.Label style={{ fontSize: "20px" }}>
+                      Teacher Name
+                    </Form.Label>
+                    <Form.Select onChange={(e) => setTeacherId(e.target.value)}>
+                      <option defaultValue hidden>
+                        Select a Teacher
+                      </option>
+                      {shows.showTeachers}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlInput1"
+                  >
+                    <Form.Label style={{ fontSize: "20px" }}>
+                      Course Name
+                    </Form.Label>
+                    <Select
+                      options={courses}
+                      getOptionLabel={(e) => e.name}
+                      getOptionValue={(e) => e.id}
+                      value={selectedOptionsForTeacherCourse}
+                      onChange={handelChangeForSemesterCourse}
+                      isMulti
+                    />
+                  </Form.Group>
+
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlInput1"
+                  >
+                    <Form.Label style={{ fontSize: "20px" }}>
+                      The teacher's current courses
+                    </Form.Label>
+                    <ListGroup>{shows.showCoursesName}</ListGroup>
+                  </Form.Group>
+                  <Row>
+                    <Col className="">
+                      <Button
+                        variant="success"
+                        onClick={handelSubmitForTeacherCourse}
+                      >
+                        Save Change
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </Tab>
+              <Tab eventKey={"teacher-ass"} title="Teacher Assistant">
+              <Form style={{ padding: "10px" }}>
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlInput1"
+                  >
+                    <Form.Label style={{ fontSize: "20px" }}>
+                      Teacher Name
+                    </Form.Label>
+                    <Form.Select onChange={(e) => setTeacherId(e.target.value)}>
+                      <option defaultValue hidden>
+                        Select a Teacher 
+                      </option>
+                      {shows.showTeachersAssistant}
+                    </Form.Select>
+                  </Form.Group>
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlInput1"
+                  >
+                    <Form.Label style={{ fontSize: "20px" }}>
+                      Course Name
+                    </Form.Label>
+                    <Select
+                      options={teacherAssistantCourses}
+                      getOptionLabel={(e) => e.courseName}
+                      getOptionValue={(e) => e.courseId}
+                      value={selectedOptionsForTeacherCourse}
+                      onChange={handelChangeForSemesterCourseAssistant}
+                      isMulti
+                    />
+                  </Form.Group>
+
+                  <Form.Group
+                    className="mb-3"
+                    controlId="exampleForm.ControlInput1"
+                  >
+                    <Form.Label style={{ fontSize: "20px" }}>
+                      The teacher's current courses
+                    </Form.Label>
+                    <ListGroup>{shows.showCoursesName}</ListGroup>
+                  </Form.Group>
+                  <Row>
+                    <Col className="">
+                      <Button
+                        variant="success"
+                        onClick={handelSubmitForTeacherCourse}
+                      >
+                        Save Change
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </Tab>
+            </Tabs>
+            </div>
           </div>
         </Tab>
 
@@ -915,51 +1046,61 @@ export default function Control() {
         </Tab>
 
         <Tab eventKey="premissions" title="Permissions">
-        <div>
-      <div style={{ border: "2px solid #121431", borderRadius: "10px" }}>
-        <div
-          style={{
-            background: "#121431",
-            color: "white",
-            padding: "20px",
-            fontSize: "30px",
-          }}
-        >
-          Give Permissions
-        </div>
-        <Form style={{ padding: "10px" }}>
-          <Form.Group
-            className="mb-3"
-            controlId="exampleForm.ControlInput1"
-          >
-            <Form.Label style={{ fontSize: "20px" }}>
-              Teacher Name
-            </Form.Label>
-            <Select
-              options={staffPermission}
-              getOptionLabel={(e) => e.name}
-              getOptionValue={(e) => e.userId}
-              onChange={(e) => handelPermissions(e.userId)}
-            />
-          </Form.Group>
-
-          <div className="mb-3">
-            {premissionRoles?.map((role,index) => (
-              <div key={index} className="d-flex gap-3">
-                <input
-                  type="checkbox"
-                  checked={role.isSelected}
-                  onChange={() => handleCheckboxChange(role.id)}
-                  id= {`permission-${index}`}
-                  />
-                  <label htmlFor={`permission-${index}`} style={{fontSize:"18px",fontWeight:"bold"}}>{role.name}</label>
+          <div>
+            <div style={{ border: "2px solid #121431", borderRadius: "10px" }}>
+              <div
+                style={{
+                  background: "#121431",
+                  color: "white",
+                  padding: "20px",
+                  fontSize: "30px",
+                }}
+              >
+                Give Permissions
               </div>
-            ))}
+              <Form style={{ padding: "10px" }}>
+                <Form.Group
+                  className="mb-3"
+                  controlId="exampleForm.ControlInput1"
+                >
+                  <Form.Label style={{ fontSize: "20px" }}>
+                    Teacher Name
+                  </Form.Label>
+                  <Select
+                    options={staffPermission}
+                    getOptionLabel={(e) => e.name}
+                    getOptionValue={(e) => e.userId}
+                    onChange={(e) => handelPermissions(e.userId)}
+                  />
+                </Form.Group>
+
+                <div className="mb-3">
+                  {premissionRoles?.map((role, index) => (
+                    <div key={index} className="d-flex gap-3">
+                      <input
+                        type="checkbox"
+                        checked={role.isSelected}
+                        onChange={() => handleCheckboxChange(role.id)}
+                        id={`permission-${index}`}
+                      />
+                      <label
+                        htmlFor={`permission-${index}`}
+                        style={{ fontSize: "18px", fontWeight: "bold" }}
+                      >
+                        {role.name}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+                <Button
+                  variant="success"
+                  onClick={(e) => handleSavePermissions(e)}
+                >
+                  Save Changes
+                </Button>
+              </Form>
+            </div>
           </div>
-          <Button variant="success" onClick={e=>handleSavePermissions(e)}>Save Changes</Button>
-        </Form>
-      </div>
-    </div>
         </Tab>
         <Tab eventKey="end-semester" title="End Semester">
           <div style={{ border: "2px solid #121431", borderRadius: "10px" }}>

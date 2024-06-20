@@ -1176,3 +1176,33 @@ ul {
 .result table tbody tr:nth-child(even) {
   background-color: white;
 }
+
+
+
+/**/
+
+/* .modal-header {
+  background-color: var(--main-color);
+  color: white;
+} */
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.fc .fc-toolbar {
+  display: none;
+}
+
+.fc .fc-daygrid-day-number {
+  display: none;
+}
+
+.fc .fc-col-header-cell-cushion {
+  display: block;
+  font-size: 1.2em;
+}
+
+/* Add this to your main CSS file or in the component's CSS-in-JS style */
+

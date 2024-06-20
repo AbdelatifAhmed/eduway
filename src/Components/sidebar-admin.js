@@ -23,14 +23,15 @@ export default function SidebarAdmin(props) {
     ],
     Teacher: [
       { to: "/admin/course-grades", icon: "fa-file-import", label: "Enter Grades" },
-      { to: "/admin/notes", icon: "fa-file-import", label: "Notes" }
+      { to: "/admin/notes", icon: "fa-file-import", label: "Notes" },
+      { to: "/admin/timeTable", icon: "fa-user-tie", label: "TimeTable" }
     ],
     Staff: [
       { to: "/admin/students", icon: "fa-user-tie", label: "Students" }
     ],
     TeacherAssistant: [
-      { to: "/admin/course-grades", icon: "fa-file-import", label: "Enter Grades" },
-      { to: "/admin/notes", icon: "fa-file-import", label: "Notes" }
+      { to: "/admin/student-section", icon: "fa-user-tie", label: "Student Section" },
+      { to: "/admin/timeTable", icon: "fa-user-tie", label: "TimeTable" }
     ],
     ControlMembers: [
       { to: "/admin/final-grades", icon: "fa-file-circle-plus", label: "Enter Final Grades" },
