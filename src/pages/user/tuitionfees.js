@@ -1,16 +1,7 @@
-import { useState } from "react";
-import Sidebar from "../../Components/sidebar";
-import Navbar from "../../Components/navbar";
+
 export default function TuitionFees() {
-  const [changeActive, setChangeActive] = useState(true);
   return (
-    <div className="page">
-      <Sidebar changeActive={changeActive} />
-      {/* <!-- Main content --> */}
-      <div className={changeActive ? "main" : "main active"}>
-        {/* <!-- Top Bar (Naigation bar) --> */}
-        <Navbar changeActive={changeActive} setChangeActive={setChangeActive} />
-        {/* conent */}
+
         <div className="tuition-fees">
           <div className="tablee">
             <div className="tab">
@@ -181,7 +172,6 @@ export default function TuitionFees() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+    
   );
 }

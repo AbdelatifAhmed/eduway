@@ -522,6 +522,14 @@ ul {
   display: none;
 }
 
+@media (max-width: 991px) {
+  nav .nav-settings {
+    display: flex !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+}
+
 .main .basic-info {
   padding: 30px;
   width: 100%;

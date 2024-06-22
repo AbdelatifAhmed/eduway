@@ -5,7 +5,7 @@ import { AiFillFileExcel } from "react-icons/ai";
 import useAxiosPrivate from "../hooks/useAxiosPrivatet";
 import Swal from "sweetalert2";
 
-function Uploader({ selectedCourse }) {
+function Uploader({ type, url, id }) {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState("No selected file");
   const [isUploading, setIsUploading] = useState(false);
@@ -24,14 +24,13 @@ function Uploader({ selectedCourse }) {
       },
     });
 
-    if (!file)
-      {
-        Toast.fire({
-          icon: "info",
-          title: "No selected file ",
-        });
-        return;
-      } 
+    if (!file) {
+      Toast.fire({
+        icon: "info",
+        title: "No selected file ",
+      });
+      return;
+    }
 
     const formData = new FormData();
     formData.append("file", file);
@@ -39,24 +38,37 @@ function Uploader({ selectedCourse }) {
     setIsUploading(true);
 
     try {
-      const response = await axios.put(`api/Course/UpdateCourseStudentsAssessMethodWithExcelFile/${selectedCourse}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      });
+      let response = null;
 
-      if (response.status === 200) {
-        Toast.fire({
-          icon: "success",
-          title: "File uploaded successfully ",
+      if (type === 1) {
+        response = await axios.put(`${url}${id}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         });
       } else {
-        alert("File upload failed");
+        response = await axios.post(`${url}${id}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      }
+
+      if (response.status === 201) {
+        Toast.fire({
+          icon: "success",
+          title: response?.data?.message,
+        });
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: "File uploaded Failed ",
+        });
       }
     } catch (error) {
       Toast.fire({
         icon: "error",
-        title: "An error occurred while uploading the file ",
+        title: error?.reponse?.data?.message,
       });
     } finally {
       setIsUploading(false);
@@ -81,11 +93,10 @@ function Uploader({ selectedCourse }) {
             }
           }}
         />
-          <>
-            <MdCloudUpload color="#1475cf" size={60} />
-            <p>Browse Files to upload</p>
-          </>
-
+        <>
+          <MdCloudUpload color="#1475cf" size={60} />
+          <p>Browse Files to upload</p>
+        </>
       </form>
 
       <section className="uploaded-row">

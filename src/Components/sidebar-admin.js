@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
 import useLogout from "../hooks/useLogout";
 import useAuth from "../hooks/useAuth";
-import { useState } from "react";
 
 export default function SidebarAdmin(props) {
   const logout = useLogout();

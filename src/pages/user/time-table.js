@@ -1,20 +1,12 @@
-import { useState } from "react";
-import Sidebar from "../../Components/sidebar";
-import Navbar from "../../Components/navbar";
+
 import StudentTimetable from "../../Components/StudentTimeTable";
 import useFetchTimetable from "../../Components/fetchTimetable";
 export default function TimeTable() {
-  const [changeActive, setChangeActive] = useState(true);
-  const timetable = useFetchTimetable()
+  const timetable = useFetchTimetable();
   return (
-    <div className="page">
-      <Sidebar changeActive={changeActive} />
-      {/* <!-- Main content --> */}
-      <div className={changeActive ? "main" : "main active"}>
-        {/* <!-- Top Bar (Naigation bar) --> */}
-        <Navbar changeActive={changeActive} setChangeActive={setChangeActive} />
-        {/* conent */}
-        {/* <div className="time-table">
+    <>
+      {/* conent */}
+      {/* <div className="time-table">
   <div className="header-info">
     <h2 className="head">student time table</h2>
     <i className="fa-solid fa-print" />
@@ -184,10 +176,7 @@ export default function TimeTable() {
     </tbody>
   </table>
         </div> */}
-        <StudentTimetable timetable = {timetable}/>
-      </div>
-    </div>
+      <StudentTimetable timetable={timetable} />
+    </>
   );
 }
-
-

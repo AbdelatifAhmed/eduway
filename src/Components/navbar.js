@@ -130,7 +130,7 @@ export default function MyNavbar(props) {
           <Form.Group>
             <Form.Label htmlFor="inputPassword5">Old Password</Form.Label>
             <Form.Control
-              type={showPass ? "password" : 'text'}
+              type={showPass ? "password" : "text"}
               id="inputPassword"
               placeholder="Old Password"
               aria-describedby="passwordHelpBlock"
@@ -141,7 +141,7 @@ export default function MyNavbar(props) {
           <Form.Group className="mt-3">
             <Form.Label htmlFor="inputPassword5">New Password</Form.Label>
             <Form.Control
-              type={showPass ? "password" : 'text'}
+              type={showPass ? "password" : "text"}
               placeholder="New Password"
               id="inputNewPassword"
               aria-describedby="passwordHelpBlock"
@@ -153,7 +153,7 @@ export default function MyNavbar(props) {
           <Form.Group className="mt-3">
             <Form.Label htmlFor="inputPassword5">Confirm Password</Form.Label>
             <Form.Control
-              type={showPass ? "password" : 'text'}
+              type={showPass ? "password" : "text"}
               placeholder="Confirm Password"
               id="inputConPassword"
               aria-describedby="passwordHelpBlock"
@@ -225,8 +225,8 @@ export default function MyNavbar(props) {
                 </p>
               </Nav.Link>
             </Nav>
-            <Nav className="d-flex align-items-center gap-2">
-              {Auth?.dataDetails?.roles?.includes("Administration") && (
+            <Nav className="d-flex align-items-center gap-2 nav-settings">
+              {Auth?.dataDetails?.roles?.includes("Administration") ? (
                 <NavDropdown title="Settings" id="collapsible-nav-dropdown">
                   <NavDropdown.Item as={Button} onClick={goToStudentFormat}>
                     Student Format
@@ -238,9 +238,13 @@ export default function MyNavbar(props) {
                     Change Password
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
-                  <NavDropdown.Item href="#action/3.4">
-                    Separated link
+                </NavDropdown>
+              ) : (
+                <NavDropdown title="Settings" id="collapsible-nav-dropdown">
+                  <NavDropdown.Item as={Button} onClick={handleShow}>
+                    Change Password
                   </NavDropdown.Item>
+                  <NavDropdown.Divider />
                 </NavDropdown>
               )}
               {Auth?.dataDetails?.roles?.includes("Administration") &&

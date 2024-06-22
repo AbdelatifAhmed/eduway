@@ -443,7 +443,7 @@ export default function AddCourseGrades() {
                 {excelUl === true && selectedCourse? (
                   <div>
                     <hr />
-                    <Uploader  selectedCourse={selectedCourse?.courseId}/>
+                    <Uploader type={1} url={'api/Course/UpdateCourseStudentsAssessMethodWithExcelFile/'}  id={selectedCourse?.courseId}/>
                   </div>
                 ) : excelDl === true && selectedCourse ? (
                   <div>
@@ -467,14 +467,6 @@ export default function AddCourseGrades() {
                   "Select Course "
                 )}
               </Modal.Body>
-              {/* <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
-                  Close
-                </Button>
-                <Button variant="primary" onClick={handleClose}>
-                  Save Changes
-                </Button>
-              </Modal.Footer> */}
             </Modal>
           </div>
           <Offcanvas

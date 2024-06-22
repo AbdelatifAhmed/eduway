@@ -58,8 +58,8 @@ export default function AddFaculty({
   const [successPercentageBand, setSuccessPercentageBand] = useState();
   const [successPercentageSemester, setSuccessPercentageSemester] = useState();
   const [successPercentagePhase, setSuccessPercentagePhase] = useState();
-  const [isCurrentSemester,setIsCurrentSemester] = useState(false)
-  const [isControl,setIsControl] = useState(false)
+  const [isCurrentSemester, setIsCurrentSemester] = useState(false);
+  const [isControl, setIsControl] = useState(false);
   //Add bylaws Inputs
   const [estimates, setEstimates] = useState([]);
   const [estimateCourse, setEstimateCourse] = useState([]);
@@ -154,7 +154,7 @@ export default function AddFaculty({
 
   const getAllBands = () => {
     axios
-      .get(`/api/Band/ByFacultyId/${facultyId}`, {
+      .get(`/api/Band/All/${facultyId}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
@@ -166,7 +166,7 @@ export default function AddFaculty({
 
   const getAllPhases = () => {
     axios
-      .get(`/api/phase/ByFacultyId/${facultyId}`, {
+      .get(`/api/phase/All/${facultyId}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
@@ -178,7 +178,7 @@ export default function AddFaculty({
 
   const getAllSemesters = () => {
     axios
-      .get(`/api/semester/ByFacultyId/${facultyId}`, {
+      .get(`/api/semester/All/${facultyId}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
@@ -190,7 +190,7 @@ export default function AddFaculty({
 
   const getAllExamRoles = () => {
     axios
-      .get(`/api/examRole/ByFacultyId/${facultyId}`, {
+      .get(`/api/examRole/all/${facultyId}`, {
         headers: {
           Accept: "application/json",
           // Authorization: "Bearer" + token ,
@@ -394,20 +394,17 @@ export default function AddFaculty({
     });
     try {
       axios
-        .post(
-          "/api/Bylaw",
-          {
-            name: name,
-            description: description,
-            facultyId: faculty,
-            type: type,
-            start: startDate,
-            end: endDate,
-            estimates: estimatesData,
-            estimatesCourses: estimateCourseData,
-            id: 0,
-          }
-        )
+        .post("/api/Bylaw", {
+          name: name,
+          description: description,
+          facultyId: faculty,
+          type: type,
+          start: startDate,
+          end: endDate,
+          estimates: estimatesData,
+          estimatesCourses: estimateCourseData,
+          id: 0,
+        })
         .then((response) => {
           if (response.status === 201) {
             Toast.fire({
@@ -586,7 +583,7 @@ export default function AddFaculty({
             minDegree: minDegree,
             maxDegree: maxDegree,
             id: 0,
-            isControlStatus:isControl,
+            isControlStatus: isControl,
           },
           {
             headers: {
@@ -759,53 +756,143 @@ export default function AddFaculty({
 
   const handelScientificDegreeTypeChange = (event) => {
     setType(event);
-    if (event == 2) {
-      setBandDisabled(false);
-      setPhaseDisabled(true);
-      setSemesterDisabled(true);
-      setExamRoleDisabled(true);
-      document.getElementById("scienticSemester").value = null;
-      document.getElementById("scienticPhase").value = null;
-      document.getElementById("scienticExamRole").value = null;
-    } else if (event == 3) {
-      setBandDisabled(true);
-      setPhaseDisabled(false);
-      setSemesterDisabled(true);
-      setExamRoleDisabled(true);
-      document.getElementById("scienticBand").value = null;
-      document.getElementById("scienticSemester").value = null;
-      document.getElementById("scienticExamRole").value = null;
-      setBand(null);
-      setSemester(null);
-      setExamRole(null);
-    } else if (event == 4) {
-      setBandDisabled(true);
-      setPhaseDisabled(true);
-      setSemesterDisabled(false);
-      setExamRoleDisabled(true);
-      document.getElementById("scienticBand").value = null;
-      document.getElementById("scienticPhase").value = null;
-      document.getElementById("scienticExamRole").value = null;
-      setBand(null);
-      setPhase(null);
-      setExamRole(null);
-    } else if (event == 5) {
-      setBandDisabled(true);
-      setPhaseDisabled(true);
-      setSemesterDisabled(true);
-      setExamRoleDisabled(false);
-      document.getElementById("scienticBand").value = null;
-      document.getElementById("scienticSemester").value = null;
-      document.getElementById("scienticPhase").value = null;
-      setBand(null);
-      setSemester(null);
-      setPhase(null);
-    } else {
-      setBandDisabled(true);
-      setPhaseDisabled(true);
-      setSemesterDisabled(true);
-      setExamRoleDisabled(true);
+    console.log(event);
+
+    switch (event) {
+      case 1:
+        setBandDisabled(true);
+        setPhaseDisabled(true);
+        setSemesterDisabled(true);
+        setExamRoleDisabled(true);
+        document.getElementById("scienticPhase").value = null;
+        document.getElementById("scienticSemester").value = null;
+        document.getElementById("scienticExamRole").value = null;
+        document.getElementById("scienticBand").value = null;
+        setPhase(null);
+        setSemester(null);
+        setExamRole(null);
+        setBand(null);
+        break;
+      case 2:
+        setBandDisabled(false);
+        setPhaseDisabled(true);
+        setSemesterDisabled(true);
+        setExamRoleDisabled(true);
+        document.getElementById("scienticPhase").value = null;
+        document.getElementById("scienticSemester").value = null;
+        document.getElementById("scienticExamRole").value = null;
+        setPhase(null);
+        setSemester(null);
+        setExamRole(null);
+        break;
+      case 3:
+        setBandDisabled(true);
+        setPhaseDisabled(false);
+        setSemesterDisabled(true);
+        setExamRoleDisabled(true);
+        document.getElementById("scienticBand").value = null;
+        document.getElementById("scienticSemester").value = null;
+        document.getElementById("scienticExamRole").value = null;
+        setBand(null);
+        setSemester(null);
+        setExamRole(null);
+        break;
+      case 4:
+        setBandDisabled(true);
+        setPhaseDisabled(true);
+        setSemesterDisabled(false);
+        setExamRoleDisabled(true);
+        document.getElementById("scienticBand").value = null;
+        document.getElementById("scienticPhase").value = null;
+        document.getElementById("scienticExamRole").value = null;
+
+        break;
+      case 5:
+        setBandDisabled(true);
+        setPhaseDisabled(true);
+        setSemesterDisabled(true);
+        setExamRoleDisabled(false);
+        document.getElementById("scienticBand").value = null;
+        document.getElementById("scienticSemester").value = null;
+        document.getElementById("scienticPhase").value = null;
+        setBand(null);
+        setSemester(null);
+        setPhase(null);
+        break;
+      default:
+        setBandDisabled(true);
+        setPhaseDisabled(true);
+        setSemesterDisabled(true);
+        setExamRoleDisabled(true);
+        document.getElementById("scienticPhase").value = null;
+        document.getElementById("scienticSemester").value = null;
+        document.getElementById("scienticExamRole").value = null;
+        document.getElementById("scienticBand").value = null;
+        setPhase(null);
+        setSemester(null);
+        setExamRole(null);
+        setBand(null);
     }
+  //   if (event === 1) {
+  //     setBandDisabled(true);
+  //     setPhaseDisabled(true);
+  //     setSemesterDisabled(true);
+  //     setExamRoleDisabled(true);
+  //     setPhase(null);
+  //     setSemester(null);
+  //     setExamRole(null);
+  //     setBand(null);
+  //   } else if (event === 2) {
+  //     setBandDisabled(false);
+  //     setPhaseDisabled(true);
+  //     setSemesterDisabled(true);
+  //     setExamRoleDisabled(true);
+  //     setPhase(null);
+  //     setSemester(null);
+  //     setExamRole(null);
+  //   } else if (event === 3) {
+  //     setBandDisabled(true);
+  //     setPhaseDisabled(false);
+  //     setSemesterDisabled(true);
+  //     setExamRoleDisabled(true);
+  //     document.getElementById("scienticBand").value = null;
+  //     document.getElementById("scienticSemester").value = null;
+  //     document.getElementById("scienticExamRole").value = null;
+  //     setBand(null);
+  //     setSemester(null);
+  //     setExamRole(null);
+  //   } else if (event === 4) {
+  //     setBandDisabled(true);
+  //     setPhaseDisabled(true);
+  //     setSemesterDisabled(false);
+  //     setExamRoleDisabled(true);
+  //     document.getElementById("scienticBand").value = null;
+  //     document.getElementById("scienticPhase").value = null;
+  //     document.getElementById("scienticExamRole").value = null;
+  //     setBand(null);
+  //     setPhase(null);
+  //     setExamRole(null);
+  //   } else if (event === 5) {
+  //     setBandDisabled(true);
+  //     setPhaseDisabled(true);
+  //     setSemesterDisabled(true);
+  //     setExamRoleDisabled(false);
+  //     document.getElementById("scienticBand").value = null;
+  //     document.getElementById("scienticSemester").value = null;
+  //     document.getElementById("scienticPhase").value = null;
+  //     setBand(null);
+  //     setSemester(null);
+  //     setPhase(null);
+  //   } else {
+  //     setBandDisabled(true);
+  //     setPhaseDisabled(true);
+  //     setSemesterDisabled(true);
+  //     setExamRoleDisabled(true);
+  //     setPhase(null);
+  //     setSemester(null);
+  //     setExamRole(null);
+  //     setBand(null);
+  //   }
   };
 
   const handelAcademicYear = async (event) => {
@@ -823,18 +910,15 @@ export default function AddFaculty({
     });
     try {
       await axios
-        .post(
-          "/api/academyyear/add",
-          {
-            facultyId: faculty,
-            start:startDate,
-            description,
-            end:endDate,
-            academyYearOrder:order,
-            isCurrent:isCurrentSemester,
-            id: 0,
-          }
-        )
+        .post("/api/academyyear/add", {
+          facultyId: faculty,
+          start: startDate,
+          description,
+          end: endDate,
+          academyYearOrder: order,
+          isCurrent: isCurrentSemester,
+          id: 0,
+        })
         .then((response) => {
           if (response.status === 201) {
             Toast.fire({
@@ -1601,13 +1685,13 @@ export default function AddFaculty({
             />
           </FloatingLabel>
           <Form.Group className="mt-2">
-          <Form.Check // prettier-ignore
-            type="switch"
-            id="custom-switch"
-            label="Control"
-            checked={isControl}
-            onChange={()=>setIsControl(!isControl)}
-          />
+            <Form.Check // prettier-ignore
+              type="switch"
+              id="custom-switch"
+              label="Control"
+              checked={isControl}
+              onChange={() => setIsControl(!isControl)}
+            />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
@@ -1813,9 +1897,9 @@ export default function AddFaculty({
                       className="mt-2"
                     >
                       <Form.Select
-                        onChange={(e) =>
-                          handelScientificDegreeTypeChange(+e.target.value)
-                        }
+                        onChange={(e) => {
+                          handelScientificDegreeTypeChange(+e.target.value);
+                        }}
                       >
                         <option defaultValue hidden>
                           Selecty Type
@@ -2088,12 +2172,12 @@ export default function AddFaculty({
           </FloatingLabel>
 
           <Form.Group className="mt-2">
-          <Form.Check // prettier-ignore
-            type="switch"
-            id="custom-switch"
-            label="Current Semester"
-            onClick={()=>setIsCurrentSemester(!isCurrentSemester)}
-          />
+            <Form.Check // prettier-ignore
+              type="switch"
+              id="custom-switch"
+              label="Current Semester"
+              onClick={() => setIsCurrentSemester(!isCurrentSemester)}
+            />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>

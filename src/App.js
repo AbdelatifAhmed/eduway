@@ -11,13 +11,11 @@ import Faculty from "./pages/admin/faculty";
 import "./Css/all.min.css";
 import "./Css/main.css";
 import { Route, Routes } from "react-router-dom";
-import Api from "./api";
 import RequireAuth from "./Auth/RequireAuth";
 import PersistLogin from "./Auth/persistLogin";
 import Student from "./pages/admin/Student";
 import Admin from "./pages/admin/admin";
 import AddStudent from "./pages/admin/AddStudent.js";
-import Test from "./pages/admin/test.js";
 import Courses from "./pages/admin/Courses.js";
 import AddCourse from "./pages/admin/AddCourse.js";
 import Staff from "./pages/admin/Staff.js";
@@ -28,7 +26,6 @@ import AddStaff from "./pages/admin/AddStaff.js";
 import AddControlMember from "./pages/admin/addControlMember.js";
 import Control from "./pages/admin/Control.js";
 import AddCourseGrades from "./pages/Courses/courseGrade.js";
-import Test2 from "./test2.js";
 import FinalGrades from "./pages/Courses/finalGrades.js";
 import StudentView from "./pages/admin/studentView.js";
 import CourseView from "./pages/admin/CourseView.js";
@@ -52,6 +49,7 @@ import StudentSection from "./pages/Courses/StudentSection.js";
 import Timetable from "./Components/TimeTable.jsx";
 import SchedulerView from "./Components/SchedulerView.js";
 import Places from "./Components/Places.jsx";
+import User from "./pages/user/User.js";
 export default function App() {
   return (
     <>
@@ -59,19 +57,19 @@ export default function App() {
         {/* Public routes */}
         <Route path="/" element={<Login />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/test2" element={<Test2 />} />
-        <Route path="/test" element={<Test />} />
-        <Route path="/std-scheduler" element={<StudentScheduler />} />
 
         {/* Protected Routes */}
 
         <Route element={<PersistLogin />}>
           <Route element={<RequireAuth allowedRoles={["Student"]} />}>
-            <Route path="/user/Basic-info" element={<BasicInfo />} />
-            <Route path="/user/examtable" element={<ExamTable />} />
-            <Route path="/user/time-table" element={<TimeTable />} />
-            <Route path="/user/tuitionFees" element={<TuitionFees />} />
-            <Route path="/user/course-grades" element={<CourseGrades />} />
+            <Route path="/user/" element={<User />}>
+              <Route path="Basic-info" element={<BasicInfo />} />
+              <Route path="examtable" element={<ExamTable />} />
+              <Route path="time-table" element={<TimeTable />} />
+              <Route path="tuitionFees" element={<TuitionFees />} />
+              <Route path="course-grades" element={<CourseGrades />} />
+              <Route path="std-scheduler" element={<StudentScheduler />} />
+            </Route>
           </Route>
 
           <Route path="/admin/" element={<Admin />}>
@@ -88,7 +86,6 @@ export default function App() {
                 />
               }
             >
-        <Route path="ss" element={<Api />} />
               <Route path="basic" element={<Basic />} />
             </Route>
 
@@ -112,11 +109,10 @@ export default function App() {
               />
               <Route path="add-control-member" element={<AddControlMember />} />
               <Route path="control" element={<Control />} />
-              <Route path="student-format" element={<StudentForamt/>}/>
+              <Route path="student-format" element={<StudentForamt />} />
               <Route path="admin-scheduler" element={<AdminScheduler />} />
-              <Route path="scheduler" element={<SchedulerView/>}/>
-              <Route path="places" element={<Places/>}/>
-              
+              <Route path="scheduler" element={<SchedulerView />} />
+              <Route path="places" element={<Places />} />
             </Route>
 
             <Route
@@ -132,38 +128,19 @@ export default function App() {
               <Route path="add-student" element={<AddStudent />} />
             </Route>
 
-            <Route
-              element={
-                <RequireAuth
-                  allowedRoles={[
-                    "Teacher",
-                  ]}
-                />
-              }
-            >
+            <Route element={<RequireAuth allowedRoles={["Teacher"]} />}>
               <Route path="notes" element={<Notes />} />
             </Route>
 
             <Route
-              element={
-                <RequireAuth
-                  allowedRoles={[
-                    "TeacherAssistant",
-                  ]}
-                />
-              }
+              element={<RequireAuth allowedRoles={["TeacherAssistant"]} />}
             >
               <Route path="student-section" element={<StudentSection />} />
             </Route>
 
             <Route
               element={
-                <RequireAuth
-                  allowedRoles={[
-                    "TeacherAssistant",
-                    "Teacher"
-                  ]}
-                />
+                <RequireAuth allowedRoles={["TeacherAssistant", "Teacher"]} />
               }
             >
               <Route path="timeTable" element={<Timetable />} />
@@ -171,26 +148,13 @@ export default function App() {
 
             <Route
               element={
-                <RequireAuth
-                  allowedRoles={[
-                    "ControlMembers",
-                    "Teacher"
-                  ]}
-                />
+                <RequireAuth allowedRoles={["ControlMembers", "Teacher"]} />
               }
             >
               <Route path="course-grades" element={<AddCourseGrades />} />
             </Route>
 
-
-
-            <Route
-              element={
-                <RequireAuth
-                  allowedRoles={["ControlMembers"]}
-                />
-              }
-            >
+            <Route element={<RequireAuth allowedRoles={["ControlMembers"]} />}>
               <Route path="final-grades" element={<FinalGrades />} />
               <Route path="monitor-grades" element={<MonitorGrades />} />
             </Route>
@@ -198,12 +162,12 @@ export default function App() {
             <Route
               element={
                 <RequireAuth
-                  allowedRoles={["Administration","ControlMembers"]}
+                  allowedRoles={["Administration", "ControlMembers"]}
                 />
               }
             >
-            <Route path="reports" element={<Reports />} />
-            <Route path="student-result" element={<StudentCourse />} />
+              <Route path="reports" element={<Reports />} />
+              <Route path="student-result" element={<StudentCourse />} />
               <Route
                 path="student-result/student/:studentId"
                 element={<StudentResult />}

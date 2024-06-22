@@ -1,10 +1,12 @@
 import { FaSort } from "react-icons/fa";
 import Pagination from "../../Components/Pagination";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Button,
   Col,
+  Dropdown,
+  DropdownButton,
   FormLabel,
   FormSelect,
   Modal,
@@ -99,6 +101,8 @@ export default function Courses(props) {
     courses && courses.slice(indexOfFirstRecord, indexOfLastRecord);
   const nPages = courses && Math.ceil(courses.length / recordsPerPage);
 
+  const navigate =  useNavigate()
+
   const showCourses = courses ? (
     currentRecords.map((course) => (
       <tr key={course.id}>
@@ -132,6 +136,11 @@ export default function Courses(props) {
           >
             view
           </Link>
+          {/* <DropdownButton id="dropdown-basic-button" title="Actions">
+            <Dropdown.Item as={Button} onClick={() => handelDelete(course)}>Delete</Dropdown.Item>
+            <Dropdown.Item as={Button} onClick={() => openPrerequisite(course?.id)}>Prerequisite</Dropdown.Item>
+            <Dropdown.Item as={Button} onClick={()=>navigate(`course/${course.id}`)}>View</Dropdown.Item>
+          </DropdownButton> */}
         </td>
       </tr>
     ))

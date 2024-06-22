@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
-import Sidebar from "../../Components/sidebar";
-import Navbar from "../../Components/navbar";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
 export default function BasicInfo() {
-  const [changeActive, setChangeActive] = useState(true);
   const axios =useAxiosPrivate()
   const [studentData, setStudentData] = useState([])
 
@@ -18,12 +15,6 @@ export default function BasicInfo() {
     getStudentData()
   },[])
   return (
-    <div className="page">
-      <Sidebar changeActive={changeActive} />
-      {/* <!-- Main content --> */}
-      <div className={changeActive ? "main" : "main active"}>
-        {/* <!-- Top Bar (Naigation bar) --> */}
-        <Navbar changeActive={changeActive} setChangeActive={setChangeActive} />
         <div className="basic-info">
           <div className="item">
             <fieldset>
@@ -134,7 +125,6 @@ export default function BasicInfo() {
             </fieldset>
           </div>
         </div>
-      </div>
-    </div>
+      
   );
 }

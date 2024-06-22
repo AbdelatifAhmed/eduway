@@ -1,16 +1,7 @@
-import { useState } from "react";
-import Sidebar from "../../Components/sidebar";
-import Navbar from "../../Components/navbar";
+
 export default function ExamTable() {
-  const [changeActive, setChangeActive] = useState(true);
   return (
-    <div className="page">
-      <Sidebar changeActive={changeActive} />
-      {/* <!-- Main content --> */}
-      <div className={changeActive ? "main" : "main active"}>
-        {/* <!-- Top Bar (Naigation bar) --> */}
-        <Navbar changeActive={changeActive} setChangeActive={setChangeActive} />
-        {/* conent */}
+
         <div className="exam-table">
           <div className="head">
             <p>data&amp;time:</p>
@@ -77,7 +68,6 @@ export default function ExamTable() {
             </table>
           </div>
         </div>
-      </div>
-    </div>
+
   );
 }
