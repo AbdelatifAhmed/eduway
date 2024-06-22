@@ -2,19 +2,20 @@ import React, { useState, useEffect } from "react";
 import { Accordion, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from "../../hooks/useFaculty";
 
 export default function MonitorGrades() {
   const axios = useAxiosPrivate();
   const [array1, setArray1] = useState([]);
   const [array2Data, setArray2Data] = useState({});
-
+  const {globalFaculty} = useFaculty()
   useEffect(() => {
     fetchArray1Data();
   }, []);
 
   const fetchArray1Data = () => {
     axios
-      .get("api/Control/GetAllSemester")
+      .get(`api/Control/GetAllSemester/${globalFaculty}`)
       .then((response) => {
         const semesterName = response.data?.data?.semesterName ?? [];
         setArray1(semesterName);

@@ -1,9 +1,8 @@
-import avatar from "../images/avatar.jpg";
 import { useEffect, useState } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivatet";
 import useFaculty from "../hooks/useFaculty";
 import useAuth from "../hooks/useAuth";
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from "jwt-decode"; // Remove the curly braces
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -11,6 +10,8 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { useNavigate } from "react-router-dom";
+import { Modal } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 export default function MyNavbar(props) {
   const [rotateIcon, setRotateIcon] = useState(false);
@@ -22,6 +23,9 @@ export default function MyNavbar(props) {
 
   const axios = useAxiosPrivate();
   const [facultyNames, setFacultyNames] = useState([]);
+  const [psw, setPsw] = useState();
+  const [new_psw, setNew_psw] = useState();
+  const [con_psw, setCon_psw] = useState();
   const { setGlobalFaculty } = useFaculty();
   const { Auth } = useAuth();
   const [decoded, setDecoded] = useState();
@@ -36,8 +40,12 @@ export default function MyNavbar(props) {
     if (Auth?.dataDetails?.roles?.includes("Administration")) {
       try {
         const res = await axios.get("/api/Facult/Faculty");
-        setFacultyNames(res?.data?.data?.getFacultyDtos || []);
-        if (
+        const faculties = res?.data?.data?.getFacultyDtos || [];
+        setFacultyNames(faculties);
+        if (faculties.length === 1) {
+          setGlobalFaculty(faculties[0].facultId);
+          setIsInvalid(false);
+        } else if (
           res.status === 204 ||
           (res.data?.data?.getFacultyDtos &&
             res.data?.data?.getFacultyDtos.length === 0)
@@ -50,8 +58,10 @@ export default function MyNavbar(props) {
       }
     } else {
       try {
-        if(!Auth?.dataDetails?.roles === 'Student'){const staffRes = await axios.get("/api/staff/F");
-        setGlobalFaculty(staffRes?.data?.data?.factulyId);}
+        if (Auth?.dataDetails?.roles !== "Student") {
+          const staffRes = await axios.get("/api/staff/F");
+          setGlobalFaculty(staffRes?.data?.data?.factulyId);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -61,52 +71,131 @@ export default function MyNavbar(props) {
   useEffect(() => {
     getAllFaculty();
   }, []);
-  const navigate = useNavigate()
-  const goToStudentFormat =()=>{
+
+  const navigate = useNavigate();
+  const goToStudentFormat = () => {
     navigate("/admin/student-format");
-  }
+  };
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const handelChangePassword = async () => {
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
+
+    const data = {
+      oldPassword: psw,
+      newPassword: new_psw,
+      confirmPassword: con_psw,
+    };
+    try {
+      await axios.post(`api/Auth/ChangePassword`, data).then((res) => {
+        Toast.fire({
+          icon: "success",
+          title: res?.data.message,
+        });
+        setCon_psw("");
+        setPsw("");
+        setNew_psw("");
+      });
+    } catch (error) {
+      console.error(error);
+      Toast.fire({
+        icon: "error",
+        title: error?.response?.data.message,
+      });
+    }
+  };
+
+  const [showPass, setShowPass] = useState(true);
 
   return (
     <>
-      {/* <div className="topbar">
-        <div className="toggle-search">
-          <span className="toggle" onClick={toggle}>
-            <i className="fa-solid fa-bars"></i>
-          </span>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Change Password</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label htmlFor="inputPassword5">Old Password</Form.Label>
+            <Form.Control
+              type={showPass ? "password" : 'text'}
+              id="inputPassword"
+              placeholder="Old Password"
+              aria-describedby="passwordHelpBlock"
+              onChange={(e) => setPsw(e.target.value)}
+              value={psw}
+            />
+          </Form.Group>
+          <Form.Group className="mt-3">
+            <Form.Label htmlFor="inputPassword5">New Password</Form.Label>
+            <Form.Control
+              type={showPass ? "password" : 'text'}
+              placeholder="New Password"
+              id="inputNewPassword"
+              aria-describedby="passwordHelpBlock"
+              onChange={(e) => setNew_psw(e.target.value)}
+              value={new_psw}
+            />
+          </Form.Group>
 
-          {Auth?.dataDetails?.roles?.includes("Administration") &&
-          facultyNames.length > 1 ? (
+          <Form.Group className="mt-3">
+            <Form.Label htmlFor="inputPassword5">Confirm Password</Form.Label>
+            <Form.Control
+              type={showPass ? "password" : 'text'}
+              placeholder="Confirm Password"
+              id="inputConPassword"
+              aria-describedby="passwordHelpBlock"
+              onChange={(e) => setCon_psw(e.target.value)}
+              value={con_psw}
+            />
+          </Form.Group>
+          <div className="d-flex align-items-center gap-2 mt-3">
             <span>
-              <Form.Select
-                aria-label="Default select example"
-                onChange={(e) => setGlobalFaculty(e.target.value)}
+              <Button
+                size="sm"
+                variant="light"
+                onClick={() => setShowPass(!showPass)}
               >
-                <option defaultValue hidden>
-                  Select Faculty
-                </option>
-                {facultyNames.map((f, i) => (
-                  <option key={i} value={f.facultId}>
-                    {f.facultName}
-                  </option>
-                ))}
-              </Form.Select>
+                {showPass ? (
+                  <i class="fa-solid fa-eye"></i>
+                ) : (
+                  <i class="fa-solid fa-eye-slash"></i>
+                )}
+              </Button>
             </span>
-          ) : (
-            ""
-          )}
-        </div>
-        <div className="user">
-          <p id="name">{decoded?.name}</p>
-          <img src={avatar} alt="Avatar" />
-          <i className="fa-solid fa-gear fa-fw"></i>
-
-          <i className="fa-solid fa-circle-question fa-fw"></i>
-          <i className="fa-regular fa-bell fa-fw"></i>
-        </div>
-      </div> */}
-      <Navbar collapseOnSelect expand="lg" className="bg-body-tertiary" style={{background:"red"}} sticky="top">
+            <span>show Password</span>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handelChangePassword}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Navbar
+        collapseOnSelect
+        expand="lg"
+        className="bg-body-tertiary"
+        style={{ background: "red" }}
+        sticky="top"
+      >
         <Container fluid>
-          <Navbar.Brand >
+          <Navbar.Brand>
             <span className="toggle" onClick={toggle}>
               <i
                 className={`fa-solid fa-circle-chevron-left ${
@@ -118,52 +207,66 @@ export default function MyNavbar(props) {
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-            <Nav.Link style={{ display: "flex", alignItems: "center" ,justifyContent:"center"}}>
-                <p style={{ textTransform: "capitalize",display:"flex",alignItems:"center" }}>
+              <Nav.Link
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <p
+                  style={{
+                    textTransform: "capitalize",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
                   <strong>user </strong> | {decoded?.name}
                 </p>
               </Nav.Link>
-              
             </Nav>
             <Nav className="d-flex align-items-center gap-2">
-           { Auth?.dataDetails?.roles?.includes("Administration")
-            ? <NavDropdown title="Settings" id="collapsible-nav-dropdown">
-                <NavDropdown.Item as={Button} onClick={goToStudentFormat}>Student Format</NavDropdown.Item>
-                <NavDropdown.Item as={Button}>
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">
-                  Something
-                </NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">
-                  Separated link
-                </NavDropdown.Item>
-              </NavDropdown> :""}
-            {Auth?.dataDetails?.roles?.includes("Administration") &&
-            facultyNames.length > 1 ? (
-              <span>
-                <Form.Select
-                  aria-label="Default select example"
-                  onChange={(e) => {
-                    setGlobalFaculty(e.target.value);
-                    setIsInvalid(false);
-                  }}
-                  isInvalid={isInvalid}
-                >
-                  <option defaultValue hidden>
-                    Select Faculty
-                  </option>
-                  {facultyNames.map((f, i) => (
-                    <option key={i} value={f.facultId}>
-                      {f.facultName}
+              {Auth?.dataDetails?.roles?.includes("Administration") && (
+                <NavDropdown title="Settings" id="collapsible-nav-dropdown">
+                  <NavDropdown.Item as={Button} onClick={goToStudentFormat}>
+                    Student Format
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Button}>
+                    Another action
+                  </NavDropdown.Item>
+                  <NavDropdown.Item as={Button} onClick={handleShow}>
+                    Change Password
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item href="#action/3.4">
+                    Separated link
+                  </NavDropdown.Item>
+                </NavDropdown>
+              )}
+              {Auth?.dataDetails?.roles?.includes("Administration") &&
+              facultyNames.length > 1 ? (
+                <span>
+                  <Form.Select
+                    aria-label="Default select example"
+                    onChange={(e) => {
+                      setGlobalFaculty(e.target.value);
+                      setIsInvalid(false);
+                    }}
+                    isInvalid={isInvalid}
+                  >
+                    <option defaultValue hidden>
+                      Select Faculty
                     </option>
-                  ))}
-                </Form.Select>
-              </span>
-            ) : (
-              ""
-            )}
+                    {facultyNames.map((f, i) => (
+                      <option key={i} value={f.facultId}>
+                        {f.facultName}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </span>
+              ) : (
+                ""
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>

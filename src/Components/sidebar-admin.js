@@ -19,7 +19,9 @@ export default function SidebarAdmin(props) {
       { to: "/admin/courses", icon: "fa-book", label: "Courses" },
       { to: "/admin/staff", icon: "fa-users", label: "Staff" },
       { to: "/admin/control", icon: "fa-sliders", label: "Control" },
-      { to: "/admin/reports", icon: "fa-folder-open", label: "Reports" }
+      { to: "/admin/scheduler", icon: "fa-calendar-days", label: "scheduler" },
+      { to: "/admin/reports", icon: "fa-folder-open", label: "Reports" },
+
     ],
     Teacher: [
       { to: "/admin/course-grades", icon: "fa-file-import", label: "Enter Grades" },
@@ -34,9 +36,10 @@ export default function SidebarAdmin(props) {
       { to: "/admin/timeTable", icon: "fa-user-tie", label: "TimeTable" }
     ],
     ControlMembers: [
+      { to: "/admin/course-grades", icon: "fa-file-import", label: "Enter Grades" },
       { to: "/admin/final-grades", icon: "fa-file-circle-plus", label: "Enter Final Grades" },
       { to: "/admin/monitor-grades", icon: "fa-file-circle-check", label: "Monitor Grades" },
-      { to: "/admin/reports", icon: "fa-folder-open", label: "Reports" }
+      { to: "/admin/reports", icon: "fa-folder-open", label: "Reports" },
     ]
   };
 

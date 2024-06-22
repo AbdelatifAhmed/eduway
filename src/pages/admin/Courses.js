@@ -72,7 +72,7 @@ export default function Courses(props) {
             .then((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Deleted!",
-                text: "Your Course has been Deleted.",
+                text: res?.data?.message,
                 icon: "success",
               });
               getCourses();
@@ -80,14 +80,13 @@ export default function Courses(props) {
             .catch((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Error!",
-                text: res?.data?.message,
+                text: res?.data?.response?.message,
                 icon: "error",
               });
             });
         } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire({
             title: "Cancelled",
-            text: "Your Course is safe :)",
             icon: "error",
           });
         }

@@ -14,9 +14,11 @@ import { MdModeEditOutline } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
+import useFaculty from "../../hooks/useFaculty";
 
 export default function FinalGrades() {
   const axios = useAxiosPrivate();
+  const { globalFaculty } = useFaculty()
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState();
   const [studentData, setStudentData] = useState([]);
@@ -28,12 +30,15 @@ export default function FinalGrades() {
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage, setRecordsPerPage] = useState(10);
 
-  useEffect(() => {
-    axios
-      .get("/api/Control/GetAllSemester")
-      .then((res) => setCurrentSemesters(res?.data?.data))
-      .catch((err) => console.log(err));
-  }, [axios]);
+    useEffect(() => {
+      if(globalFaculty)
+        {
+          axios
+        .get(`api/Control/GetAllSemester/${globalFaculty}`)
+        .then((res) => setCurrentSemesters(res?.data?.data))
+        .catch((err) => console.log(err));
+        }
+    }, [globalFaculty]);
 
   useEffect(() => {
     if (currentSemesterId) {
@@ -192,8 +197,8 @@ export default function FinalGrades() {
     </tr>
   );
 
-  const showCurrentSemesters = currentSemesters && currentSemesters?.semesterName.length > 0 ? (
-    currentSemesters?.semesterName.map((element) => (
+  const showCurrentSemesters = currentSemesters && currentSemesters?.semesterName?.length > 0 ? (
+    currentSemesters?.semesterName?.map((element) => (
       <option key={element.id} value={element.id}>{element.name}</option>
     ))
   ) : (
@@ -309,7 +314,7 @@ export default function FinalGrades() {
               </Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-              <FormGroup className="mb-3" controlId="exampleForm.ControlInput1">
+            <FormGroup className="mb-3" controlId="exampleForm.ControlInput1">
                 <FormLabel style={{ fontSize: "20px" }}>Semester Name</FormLabel>
                 <FormSelect onChange={(e) => setCurrentSemesterId(e.target.value)}>
                   <option hidden defaultValue>

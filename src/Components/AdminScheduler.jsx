@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Modal, Row, Col, Table } from "react-bootstrap";
 import useAxiosPrivate from "../hooks/useAxiosPrivatet";
-
+import Swal from "sweetalert2";
+import { FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 const daysOfWeek = [
   { name: "Saturday", value: "1" },
   { name: "Sunday", value: "2" },
@@ -180,30 +182,51 @@ const Admin = () => {
     setShow(false); // Close the modal
   };
 
+   
   const handleSendSchedule = async () => {
-    console.log(scheduleArray);
     const data = {
       semesterDegreeId: +selectedSemester,
       academyYearId: 0,
       scheduleDetails: scheduleArray,
     };
+
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.onmouseenter = Swal.stopTimer;
+        toast.onmouseleave = Swal.resumeTimer;
+      },
+    });
     try {
-      await axiosPrivate.post("api/schedule", data);
-      alert("Schedule submitted successfully!");
+      const response = await axiosPrivate.post("api/schedule", data);
+      Toast.fire({
+          icon: "success",
+          title: response?.data.message,
+        });
       setScheduleArray([]);
     } catch (error) {
       console.log(error);
+      Toast.fire({
+        icon: "error",
+        title: error?.response?.data.message,
+      });
     }
   };
-
   const handleDelete = (index) => {
     setScheduleArray((prevArray) =>
       prevArray.filter((_, i) => i !== index)
     );
   };
 
+  const navigate = useNavigate()
+
   return (
     <div className="pad">
+      <Button onClick={()=>navigate(-1)}><FaArrowLeft/></Button>
       <Row>
         <Col>
           <Form.Group controlId="formFaculty">

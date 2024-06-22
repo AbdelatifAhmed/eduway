@@ -50,6 +50,8 @@ import AdminScheduler from "./Components/AdminScheduler.jsx";
 import StudentScheduler from "./Components/StudentTimeTable.jsx";
 import StudentSection from "./pages/Courses/StudentSection.js";
 import Timetable from "./Components/TimeTable.jsx";
+import SchedulerView from "./Components/SchedulerView.js";
+import Places from "./Components/Places.jsx";
 export default function App() {
   return (
     <>
@@ -112,7 +114,9 @@ export default function App() {
               <Route path="control" element={<Control />} />
               <Route path="student-format" element={<StudentForamt/>}/>
               <Route path="admin-scheduler" element={<AdminScheduler />} />
-
+              <Route path="scheduler" element={<SchedulerView/>}/>
+              <Route path="places" element={<Places/>}/>
+              
             </Route>
 
             <Route
@@ -137,7 +141,6 @@ export default function App() {
                 />
               }
             >
-              <Route path="course-grades" element={<AddCourseGrades />} />
               <Route path="notes" element={<Notes />} />
             </Route>
 
@@ -166,6 +169,19 @@ export default function App() {
               <Route path="timeTable" element={<Timetable />} />
             </Route>
 
+            <Route
+              element={
+                <RequireAuth
+                  allowedRoles={[
+                    "ControlMembers",
+                    "Teacher"
+                  ]}
+                />
+              }
+            >
+              <Route path="course-grades" element={<AddCourseGrades />} />
+            </Route>
+
 
 
             <Route
@@ -177,7 +193,6 @@ export default function App() {
             >
               <Route path="final-grades" element={<FinalGrades />} />
               <Route path="monitor-grades" element={<MonitorGrades />} />
-              
             </Route>
 
             <Route

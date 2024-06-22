@@ -182,7 +182,7 @@ export default function Control() {
         .catch((err) => console.log(err));
 
       axios
-        .get("/api/Control/GetAllSemester")
+        .get(`/api/Control/GetAllSemester/${globalFaculty}`)
         .then((res) => setCurrentSemesters(res?.data?.data))
         .catch((err) => console.log(err));
 
@@ -611,10 +611,10 @@ export default function Control() {
         }
         resetVariables();
       })
-      .catch(() => {
+      .catch((err) => {
         Toast.fire({
           icon: "error",
-          title: "Error Occured",
+          title: err?.response?.data?.message ,
         });
       });
   };

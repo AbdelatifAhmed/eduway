@@ -86,14 +86,12 @@ export default function Faculty() {
       <AddFaculty getFacultiesForMainPage={getFacultiesForMainPage} shouldRefetch={shouldRefetch} setShouldRefetch={setShouldRefetch}/>
       <div
         style={{
-          background: "white",
           margin: "20px",
           padding: "10px",
-          boxShadow: "-4px 2px 10px rgba(0,0,0,0.25)",
           display: "flex",
           gap: "10px",
           flexWrap: "wrap",
-        }}
+   }}
       >
         {facultyNames?.map((f, i) => (
           <Card

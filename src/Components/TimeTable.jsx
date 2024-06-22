@@ -1,4 +1,3 @@
-// src/components/Timetable.js
 import React from 'react';
 import useFetchTimetable from './fetchTimetable';
 import { Table } from 'react-bootstrap';
@@ -26,16 +25,20 @@ const Timetable = () => {
             const endIndex = getHourIndex(endTime);
             const span = endIndex - startIndex;
 
-            timetableMatrix[startIndex][slot.scheduleDay - 1] = {
-                slot,
-                span,
-                isMain: true,
-            };
-
-            for (let i = startIndex + 1; i < endIndex; i++) {
-                timetableMatrix[i][slot.scheduleDay - 1] = {
-                    isMain: false,
+            if (startIndex >= 0 && startIndex < 13 && endIndex > startIndex && endIndex <= 13) {
+                timetableMatrix[startIndex][slot.scheduleDay - 1] = {
+                    slot,
+                    span,
+                    isMain: true,
                 };
+
+                for (let i = startIndex + 1; i < endIndex; i++) {
+                    if (i < 13) {
+                        timetableMatrix[i][slot.scheduleDay - 1] = {
+                            isMain: false,
+                        };
+                    }
+                }
             }
         });
 
@@ -43,6 +46,38 @@ const Timetable = () => {
     };
 
     const timetableMatrix = generateTimetable();
+
+    function convertTo12HourFormat(timeRange) {
+        // Split the time range into start and end times
+        const [startTime, endTime] = timeRange.split(' - ');
+    
+        // Helper function to convert a single time from 24-hour to 12-hour format
+        const convertTo12Hour = (time) => {
+            const [hour, minute] = time.split(':');
+            let period = 'AM';
+            let hour12 = parseInt(hour);
+    
+            if (hour12 >= 12) {
+                period = 'PM';
+                if (hour12 > 12) {
+                    hour12 -= 12;
+                }
+            }
+    
+            if (hour12 === 0) {
+                hour12 = 12; // 0 hour (midnight) should be 12 AM in 12-hour format
+            }
+    
+            return `${hour12}:${minute} ${period}`;
+        };
+    
+        // Convert both start and end times
+        const start12Hour = convertTo12Hour(startTime);
+        const end12Hour = convertTo12Hour(endTime);
+    
+        // Return the formatted time range
+        return `${start12Hour} - ${end12Hour}`;
+    }
 
     return (
         <div className='pad'>
@@ -73,7 +108,7 @@ const Timetable = () => {
                                     if (cellData.isMain) {
                                         const { slot, span } = cellData;
                                         return (
-                                            <td key={day} rowSpan={span} style={{ background: slot.scheduleType === 1 ? '#FFD700' : '#ADFF2F', padding: '10px', borderRadius: '5px', marginBottom: '5px' }}>
+                                            <td key={day} title={convertTo12HourFormat(slot?.timing)} rowSpan={span} style={{ background: slot.scheduleType === 1 ? '#FFD700' : '#ADFF2F', padding: '10px', borderRadius: '5px', marginBottom: '5px' }}>
                                                 <p>{slot.coursesName}</p>
                                                 <p>{slot.coursesCode}</p>
                                                 <p>{slot.schedulePlacesName}</p>
