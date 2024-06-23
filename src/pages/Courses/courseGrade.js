@@ -323,49 +323,49 @@ export default function AddCourseGrades() {
   const handleShow = () => setShow(true);
   const [excelDl, setExcelDl] = useState(false);
   const [excelUl, setExcelUl] = useState(false);
-  const [isTrue, setIsTrue] = useState(false)
-  const handelExcelDownload = async()=> {
-
+  const [isTrue, setIsTrue] = useState(false);
+  const handelExcelDownload = async () => {
     try {
       const response = await axios.get(
         `api/Course/GetExcelFileForSpecificCourse/${selectedCourse?.courseId}/${isTrue}`,
         {
-          responseType: 'blob', // Important to handle the file as a Blob
+          responseType: "blob", // Important to handle the file as a Blob
         }
       );
       // Create a URL for the blob
       const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.setAttribute('download', 'EduWay-AssessmentMethods.xlsx'); // Set default file name
+      link.setAttribute("download", "EduWay-AssessmentMethods.xlsx"); // Set default file name
       document.body.appendChild(link);
       link.click();
 
       // Clean up and remove the link
       link.parentNode.removeChild(link);
-    }
-     catch (error) {
+    } catch (error) {
       console.error("Error downloading the file:", error);
     }
-
-  } 
+  };
 
   return (
     <>
       <div className="pad">
         <header style={{ paddingRight: "15px" }}>
-          <div className="d-flex justify-content-between ">
-            <div>
+          <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <div className="mb-2 mb-md-0">
               <Button variant="success" onClick={sendEditedDataToServer}>
                 Save
               </Button>
             </div>
-            <div style={{ width: "200px" }}>
-              <Row>
-                <Col className="d-flex justify-content-end ">
-                  <FormLabel style={{ fontSize: "25px" }}>Display</FormLabel>
+
+            <div className="mb-2 mb-md-0" style={{ maxWidth: "200px" }}>
+              <Row className="g-2 align-items-center">
+                <Col xs="auto" className="d-flex align-items-center">
+                  <FormLabel className="mb-0" style={{ fontSize: "16px" }}>
+                    Display
+                  </FormLabel>
                 </Col>
-                <Col>
+                <Col xs="auto">
                   <FormSelect
                     onChange={(e) => setRecordsPerPage(e.target.value)}
                   >
@@ -378,31 +378,37 @@ export default function AddCourseGrades() {
                 </Col>
               </Row>
             </div>
+
             <div>
               <Button variant="dark" onClick={openCoursesDisplay}>
                 Select Course
               </Button>
             </div>
-          </div>
+          </div>  
           <hr />
-          <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
+            {/* Course Name */}
             <div
+              className="mb-3 mb-md-0"
               style={{
-                fontSize: "30px",
+                fontSize: "24px",
                 fontWeight: "bold",
+                textAlign: "center",
               }}
             >
               {selectedCourse
-                ? `Course Name : ${selectedCourse?.courseName}`
+                ? `Course Name : ${selectedCourse.courseName}`
                 : "Choose a Course"}
             </div>
+
+            {/* Excel Icon */}
             <div>
               <RiFileExcel2Fill
-                size={"50px"}
+                size={"40px"}
                 style={{
                   background: "green",
                   color: "white",
-                  padding: "5px",
+                  padding: "8px",
                   borderRadius: "5px",
                   cursor: "pointer",
                 }}
@@ -426,7 +432,7 @@ export default function AddCourseGrades() {
                       setExcelUl(true);
                     }}
                   >
-                    <MdCloudUpload size={"30px"}/>
+                    <MdCloudUpload size={"30px"} />
                   </Button>
                   <Button
                     variant="success"
@@ -436,14 +442,20 @@ export default function AddCourseGrades() {
                       setExcelDl(true);
                     }}
                   >
-                    <MdCloudDownload size={"30px"}/>
+                    <MdCloudDownload size={"30px"} />
                   </Button>
                 </ButtonGroup>
 
-                {excelUl === true && selectedCourse? (
+                {excelUl === true && selectedCourse ? (
                   <div>
                     <hr />
-                    <Uploader type={1} url={'api/Course/UpdateCourseStudentsAssessMethodWithExcelFile/'}  id={selectedCourse?.courseId}/>
+                    <Uploader
+                      type={1}
+                      url={
+                        "api/Course/UpdateCourseStudentsAssessMethodWithExcelFile/"
+                      }
+                      id={selectedCourse?.courseId}
+                    />
                   </div>
                 ) : excelDl === true && selectedCourse ? (
                   <div>
@@ -453,12 +465,17 @@ export default function AddCourseGrades() {
                         id="custom-switch"
                         label="Old data"
                         value={isTrue}
-                        onChange={()=>setIsTrue(!isTrue)}
+                        onChange={() => setIsTrue(!isTrue)}
                       />
                       <div className="d-grid gap-2 mt-2">
-                        <Button variant="primary" size="lg" onClick={handelExcelDownload} className="d-flex gap-2 justify-content-center align-items-center">
-                        <i class="fa-solid fa-file-pen"></i>
-                        <span>Download</span>
+                        <Button
+                          variant="primary"
+                          size="lg"
+                          onClick={handelExcelDownload}
+                          className="d-flex gap-2 justify-content-center align-items-center"
+                        >
+                          <i class="fa-solid fa-file-pen"></i>
+                          <span>Download</span>
                         </Button>
                       </div>
                     </Form>

@@ -23,8 +23,6 @@ export default function CourseGrades() {
       className="course-grade"
       style={{ display: "flex", flexDirection: "column", gap: "20px" }}
     >
-
-       
           {courseGrades ? courseGrades?.map((item,index)=>(
             <CourseGradesTable key={index} studentName={studentName} data={item}/>
           )):

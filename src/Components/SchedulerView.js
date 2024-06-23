@@ -356,7 +356,7 @@ const SchedulerView = () => {
 
   return (
     <div className="pad">
-      <Row>
+      <Row >
         <div className="d-flex justify-content-between">
           <Button onClick={() => navigate("/admin/admin-scheduler")}>
             New Schedules
@@ -364,55 +364,56 @@ const SchedulerView = () => {
           <Button onClick={() => navigate("/admin/places")}>Places</Button>
         </div>
       </Row>
-      <Row>
-        <Col>
-          <Form.Group controlId="formFaculty">
-            <Form.Label>Faculty</Form.Label>
-            <Form.Control
-              as="select"
-              value={selectedFaculty}
-              onChange={(e) => setSelectedFaculty(e.target.value)}
-              required
-            >
-              <option defaultValue hidden>
-                Select faculty
+      <Row className="scheduler-head">
+      <Col xs={12} md={5}>
+        <Form.Group controlId="formFaculty">
+          <Form.Label>Faculty</Form.Label>
+          <Form.Control
+            as="select"
+            value={selectedFaculty}
+            onChange={(e) => setSelectedFaculty(e.target.value)}
+            required
+          >
+            <option defaultValue hidden>
+              Select faculty
+            </option>
+            {facultyNames?.map((item, i) => (
+              <option key={i} value={item?.facultId}>
+                {item?.facultName}
               </option>
-              {facultyNames?.map((item, i) => (
-                <option key={i} value={item?.facultId}>
-                  {item?.facultName}
+            ))}
+          </Form.Control>
+        </Form.Group>
+      </Col>
+      <Col xs={12} md={5}>
+        <Form.Group controlId="formCurrentSems">
+          <Form.Label>Current Semester</Form.Label>
+          <Form.Control
+            as="select"
+            value={selectedSemester}
+            onChange={(e) => setSelectedSemester(e.target.value)}
+            required
+          >
+            <option defaultValue hidden>
+              Select semester
+            </option>
+            {currentSemesters && currentSemesters.length > 0 ? (
+              currentSemesters?.map((item, i) => (
+                <option key={i} value={item?.id}>
+                  {item?.name}
                 </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-        </Col>
-        <Col>
-          <Form.Group controlId="formCurrentSems">
-            <Form.Label>Current Semester</Form.Label>
-            <Form.Control
-              as="select"
-              value={selectedSemester}
-              onChange={(e) => setSelectedSemester(e.target.value)}
-              required
-            >
-              <option defaultValue hidden>
-                Select semester
-              </option>
-              {currentSemesters && currentSemesters.length > 0 ? (
-                currentSemesters?.map((item, i) => (
-                  <option key={i} value={item?.id}>
-                    {item?.name}
-                  </option>
-                ))
-              ) : (
-                <option>No Semesters</option>
-              )}
-            </Form.Control>
-          </Form.Group>
-        </Col>
-        <Col sm={2} className="d-flex align-items-end justify-content-end">
-        <Button variant="secondary" onClick={handelRaiseTable}>Raise Table </Button>
-        </Col>
-      </Row>
+              ))
+            ) : (
+              <option>No Semesters</option>
+            )}
+          </Form.Control>
+        </Form.Group>
+      </Col>
+      <Col xs={12} md={2} className="d-flex align-items-end justify-content-md-end mt-2 mt-md-0">
+        <Button variant="secondary" onClick={handelRaiseTable}>Raise Table</Button>
+      </Col>
+    </Row>
+      <div className="table-content">
       <Table striped bordered hover className="mt-3">
         <thead>
           <tr>
@@ -467,6 +468,7 @@ const SchedulerView = () => {
           )}
         </tbody>
       </Table>
+      </div>
 
       <Modal show={show} onHide={() => setShow(false)}>
         <Modal.Header closeButton>

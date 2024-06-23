@@ -40,6 +40,7 @@ const StudentTimetable = ({ timetable }) => {
     return (
         <div className='pad'>
             <h2>Student Timetable</h2>
+            <div className='table-content'>
             <Table bordered>
                 <thead>
                     <tr>
@@ -79,6 +80,7 @@ const StudentTimetable = ({ timetable }) => {
                     ))}
                 </tbody>
             </Table>
+            </div>
         </div>
     );
 };

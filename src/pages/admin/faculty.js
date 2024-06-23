@@ -1,38 +1,32 @@
 import AddFaculty from "./addFaculty";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Card } from "react-bootstrap";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+
 export default function Faculty() {
   const axios = useAxiosPrivate();
   const [facultyNames, setFacultyNames] = useState([]);
   const [shouldRefetch, setShouldRefetch] = useState(false);
 
-// {
-  // const [shouldRefetch, setShouldRefetch] = useState(false);
-  // const getAllFaculty = async () => {
-  //   await axios
-  //     .get("/api/Facult/Faculty")
-  //     .then((res) => {setFacultyNames(res?.data?.data?.getFacultyDtos) 
-  //                       console.log('afterDelete',facultyNames)})
-  //     .catch((err) => console.log(err));
-  // };
+  useEffect(() => {
+    const getAllFaculty = async () => {
+      await axios
+        .get("/api/Facult/Faculty")
+        .then((res) => {
+          setFacultyNames(res?.data?.data?.getFacultyDtos);
+        })
+        .catch((err) => console.log(err));
+    };
 
-  // useEffect(() => {
-  //   getAllFaculty();
-  // }, [shouldRefetch]);
-
-  // const getFacultiesForMainPage = () => {
-  //   setShouldRefetch(true);
-  // }; 
-// }
+    getAllFaculty();
+  }, [shouldRefetch]);
 
   const getFacultiesForMainPage = (array) => {
-    setFacultyNames(array)
-  }
-  
+    setFacultyNames(array);
+  };
 
   const handelDelete = (faculty) => {
     const swalWithBootstrapButtons = Swal.mixin({
@@ -55,62 +49,65 @@ export default function Faculty() {
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
-           const respond = await axios.delete(`/api/Facult/${faculty.facultId}`)
-           swalWithBootstrapButtons.fire({
-             title: "Deleted!",
-             text: respond?.data?.message,
-             icon: "success",
-            })
+            const respond = await axios.delete(`/api/Facult/${faculty.facultId}`);
+            swalWithBootstrapButtons.fire({
+              title: "Deleted!",
+              text: respond?.data?.message,
+              icon: "success",
+            });
             setShouldRefetch(true);
-            } catch (error) {
+          } catch (error) {
             swalWithBootstrapButtons.fire({
               title: "Error!",
               text: "This Faculty Is Registed in Semester",
               icon: "error",
             });
           }
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire({
             title: "Cancelled",
-            text: "Your Student is safe :)",
+            text: "Your Faculty is safe :)",
             icon: "error",
           });
         }
       });
   };
+
   return (
     <div className="faculty">
-      <AddFaculty getFacultiesForMainPage={getFacultiesForMainPage} shouldRefetch={shouldRefetch} setShouldRefetch={setShouldRefetch}/>
+      <AddFaculty
+        getFacultiesForMainPage={getFacultiesForMainPage}
+        shouldRefetch={shouldRefetch}
+        setShouldRefetch={setShouldRefetch}
+      />
       <div
         style={{
           margin: "20px",
           padding: "10px",
-          display: "flex",
+          display: "grid",
           gap: "10px",
-          flexWrap: "wrap",
-   }}
+          gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+        }}
       >
         {facultyNames?.map((f, i) => (
           <Card
-            // bg={"secondary"}
             key={i}
             text={"white"}
-            style={{ width: "calc((100% / 4) - 86px )", background: "#6675f0" }}
+            style={{ background: "#6675f0" }}
             className="mb-2"
           >
             <Card.Header>Faculty</Card.Header>
             <Card.Body>
               <Card.Title>{f.facultName}</Card.Title>
-              <Card.Text className="opacity-75">
-                {f.facultDescription}
-              </Card.Text>
+              <Card.Text className="opacity-75">{f.facultDescription}</Card.Text>
             </Card.Body>
             <Card.Footer className="d-flex justify-content-between">
-              <Button variant="outline-danger" onClick={()=>handelDelete(f)}><MdDelete/></Button>
-              <Link to={`${f?.facultId}`} className="btn btn-outline-warning">Show details</Link>
+              <Button variant="outline-danger" onClick={() => handelDelete(f)}>
+                <MdDelete />
+              </Button>
+              <Link to={`${f?.facultId}`} className="btn btn-outline-warning">
+                Show details
+              </Link>
             </Card.Footer>
           </Card>
         ))}

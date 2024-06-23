@@ -104,11 +104,11 @@ export default function Student(props) {
   
   return (
     <div className="pad">
-      <header className="d-flex justify-content-between align-items-center" style={{paddingRight:"20px"}}>
+      <header className="d-flex justify-content-between align-items-center flex-wrap gap-2" style={{paddingRight:"20px"}}>
         <div>
         <Link
           to="/admin/add-student"
-          className="btn btn-info btn-lg"
+          className="btn btn-info btn-lg "
           style={{ color: "white" }}
         >
           + Add New Student

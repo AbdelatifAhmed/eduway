@@ -43,12 +43,12 @@ import FacultyDetails from "./pages/admin/facultyDetails.js";
 import StaffView from "./pages/admin/StaffView.js";
 import GraduationReport from "./pages/Reports/GraduationReport.js";
 import StudentForamt from "./pages/admin/StudentForamt.js";
-import AdminScheduler from "./Components/AdminScheduler.jsx";
-import StudentScheduler from "./Components/StudentTimeTable.jsx";
+import AdminScheduler from "./Components/AdminScheduler.js";
+import StudentScheduler from "./Components/StudentTimeTable.js";
 import StudentSection from "./pages/Courses/StudentSection.js";
-import Timetable from "./Components/TimeTable.jsx";
+import Timetable from "./Components/TimeTable.js";
 import SchedulerView from "./Components/SchedulerView.js";
-import Places from "./Components/Places.jsx";
+import Places from "./Components/Places.js";
 import User from "./pages/user/User.js";
 export default function App() {
   return (

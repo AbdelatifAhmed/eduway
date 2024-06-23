@@ -101,7 +101,6 @@ export default function Courses(props) {
     courses && courses.slice(indexOfFirstRecord, indexOfLastRecord);
   const nPages = courses && Math.ceil(courses.length / recordsPerPage);
 
-  const navigate =  useNavigate()
 
   const showCourses = courses ? (
     currentRecords.map((course) => (
@@ -224,7 +223,7 @@ export default function Courses(props) {
         </Modal.Footer> */}
       </Modal>
       <header
-        className="d-flex justify-content-between align-items-center"
+        className="d-flex justify-content-between align-items-center flex-wrap gap-2"
         style={{ paddingRight: "20px" }}
       >
         <div>

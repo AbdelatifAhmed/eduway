@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Tab, Tabs } from "react-bootstrap";
+import { Button, Tab, Tabs} from "react-bootstrap";
 import Pagination from "../../Components/Pagination";
 import StaffData from "./StaffData";
 import useAxiosPrivate from "../../hooks/useAxiosPrivatet";
@@ -15,10 +15,20 @@ export default function Staff() {
   const [teacherAssistant, setTeacherAssistant] = useState([]);
   const [controlMember, setControlMember] = useState([]);
 
-  //pagination
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
   const { globalFaculty } = useFaculty();
+
+  useEffect(() => {
+    if (globalFaculty) {
+      getAllAdministrations();
+      getAllControlMember();
+      getAllStaff();
+      getAllTeacher();
+      getAllTeacherAssistant();
+    }
+  }, [globalFaculty]);
 
   const getAllAdministrations = async () => {
     await axios
@@ -33,34 +43,27 @@ export default function Staff() {
       .then((res) => setStaff(res?.data?.data))
       .catch((err) => console.log(err));
   };
+
   const getAllTeacher = async () => {
     await axios
       .get(`/api/Teacher/GetAllTeacher/${globalFaculty}`)
       .then((res) => setTeacher(res?.data?.data))
       .catch((err) => console.log(err));
   };
+
   const getAllTeacherAssistant = async () => {
     await axios
       .get(`/api/TeacherAssistant/GetAllTeacherAssistant/${globalFaculty}`)
       .then((res) => setTeacherAssistant(res?.data?.data))
       .catch((err) => console.log(err));
   };
+
   const getAllControlMember = async () => {
     await axios
       .get(`/api/Control/GetAll/${globalFaculty}`)
       .then((res) => setControlMember(res?.data?.data))
       .catch((err) => console.log(err));
   };
-
-  useEffect(() => {
-    if (globalFaculty) {
-      getAllAdministrations();
-      getAllControlMember();
-      getAllStaff();
-      getAllTeacher();
-      getAllTeacherAssistant();
-    }
-  }, [globalFaculty]);
 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -88,7 +91,7 @@ export default function Staff() {
   const nPagesForControlMember =
     controlMember && Math.ceil(controlMember.length / recordsPerPage);
 
-  const handelDeleteٍ = (index, role) => {
+  const handelDelete = (index, role) => {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: "btn btn-success mx-2",
@@ -98,11 +101,11 @@ export default function Staff() {
     });
     swalWithBootstrapButtons
       .fire({
-        title: `Are you sure you want to Delete ${index.staffNameEnglish}?`,
+        title: `Are you sure you want to delete ${index.staffNameEnglish}?`,
         text: "You won't be able to revert this!",
         icon: "question",
         showCancelButton: true,
-        confirmButtonText: "Yes, Delete it!",
+        confirmButtonText: "Yes, delete it!",
         cancelButtonText: "No, cancel!",
         reverseButtons: true,
       })
@@ -142,127 +145,29 @@ export default function Staff() {
       });
   };
 
-  const showAdminstration = administration ? (
-    currentRecordsAdmin.map((admin) => (
-      <tr key={admin.staffId}>
-        <td>{admin.staffNameArbic}</td>
-        <td>{admin.staffNameEnglish}</td>
-        <td>{admin.email}</td>
-        <td>{admin.gender}</td>
-        <td>{admin.nationality}</td>
-        <td>{admin.religion}</td>
+  const renderTableRows = (data, role) =>
+    data.map((item) => (
+      <tr key={item.staffId}>
+        <td>{item.staffNameArbic}</td>
+        <td>{item.staffNameEnglish}</td>
+        <td>{item.email}</td>
+        <td>{item.gender}</td>
+        <td>{item.nationality}</td>
+        <td>{item.religion}</td>
         <td className="d-flex gap-2">
-          <Button variant="danger" onClick={() => handelDeleteٍ(admin,1)}>
+          <Button variant="danger" onClick={() => handelDelete(item, role)}>
             Delete
           </Button>
-          <Link
-            to={`${admin.staffId}`}
-            className="btn btn-warning text-dark">View</Link>
+          <Link to={`${item.staffId}`} className="btn btn-warning text-dark">
+            View
+          </Link>
         </td>
       </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={6}>No Data</td>
-    </tr>
-  );
-  const showStaff = staff ? (
-    currentRecordsStaff.map((admin) => (
-      <tr key={admin.staffId}>
-        <td>{admin.staffNameArbic}</td>
-        <td>{admin.staffNameEnglish}</td>
-        <td>{admin.email}</td>
-        <td>{admin.gender}</td>
-        <td>{admin.nationality}</td>
-        <td>{admin.religion}</td>
-        <td className="d-flex gap-2">
-          <Button variant="danger" onClick={() => handelDeleteٍ(admin,2)}>
-            Delete
-          </Button>
-          <Link
-            to={`${admin.staffId}`}
-            className="btn btn-warning text-dark">View</Link>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={6}>No Data</td>
-    </tr>
-  );
+    ));
 
-  const showTeacher = teacher ? (
-    currentRecordsTeacher.map((teacher) => (
-      <tr key={teacher.staffId}>
-        <td>{teacher.staffNameArbic}</td>
-        <td>{teacher.staffNameEnglish}</td>
-        <td>{teacher.email}</td>
-        <td>{teacher.gender}</td>
-        <td>{teacher.nationality}</td>
-        <td>{teacher.religion}</td>
-        <td className="d-flex gap-2">
-          <Button variant="danger" onClick={() => handelDeleteٍ(teacher,3)}>
-            Delete
-          </Button>
-          <Link
-            to={`${teacher.staffId}`}
-            className="btn btn-warning text-dark">View</Link>
-        </td>
-      </tr>
-    ))
-  ) : (
+  const renderNoData = () => (
     <tr>
-      <td colSpan={6}>No Data</td>
-    </tr>
-  );
-
-  const showTeacherAssistant = teacherAssistant ? (
-    currentRecordsTeacherAssistant.map((teacher) => (
-      <tr key={teacher.staffId}>
-        <td>{teacher.staffNameArbic}</td>
-        <td>{teacher.staffNameEnglish}</td>
-        <td>{teacher.email}</td>
-        <td>{teacher.gender}</td>
-        <td>{teacher.nationality}</td>
-        <td>{teacher.religion}</td>
-        <td className="d-flex gap-2">
-          <Button variant="danger" onClick={() => handelDeleteٍ(teacher,4)}>
-            Delete
-          </Button>
-          <Link
-            to={`${teacher.staffId}`}
-            className="btn btn-warning text-dark">View</Link>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={6}>No Data</td>
-    </tr>
-  );
-
-  const showControlMember = controlMember ? (
-    currentRecordsControlMember.map((teacher) => (
-      <tr key={teacher.staffId}>
-        <td>{teacher.staffNameArbic}</td>
-        <td>{teacher.staffNameEnglish}</td>
-        <td>{teacher.email}</td>
-        <td>{teacher.gender}</td>
-        <td>{teacher.nationality}</td>
-        <td>{teacher.religion}</td>
-        <td className="d-flex gap-2">
-          <Button variant="danger" onClick={() => handelDeleteٍ(teacher,5)}>
-            Delete
-          </Button>
-          <Link
-            to={`${teacher.staffId}`}
-            className="btn btn-warning text-dark">View</Link>
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan={6}>No Data</td>
+      <td colSpan={7}>No Data</td>
     </tr>
   );
 
@@ -275,28 +180,43 @@ export default function Staff() {
         justify
         variant="tabs"
       >
-        {/* Administration  */}
         <Tab eventKey="administration" title="Administration">
-          <StaffData show={showAdminstration} link={"add-administration"} />
+          <StaffData
+            show={
+              administration
+                ? renderTableRows(currentRecordsAdmin, 1)
+                : renderNoData()
+            }
+            link={"add-administration"}
+          />
           <Pagination
             nPages={nPagesForAdmin}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
         </Tab>
-        {/*  Teacher  */}
         <Tab eventKey="teacher" title="Teacher">
-          <StaffData show={showTeacher} link={"add-teacher"} />
+          <StaffData
+            show={
+              teacher
+                ? renderTableRows(currentRecordsTeacher, 3)
+                : renderNoData()
+            }
+            link={"add-teacher"}
+          />
           <Pagination
             nPages={nPagesForTeacher}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
         </Tab>
-        {/*  Teacher Assistant */}
         <Tab eventKey="teacher-assistant" title="Teacher Assistant">
           <StaffData
-            show={showTeacherAssistant}
+            show={
+              teacherAssistant
+                ? renderTableRows(currentRecordsTeacherAssistant, 4)
+                : renderNoData()
+            }
             link={"add-teacherAssistant"}
           />
           <Pagination
@@ -305,9 +225,13 @@ export default function Staff() {
             setCurrentPage={setCurrentPage}
           />
         </Tab>
-        {/* Staaaaaff */}
         <Tab eventKey="staff" title="Staff">
-          <StaffData show={showStaff} link={"add-staff"} />
+          <StaffData
+            show={
+              staff ? renderTableRows(currentRecordsStaff, 2) : renderNoData()
+            }
+            link={"add-staff"}
+          />
           <Pagination
             nPages={nPagesForStaff}
             currentPage={currentPage}
@@ -315,7 +239,14 @@ export default function Staff() {
           />
         </Tab>
         <Tab eventKey="control-member" title="Control Member">
-          <StaffData show={showControlMember} link={"add-control-member"} />
+          <StaffData
+            show={
+              controlMember
+                ? renderTableRows(currentRecordsControlMember, 5)
+                : renderNoData()
+            }
+            link={"add-control-member"}
+          />
           <Pagination
             nPages={nPagesForControlMember}
             currentPage={currentPage}

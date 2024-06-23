@@ -242,6 +242,27 @@ ul {
   color: var(--primary-color);
 }
 
+@media (max-width : 1200px){
+  .login-page {
+    overflow: hidden;
+  }
+ .login-page .image {
+    display: none;
+  }
+  .login-page .form-info {
+    width: 100%;
+  }
+}
+@media (max-width : 590px){
+ .login-page .container{
+    width: 300px !important;
+  }
+
+  .login-page form {
+    min-width: 250px !important;
+  }
+}
+
 /*End of Login Page *******************************************/
 
 .page {
@@ -539,7 +560,7 @@ ul {
 }
 
 .main .basic-info .item {
-  flex: calc(50% - 20px);
+  flex: calc(100%);
   text-transform: capitalize;
 }
 
@@ -563,6 +584,35 @@ ul {
 .main .basic-info .item fieldset p {
   display: inline;
   width: 100%;
+}
+
+@media (max-width: 768px) {
+  
+  .main .basic-info .item {
+    flex: calc(100% - 20px);
+  }
+  .main .basic-info .item fieldset div {
+    font-size: 10px;
+    margin-bottom: 7px;
+    
+  }
+  .main .basic-info .item fieldset legend h1  {
+    font-size: 20px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px){
+  .main .basic-info .item {
+    width: calc(100% /2);
+  }
+  .main .basic-info .item fieldset div {
+    font-size: 15px;
+    margin-bottom: 7px;
+    
+  }
+  .main .basic-info .item fieldset legend h1  {
+    font-size: 25px;
+}
 }
 
 /* ========================== media query ============== */
@@ -685,8 +735,88 @@ ul {
     flex: 100%;
   }
 }
+@media  (max-width: 1230px){
+  faculty-buttons button{
+    width: calc(100% / 5);
+  }
+}
+
+
+/* Add Course and Add Student Pages Media Query */
+
+@media (max-width: 768px) {
+  
+  
+  .btn-md1 {
+    font-size: 10px;
+    height: 50px;
+
+  }
+  .btn-add1  {
+    font-size: 20px;
+    
+  }
+  .btn-add  {
+    font-size: 15px;
+    /* padding-top: 25px; */
+  }
+  .add-student .header ,.add-student #pre-requisite{
+    font-size: 15px;
+  }
+  .add-student .col {
+    flex: none;
+    font-size: 10px;
+    margin-bottom: 10px;
+  }
+}
+@media (min-width: 769px) and (max-width: 992px)  {
+  .btn-md1 {
+    font-size: 15px;
+    height: 70px;
+
+  }
+  .btn-add1  {
+    font-size: 25px;
+    
+  }
+  .btn-add{
+    font-size: 20px;
+    /* padding-top: 25px; */
+  }
+  .add-student .header , .add-student #pre-requisite{
+    font-size: 20px;
+  }
+  .add-student .col {
+    flex: none;
+    font-size: 15px;
+    margin-bottom: 10px;
+  }
+}
+
+/* student  */
 
 /*time table */
+@media (max-width: 580px) {
+  scheduler-head .col{
+    width: 100%;
+  }
+  
+}
+
+ @media (min-width: 769px) and (max-width: 992px)  {
+  .btn-wrap ,.btn-add{
+    width:100% ;
+    
+  }
+  .btn-wrap{
+    margin-bottom: 10px;
+  }
+  .btn-disp{
+    width: 100%;
+    display: flex;
+    justify-content:space-around;
+  }
+} 
 
 .time-table {
   padding: 20px;

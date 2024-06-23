@@ -41,9 +41,6 @@ export default function Control() {
   const [coursesName, setCoursesName] = useState();
   const [studentBySemester, setStudentBySemester] = useState([]);
 
-  console.log(teacherAssistant);
-  console.log(teacherAssistantCourses);
-
   const resetVariables = () => {
     setCoursesId(null);
     setFacultyId(null);
@@ -640,19 +637,19 @@ export default function Control() {
       .then((result) => {
         if (result.isConfirmed) {
           axios
-            .post(`/api/Control/EndSemester${event.id}`)
-            .then(() => {
+            .post(`/api/Control/EndSemester/${event.id}`)
+            .then((res) => {
               swalWithBootstrapButtons.fire({
                 title: "Deleted!",
-                text: "Your Semester has been Ended.",
+                text: res?.data?.message,
                 icon: "success",
               });
             })
-            .catch(() => {
+            .catch((err) => {
               swalWithBootstrapButtons.fire({
                 title: "Error!",
-                text: "An Error Occured During End Opreation.",
-                icon: "eroor",
+                text: err?.response?.data?.message,
+                icon: "error",
               });
             });
         } else if (
@@ -661,7 +658,6 @@ export default function Control() {
         ) {
           swalWithBootstrapButtons.fire({
             title: "Cancelled",
-            text: "Your Semester is safe :)",
             icon: "error",
           });
         }

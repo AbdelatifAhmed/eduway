@@ -174,34 +174,36 @@ export default function Notes() {
     <>
       <div className="pad">
         <header style={{ paddingRight: "15px" }}>
-          <div className="d-flex justify-content-between">
-            <div>
-              <Button variant="success" onClick={sendEditedDataToServer}>
-                Save
-              </Button>
-            </div>
-            <div style={{ width: "200px" }}>
-              <Row>
-                <Col className="d-flex justify-content-end">
-                  <FormLabel style={{ fontSize: "25px" }}>Display</FormLabel>
-                </Col>
-                <Col>
-                  <FormSelect onChange={(e) => setRecordsPerPage(Number(e.target.value))}>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={30}>30</option>
-                    <option value={40}>40</option>
-                    <option value={50}>50</option>
-                  </FormSelect>
-                </Col>
-              </Row>
-            </div>
-            <div>
-              <Button variant="dark" onClick={openCoursesDisplay} className="button1">
-                Select Course
-              </Button>
-            </div>
-          </div>
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <div className="mb-2 mb-md-0">
+        <Button variant="success" onClick={sendEditedDataToServer}>
+          Save
+        </Button>
+      </div>
+
+      <div className="mb-2 mb-md-0" style={{ maxWidth: "200px" }}>
+        <Row className="g-2 align-items-center">
+          <Col xs="auto" className="d-flex align-items-center">
+            <FormLabel className="mb-0" style={{ fontSize: "16px" }}>Display</FormLabel>
+          </Col>
+          <Col xs="auto">
+            <FormSelect onChange={(e) => setRecordsPerPage(e.target.value)}>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={30}>30</option>
+              <option value={40}>40</option>
+              <option value={50}>50</option>
+            </FormSelect>
+          </Col>
+        </Row>
+      </div>
+
+      <div>
+        <Button variant="dark" onClick={openCoursesDisplay}>
+          Select Course
+        </Button>
+      </div>
+    </div>
           <hr />
           <div style={{ textAlign: "center", fontSize: "30px", fontWeight: "bold" }}>
             {selectedCourse?.courseName ? `Course : ${selectedCourse?.courseName}` : "Choose a Course"}

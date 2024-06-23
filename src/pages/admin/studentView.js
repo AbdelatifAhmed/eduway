@@ -199,6 +199,54 @@ export default function StudentView() {
       });
     }
   };
+
+  const[countries,setCountries] = useState([])
+  const[governorates,setGovernorates] = useState([])
+  const[cities,setCities] = useState([])
+
+  useEffect(()=>{
+    try {
+      axios
+      .get(`api/locations/GetCountry`)
+      .then(res=>{
+        setCountries(res?.data?.data)
+      })
+    } catch (error) {
+      console.error(error);
+    }
+
+    
+  },[])
+
+  useEffect(()=>{
+    if(country)
+      {
+        try {
+          axios
+          .get(`api/Locations/GetGovernorateByCountryId/${country}`)
+          .then(res=>{
+            setGovernorates(res?.data?.data)
+          })
+        } catch (error) {
+          console.error(error);
+        }
+      }
+  },[country])
+
+  useEffect(()=>{
+    if(governorate)
+      {
+        try {
+          axios
+          .get(`/api/Locations/GetCityByGovernorateId/${governorate}`)
+          .then(res=>{
+            setCities(res?.data?.data)
+          })
+        } catch (error) {
+          console.error(error);
+        }
+      }
+  },[governorate])
   return (
     <form onSubmit={handelAddStudent}>
       <div

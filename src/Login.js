@@ -1,8 +1,7 @@
-import {  NavLink, useLocation, useNavigate } from "react-router-dom";
+import {  NavLink, useNavigate } from "react-router-dom";
 import rafik from "./images/rafiki.png";
 import { useState} from "react";
 import axios from "./Api/axios";
-import Cookies from "universal-cookie";
 import useAuth from "./hooks/useAuth";
 
 export default function Login(props) {
@@ -65,7 +64,7 @@ export default function Login(props) {
               <a href="#">Home</a>
             </li>
             <li>
-              <NavLink to="/ss">About</NavLink>
+              <NavLink to="">About</NavLink>
             </li>
             <li>
               <a href="#">Contact Us</a>

@@ -180,15 +180,15 @@ export default function AddStudent() {
         style={{ marginLeft: "20px" }}
         className="d-flex  justify-content-between"
       >
-        <h1 className="d-inline">Add Student </h1>
+        <h1 className="d-inline btn-add1">Add Student</h1>
         <div className="d-flex  gap-2 p-2">
-          <button className="btn btn-info btn-md " style={{ color: "white" }}>
+          <button className="btn btn-info btn-md btn-md1" style={{ color: "white" }}>
             Save
           </button>
-          <button type="reset" className="btn btn-warning btn-md">
+          <button type="reset" className="btn btn-warning btn-md btn-md1">
             Reset
           </button>
-          <button onClick={goBack} className="btn btn-dark btn-md">
+          <button onClick={goBack} className="btn btn-dark btn-md btn-md1">
             Back To Student
           </button>
           <RiFileExcel2Fill

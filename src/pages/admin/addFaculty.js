@@ -959,109 +959,143 @@ export default function AddFaculty({
   };
   return (
     <div>
-      <div
-        className="d-flex justify-content-between px-4"
-        style={{
-          paddingLeft: "20px",
-          background: "#121432",
-          padding: "10px 0",
-          margin: "0 20px",
-          borderBottomLeftRadius: "20px",
-          borderBottomRightRadius: "20px",
+   <div
+  className="container-fluid px-4"
+  style={{
+    paddingLeft: "20px",
+    background: "#121432",
+    padding: "10px 0",
+    margin: "0 20px",
+    borderBottomLeftRadius: "20px",
+    borderBottomRightRadius: "20px",
+  }}
+>
+  <div className="row justify-content-center">
+    {/* Each button takes up 1/5th of the row on large screens, 1/3rd on medium screens, and 1/2 on small screens */}
+    <div className="col-6 col-md-4 col-lg-2 mb-2">
+      <Button
+        variant="outline-light"
+        className="w-100"
+        onClick={() => {
+          setAddFacultyShow(true);
+          restVariables();
         }}
       >
-        <Button
-          variant="outline-light"
-          className="me-2 "
-          onClick={() => {
-            setAddFacultyShow(true);
-            restVariables();
-          }}
-        >
-          Faculty
-        </Button>
-        <Button
-          variant="outline-light"
-          onClick={() => {
-            setAddBylaw(true);
-            restVariables();
-          }}
-        >
-          Bylaws
-        </Button>
-        <Button
-          variant="outline-light"
-          onClick={() => {
-            setAddSemester(true);
-            restVariables();
-          }}
-        >
-          Semesters
-        </Button>
-        <Button
-          variant="outline-light"
-          onClick={() => {
-            setAddDepartment(true);
-            restVariables();
-          }}
-        >
-          Departments
-        </Button>
-        <Button
-          variant="outline-light"
-          onClick={() => {
-            setAddExamRoles(true);
-            restVariables();
-          }}
-        >
-          Exam Roles
-        </Button>
-        <Button
-          variant="outline-light"
-          onClick={() => {
-            setAddAssessMethods(true);
-            restVariables();
-          }}
-        >
-          Assess Methods
-        </Button>
-        <Button
-          variant="outline-light"
-          onClick={() => {
-            setAddBands(true);
-            restVariables();
-          }}
-        >
-          Bands
-        </Button>
-        <Button
-          variant="outline-light"
-          onClick={() => {
-            setAddPhase(true);
-            restVariables();
-          }}
-        >
-          Phase
-        </Button>
-        <Button
-          variant="outline-light"
-          onClick={() => {
-            setAddPhaseDegree(true);
-            restVariables();
-          }}
-        >
-          Phase Degree
-        </Button>
-        <Button
-          variant="outline-light"
-          onClick={() => {
-            setAddAcademicYear(true);
-            restVariables();
-          }}
-        >
-          Academic Year
-        </Button>
-      </div>
+        Faculty
+      </Button>
+    </div>
+    <div className="col-6 col-md-4 col-lg-2 mb-2">
+      <Button
+        variant="outline-light"
+        className="w-100"
+        onClick={() => {
+          setAddBylaw(true);
+          restVariables();
+        }}
+      >
+        Bylaws
+      </Button>
+    </div>
+    <div className="col-6 col-md-4 col-lg-2 mb-2">
+      <Button
+        variant="outline-light"
+        className="w-100"
+        onClick={() => {
+          setAddSemester(true);
+          restVariables();
+        }}
+      >
+        Semesters
+      </Button>
+    </div>
+    <div className="col-6 col-md-4 col-lg-2 mb-2">
+      <Button
+        variant="outline-light"
+        className="w-100"
+        onClick={() => {
+          setAddDepartment(true);
+          restVariables();
+        }}
+      >
+        Departments
+      </Button>
+    </div>
+    <div className="col-6 col-md-4 col-lg-2 mb-2">
+      <Button
+        variant="outline-light"
+        className="w-100"
+        onClick={() => {
+          setAddExamRoles(true);
+          restVariables();
+        }}
+      >
+        Exam Roles
+      </Button>
+    </div>
+    <div className="col-6 col-md-4 col-lg-2 mb-2">
+      <Button
+        variant="outline-light"
+        className="w-100"
+        onClick={() => {
+          setAddAssessMethods(true);
+          restVariables();
+        }}
+      >
+        Assess Methods
+      </Button>
+    </div>
+    <div className="col-6 col-md-4 col-lg-2 mb-2">
+      <Button
+        variant="outline-light"
+        className="w-100"
+        onClick={() => {
+          setAddBands(true);
+          restVariables();
+        }}
+      >
+        Bands
+      </Button>
+    </div>
+    <div className="col-6 col-md-4 col-lg-2 mb-2">
+      <Button
+        variant="outline-light"
+        className="w-100"
+        onClick={() => {
+          setAddPhase(true);
+          restVariables();
+        }}
+      >
+        Phase
+      </Button>
+    </div>
+    <div className="col-6 col-md-4 col-lg-2 mb-2">
+      <Button
+        variant="outline-light"
+        className="w-100"
+        onClick={() => {
+          setAddPhaseDegree(true);
+          restVariables();
+        }}
+      >
+        Phase Degree
+      </Button>
+    </div>
+    <div className="col-6 col-md-4 col-lg-2 mb-2">
+      <Button
+        variant="outline-light"
+        className="w-100"
+        onClick={() => {
+          setAddAcademicYear(true);
+          restVariables();
+        }}
+      >
+        Academic Year
+      </Button>
+    </div>
+  </div>
+</div>
+
+
 
       <Modal
         size="lg"
@@ -1307,15 +1341,15 @@ export default function AddFaculty({
                     <Col>
                       <Form.Label>Estimates Courses</Form.Label>
                       <Row>
-                        <Col sm={1}>
+                        <Row sm={1}>
                           <Button
                             className="btn-dark"
                             onClick={addChildForEstimateCourse}
                             style={{ whiteSpace: "nowrap" }}
                           >
-                            + Add New Estimate
+                            + Add Estimate Course
                           </Button>
-                        </Col>
+                        </Row>
                         {estimateCourse.map((input, index) => (
                           <Row key={index} className="mt-2">
                             <Col sm={3}>

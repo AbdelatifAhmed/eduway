@@ -483,7 +483,15 @@ export default function FacultyDetails() {
   };
 
   const handelDeleteEstimates = (id) => {
-    axios.delete(`/api/bylaw/estimates/${id}`);
+   if(id)
+    {
+      try {
+        axios.delete(`/api/bylaw/estimates/${id}`)
+        
+      } catch (error) {
+        console.log(error)
+      }
+    }
   };
 
   const addChildForEstimateCourse = () => {
@@ -508,7 +516,14 @@ export default function FacultyDetails() {
   };
 
   const handelDeleteEstimateCourses = (id) => {
-    axios.delete(`/api/bylaw/estimatesCourse/${id}`);
+    if(id)
+      {
+        try {
+          axios.delete(`/api/bylaw/estimatesCourse/${id}`)
+        } catch (error) {
+          console.log(error);
+        }
+      }
   };
 
   const handleInputChangeForEstimate = (index, fieldName, value) => {

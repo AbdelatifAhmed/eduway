@@ -411,12 +411,12 @@ const Admin = () => {
       {scheduleArray.length > 0 && (
         <div className="mt-3">
           <h3>Scheduled Events</h3>
+          <div className="table-content">
           <Table striped bordered hover>
             <thead>
               <tr>
                 <th>#</th>
                 <th>Faculty</th>
-                {/* <th>Semester</th> */}
                 <th>Course</th>
                 <th>Type</th>
                 <th>Day</th>
@@ -451,6 +451,7 @@ const Admin = () => {
               ))}
             </tbody>
           </Table>
+          </div>
           <Button onClick={handleSendSchedule}>Send Schedule</Button>
         </div>
       )}

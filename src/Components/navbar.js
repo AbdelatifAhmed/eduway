@@ -120,6 +120,54 @@ export default function MyNavbar(props) {
 
   const [showPass, setShowPass] = useState(true);
 
+  const handleAssignCourse = ()=>{
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success mx-2",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: `Are you sure you want to assign student course ? `,
+        text: "You won't be able to revert this!",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .post(`api/Control/assignCourses`)
+            .then((res) => {
+              swalWithBootstrapButtons.fire({
+                title: "Done!",
+                text: res?.data?.message,
+                icon: "success",
+              });
+            })
+            .catch((error) => {
+              swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: error?.response?.data?.message,
+                icon: "eroor",
+              });
+            });
+        } else if (
+          /* Read more about handling dismissals below */
+          result.dismiss === Swal.DismissReason.cancel
+        ) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            icon: "error",
+          });
+        }
+      });
+  }
+
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -234,10 +282,13 @@ export default function MyNavbar(props) {
                   <NavDropdown.Item as={Button}>
                     Another action
                   </NavDropdown.Item>
+                  <NavDropdown.Item as={Button} onClick={handleAssignCourse}>
+                    Assign Student to course
+                  </NavDropdown.Item>
                   <NavDropdown.Item as={Button} onClick={handleShow}>
                     Change Password
                   </NavDropdown.Item>
-                  <NavDropdown.Divider />
+                  {/* <NavDropdown.Divider /> */}
                 </NavDropdown>
               ) : (
                 <NavDropdown title="Settings" id="collapsible-nav-dropdown">
