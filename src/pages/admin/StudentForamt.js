@@ -109,9 +109,7 @@ export default function StudentFormat() {
     };
 
 
-    useEffect(()=>{
-        axios(`/api/formatStudentCode/byFacultyId/1` )
-    },[])
+ 
 
     return (
         <div className='pad'>
