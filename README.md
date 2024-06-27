@@ -13,9 +13,7 @@ Sure, here is a comprehensive README file for the front-end repository of your p
     - [🧪 Running Tests](#-running-tests)
     - [☁️ Deployment](#️-deployment)
   - [📚 Application Structure](#-application-structure)
-  - [📸 Screenshots](#-screenshots)
   - [🤝 Contributing](#-contributing)
-  - [📜 License](#-license)
 
 ## 🚀 Getting Started
 
@@ -30,7 +28,7 @@ Ensure you have the following installed:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/eduway-frontend.git
+   git clone (https://github.com/AbdelatifAhmed/eduway)
    cd eduway-frontend
    ```
 
